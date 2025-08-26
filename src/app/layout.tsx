@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import CustomRootLayout from "@/components/layout/CustomRootLayout";
+import TopNotify from "@/components/home/TopNotify";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,6 +17,7 @@ export default function RootLayout({
     <html data-theme="cmyk">
       <body
       >
+        <TopNotify />
         <CustomRootLayout />
         {children}
       </body>
