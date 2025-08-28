@@ -10,9 +10,9 @@ export default function HeroBG() {
             const newOffset = -(width * 140 / 1920);
             setOffset(newOffset);
         }
- 
+
         handleResize();
- 
+
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);

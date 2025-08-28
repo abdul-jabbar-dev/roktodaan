@@ -19,6 +19,7 @@ export default function Home() {
           <q>যে ব্যক্তি কোনো প্রাণীকে হত্যা করে, সে যেন সমস্ত মানবজাতিকে হত্যা করেছে; আর যে ব্যক্তি একটি প্রাণীকে বাঁচায়, সে যেন সমস্ত মানবজাতিকে বাঁচিয়েছে।</q><span> সূরা আল-মায়িদা (৫:৩২)</span>
         </div>
       </div>
+      
       <AboutBlood />
       <CompatibilitySection />
       <DonerToReciver />
