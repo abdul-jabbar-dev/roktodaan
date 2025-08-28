@@ -34,14 +34,13 @@ jobs:
         run: |
           npm install
           npm run build 
+          npm install -g netlify-cli
 
-      - name: Deploy to GitHub Pages
-        uses: nwtgck/actions-netlify@v1.2.2
-        with:
-          publish-dir: .next   # Next.js build output
-          production-branch: main
-          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
-      # build করা site deploy করবে GitHub Pages এ।
-      # github_token: repo access দিতে ব্যবহার হয়।
-      # publish_dir: কোন folder deploy হবে। React/Vite হলে build folder সাধারণত ./dist (বা ./build)।
+      - name: Deploy to Netlify
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          netlify deploy \
+            --prod \
+            --dir=.next \
+            --site=$NETLIFY_SITE_ID
