@@ -18,7 +18,7 @@ export default function Hero() {
             <h1 className="text-5xl font-bold">
               <span className="text-neutral">রক্ত</span> খুঁজুন, জীবন বাঁচান
             </h1>
-            <p className="py-6 text text-xl font-light text-gray-700">
+            <p className="py-6 text text-xl font-light text-gray-600">
               আপনার এলাকার রক্তদাতাদের সঙ্গে তৎক্ষণাৎ সংযোগ করুন এবং জরুরি অবস্থায় সাহায্য করুন।
             </p>
           </div>

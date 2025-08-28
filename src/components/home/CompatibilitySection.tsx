@@ -18,9 +18,9 @@ const canGive: Record<string, Record<string, boolean>> = {
 
 export default function CompatibilitySection() {
     return (
-        <section className="py-12">
+        <section className="py-16">
             <div className="max-w-6xl mx-auto px-4">
-                <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-20">
                     রক্তের গ্রুপ সামঞ্জস্য চার্ট
                 </h2>
 
@@ -28,22 +28,22 @@ export default function CompatibilitySection() {
                     <table className="min-w-full text-sm">
                         <thead className="bg-gray-50 sticky top-0">
                             <tr>
-                                <th className="p-3 text-left font-semibold">Donor ↓ / Recipient →</th>
+                                <th className="p-3 text-left font-semibold text-gray-600">Donor ↓ / Recipient →</th>
                                 {groups.map(g => (
-                                    <th key={g} className="p-3 text-center font-semibold">{g}</th>
+                                    <th key={g} className="p-3 text-gray-600 text-center font-semibold">{g}</th>
                                 ))}
                             </tr>
                         </thead>
                         <tbody>
                             {groups.map(donor => (
                                 <tr key={donor} className="even:bg-gray-50">
-                                    <td className="p-3 font-medium">{donor}</td>
+                                    <td className="p-3 font-medium text-gray-600">{donor}</td>
                                     {groups.map(recipient => {
                                         const ok = canGive[donor][recipient];
                                         return (
                                             <td key={recipient} className="p-3 text-center">
                                                 <span className={`inline-flex items-center justify-center w-6 h-6 p-1 rounded-full 
-                          ${ok ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'}`}>
+                          ${ok ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
                                                     {ok ? <Check /> : <X />}
                                                 </span>
                                             </td>

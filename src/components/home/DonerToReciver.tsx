@@ -3,11 +3,11 @@ import React from 'react'
 export default function DonerToReciver() {
     return (
 
-        <section className="py-12 bg-gray-50">
-            <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <section className="py-28 bg-gray-50">
+            <div className="max-w-6xl mx-auto flex  sm:flex-row flex-col gap-8 items-center">
 
                 {/* বাঁ পাশ: SVG বা ইমেজ ফাইল */}
-                <div className="order-1">
+                <div className="order-1  w-full sm:w-3/8 md:w-4/8">
                     <svg version="1.2" xmlns="http://www.w3.org/2000/svg" className='h-full w-full' viewBox="0 0 2334 3800"  >
                         <title>vecteezy_vector-illustration-of-blood-types-blood-donation-blood_</title>
                         <style>{`
@@ -62,11 +62,11 @@ export default function DonerToReciver() {
                 </div>
 
                 {/* ডান পাশ: তথ্য */}
-                <div className="order-2">
-                    <h3 className="text-xl md:text-2xl font-bold mb-4">
+                <div className="order-2 w-full sm:w-5/8 md:w-4/8 px-4 md:px-0">
+                    <h3 className="text-xl md:text-2xl text-gray-800 font-bold mb-4">
                         Blood Type — Quick Facts
                     </h3>
-                    <ul className="space-y-3 text-gray-700">
+                    <ul className="space-y-3 text-gray-600">
                         <li><span className="font-semibold">O−</span> → Universal donor (সবার কাছে দিতে পারে)।</li>
                         <li><span className="font-semibold">AB+</span> → Universal recipient (বেশিরভাগের কাছ থেকে নিতে পারে)।</li>
                         <li><span className="font-semibold">Same-type</span> ম্যাচ সবসময় বেশি নিরাপদ (যেমন A→A, B→B)।</li>

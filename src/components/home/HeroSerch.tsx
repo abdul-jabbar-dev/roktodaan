@@ -30,7 +30,7 @@ export default function HeroSearch({ setOpen, open }: { setOpen: React.Dispatch<
 
     return (
         <div className="card-body">
-            <fieldset className="fieldset w-full">
+            <fieldset className="fieldset w-full py-3">
                 {/* Blood Group */}
                 <div className="flex filter overflow-hidden w-full gap-y-1">
                     <input
@@ -131,7 +131,7 @@ export default function HeroSearch({ setOpen, open }: { setOpen: React.Dispatch<
                     </span>
                 </div>
 
-                <button className="btn  btn-neutral mt-4 rounded-xl"
+                <button className="btn btn-neutral text-white mt-4 rounded-xl"
                     onClick={() => {
                         setOpen(!open);
                         console.log("Selected BloodGroup:", selectedBloodGroup);

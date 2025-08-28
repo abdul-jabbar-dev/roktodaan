@@ -21,9 +21,9 @@ export default function AboutBlood() {
     ];
 
     return (
-        <section className="py-16 bg-white">
-            <div className="max-w-5xl mx-auto px-4 text-center">
-                <h2 className="text-4xl font-bold mb-12 text-gray-800">
+        <section className="py-28 bg-white">
+            <div className="max-w-6xl mx-auto px-4 text-center">
+                <h2 className="text-4xl font-bold mb-20 text-gray-800">
                     রক্ত সম্পর্কে জানুন
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -33,7 +33,7 @@ export default function AboutBlood() {
                             className="p-6 bg-gray-50 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300"
                         >
                             <div className="flex justify-center mb-4">{item.icon}</div>
-                            <h3 className="text-xl font-semibold mb-2 text-gray-700">
+                            <h3 className="text-xl font-semibold mb-2 text-gray-800">
                                 {item.title}
                             </h3>
                             <p className="text-gray-600 text-sm">{item.desc}</p>
@@ -43,8 +43,8 @@ export default function AboutBlood() {
 
                 {/* Extra info block */}
                 <div className="mt-12 p-6 bg-red-50 border border-red-200 rounded-xl text-left">
-                    <h3 className="text-2xl font-bold mb-4 text-red-700">রক্তের গ্রুপ সামঞ্জস্য চার্ট</h3>
-                    <p className="text-gray-700">
+                    <h3 className="text-2xl font-bold mb-4 text-red-800">রক্তের গ্রুপ সামঞ্জস্য চার্ট</h3>
+                    <p className="text-gray-600">
                         <span className="font-semibold">O-</span> ➝ সবার জন্য দিতে পারে, <br />
                         <span className="font-semibold">AB+</span> ➝ সবার কাছ থেকে নিতে পারে, <br />
                         অন্য গ্রুপগুলো তাদের নিজেদের সাথে বা সামঞ্জস্যপূর্ণ গ্রুপের সাথেই দেওয়া-নেওয়া সম্ভব।
