@@ -4,8 +4,7 @@ import DonateOfferContainer from "@/components/home/DonateOfferContainer";
 import DonationProcessSection from "@/components/home/DonationProcessSection";
 import DonerToReciver from "@/components/home/DonerToReciver";
 import Hero from "@/components/home/Hero";
-import WhyDonateBlood from "@/components/home/WhyDonateBlood";
-import RootFooter from "@/components/layout/RootFooter";
+import WhyDonateBlood from "@/components/home/WhyDonateBlood"; 
 
 export default function Home() {
   return (

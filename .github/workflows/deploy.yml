@@ -1,0 +1,45 @@
+name: Deploy Blood Donation Website  
+# এই workflow এর নাম। শুধু reference এর জন্য। GitHub UI তে workflow list এ এই নাম দেখাবে।  
+
+on:
+  push:
+    branches:
+      - main  
+# workflow কখন trigger হবে তা define করে। এখানে বলা হচ্ছে, যখন main branch এ code push হবে তখনই workflow start হবে।  
+
+jobs:
+  build-and-deploy:  
+  # job এর নাম। তুমি ইচ্ছা করলে অন্য নাম দিতে পারো। Job হলো workflow এর একটি unit যা নির্দিষ্ট environment এ run হবে।  
+
+    runs-on: ubuntu-latest  
+    # job কোন environment এ run হবে। এখানে latest Ubuntu VM ব্যবহার হচ্ছে।  
+
+    steps:  
+    # jobs এর ভেতর যেসব কাজ হবে তাদের list। প্রতিটি step sequentially run হবে।  
+
+      - name: Checkout repository  
+        uses: actions/checkout@v3  
+      # প্রথম step, GitHub repo থেকে সব code checkout করবে। এটা দরকার কারণ VM এ প্রথমে repo থাকে না।  
+
+      - name: Set up Node.js  
+        uses: actions/setup-node@v3  
+        with:
+          node-version: 20  
+      # Node.js setup করবে। এখানে version 20 use করা হচ্ছে। Node.js project build করার জন্য এটা দরকার।  
+
+      - name: Install dependencies  
+        run: npm install  
+      # project এর dependency install করবে। package.json অনুযায়ী node_modules generate হবে।  
+
+      - name: Build project  
+        run: npm run build  
+      # project build করবে। React/Vite project হলে build folder তৈরি হবে।  
+
+      - name: Deploy to GitHub Pages  
+        uses: peaceiris/actions-gh-pages@v6  
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}  
+          publish_dir: ./dist  
+      # build করা site deploy করবে GitHub Pages এ।  
+      # github_token: repo access দিতে ব্যবহার হয়।  
+      # publish_dir: কোন folder deploy হবে। React/Vite হলে build folder সাধারণত ./dist (বা ./build)।  

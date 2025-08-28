@@ -1,9 +1,10 @@
 'use client'
-import { Droplet, SendIcon } from 'lucide-react'
+import { Droplet } from 'lucide-react'
+import Image from 'next/image'
 import React, { useState } from 'react'
 
 export default function CustomRootLayout() {
-  const [user, setUser] = useState({})
+  const [user] = useState({id:null})
 
   return (
 
@@ -14,14 +15,16 @@ export default function CustomRootLayout() {
         </div>
         <div className="flex gap-2">
 
-          {(user as any).id ? <div className="dropdown dropdown-end">
+          {user.id ? <div className="dropdown dropdown-end">
 
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
 
               <div className="w-10 rounded-full">
-                <img
+                <Image
                   alt="Tailwind CSS Navbar component"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                  width={20}
+                  height={20}
+                  src="https://randomuser.me/api/portraits/men/32.jpg" />
               </div>
             </div>
             <ul
