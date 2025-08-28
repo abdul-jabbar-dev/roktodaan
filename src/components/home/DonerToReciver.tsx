@@ -75,19 +75,19 @@ export default function DonerToReciver() {
                     </ul>
 
                     <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
-                        <div className="p-4 rounded-2xl bg-white shadow-sm border border-red-600">
+                        <div className="p-4 rounded-2xl bg-white shadow-sm border border-red-100">
                             <p className="font-semibold mb-1">O+</p>
                             <p className="text-gray-600">দিতে পারে: O+, A+, B+, AB+</p>
                         </div>
-                        <div className="p-4 rounded-2xl bg-white shadow-sm border border-red-600">
+                        <div className="p-4 rounded-2xl bg-white shadow-sm border border-red-100">
                             <p className="font-semibold mb-1">A+</p>
                             <p className="text-gray-600">পেতে পারে: A+, A−, O+, O−</p>
                         </div>
-                        <div className="p-4 rounded-2xl bg-white shadow-sm border border-red-600">
+                        <div className="p-4 rounded-2xl bg-white shadow-sm border border-red-100">
                             <p className="font-semibold mb-1">B+</p>
                             <p className="text-gray-600">পেতে পারে: B+, B−, O+, O−</p>
                         </div>
-                        <div className="p-4 rounded-2xl bg-white shadow-sm border border-red-600">
+                        <div className="p-4 rounded-2xl bg-white shadow-sm border border-red-100">
                             <p className="font-semibold mb-1">AB−</p>
                             <p className="text-gray-600">দিতে পারে: AB−, AB+</p>
                         </div>

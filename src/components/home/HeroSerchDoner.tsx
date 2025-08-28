@@ -6,10 +6,11 @@ import { Grid, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/grid';
 import 'swiper/css/pagination';
+import Image from "next/image";
 
 export default function HeroSerchDoner() {
     const doners = [
-        { id: 1, name: "Abdul Jabbar", age: 21, location: "Tongi Gazipur Dhaka Bangladesh.", bloodGroup: "O+", profileImage: "https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL3BsYXlcLzBiN2Y0ZTliLWY1OWMtNDAyNC05ZjA2LWIzZGMxMjg1MGFiNy0xOTIwLTEwODAuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9fX0=" },
+        { id: 1, name: "Abdul Jabbar", age: 21, location: "Tongi Gazipur Dhaka Bangladesh.", bloodGroup: "O+", profileImage: "https://randomuser.me/api/portraits/men/30.jpg" },
         { id: 2, name: "Hasan", age: 24, location: "Dhaka, Bangladesh.", bloodGroup: "A+", profileImage: "https://randomuser.me/api/portraits/men/32.jpg" },
         { id: 3, name: "Rahim", age: 20, location: "Gazipur, Bangladesh.", bloodGroup: "B-", profileImage: "https://randomuser.me/api/portraits/men/45.jpg" },
         { id: 4, name: "Karim", age: 29, location: "Uttara, Dhaka.", bloodGroup: "AB+", profileImage: "https://randomuser.me/api/portraits/men/12.jpg" },
@@ -70,7 +71,7 @@ export default function HeroSerchDoner() {
                 <SwiperSlide className="py-6" key={doner.id}>
                     <div className="card relative flex flex-col sm:h-56 h-96  sm:flex-row w-full card-side bg-base-100 shadow-sm">
                         <figure>
-                            <img className="sm:w-32 w-full h-72 object-cover" src={doner.profileImage} />
+                            <Image width={100} height={160} className="sm:w-32 w-full h-72 object-cover" src={doner.profileImage} alt={doner.name} />
                         </figure>
                         <div className="card-body relative">
                             <div>
@@ -79,10 +80,12 @@ export default function HeroSerchDoner() {
                             </div>
                             <p>{doner.location}</p>
                             <span className="w-11 absolute top-4 right-4">
-                                <img
+                                <Image
                                     className="w-11"
-                                    src={bloodGroups.find((bg) => bg.name === doner.bloodGroup)?.img}
+                                    src={(bloodGroups.find((bg) => bg.name === doner.bloodGroup)?.img as string)}
                                     alt={doner.bloodGroup}
+                                    height={30}
+                                    width={30}
                                 />
                             </span>
                             <div className="card-actions justify-end">

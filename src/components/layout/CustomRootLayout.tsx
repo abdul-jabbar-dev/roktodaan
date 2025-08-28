@@ -14,7 +14,7 @@ export default function CustomRootLayout() {
         </div>
         <div className="flex gap-2">
 
-          {user?.id ? <div className="dropdown dropdown-end">
+          {(user as any).id ? <div className="dropdown dropdown-end">
 
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
 
