@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import CustomRootLayout from "@/components/layout/CustomRootLayout";
 import TopNotify from "@/components/home/TopNotify";
-
+import RootHook from "@/hooks/RootHook";
+// import 'rsuite/dist/rsuite-no-reset.min.css';
 export const metadata: Metadata = {
   title: "RoktoDan - রক্ত দান করে জীবন বাঁচান",
   description:
@@ -45,9 +46,12 @@ export default function RootLayout({
   return (
     <html lang="bn" data-theme="cmyk">
       <body className="">
-        <TopNotify />
-        <CustomRootLayout />
-        {children}
+        <RootHook>
+          <>
+            <TopNotify />
+            <CustomRootLayout />
+            {children}</>
+        </RootHook>
       </body>
     </html>
   );

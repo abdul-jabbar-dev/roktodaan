@@ -2,9 +2,9 @@
 import { Droplet } from 'lucide-react'
 import Image from 'next/image'
 import React, { useState } from 'react'
-
+import Link from 'next/link'
 export default function CustomRootLayout() {
-  const [user] = useState({id:null})
+  const [user] = useState({ id: null })
 
   return (
 
@@ -41,10 +41,12 @@ export default function CustomRootLayout() {
             </ul>
           </div> : <div className=' flex items-center'>
             <button className='btn btn-lg btn-link no-underline underline-offset-4  text-gray-600'>রক্তদাতা খুঁজুন</button>
-            <button className="btn btn-lg text-red-400  no-underline underline-offset-4  btn-link ">
-              <Droplet className='text-red-400' />
-              রক্তদাতা হোন
-            </button>
+            <Link
+              href="/register">
+              <button className="btn btn-lg text-red-400  no-underline underline-offset-4  btn-link ">
+                <Droplet className='text-red-400' />
+                রক্তদাতা হোন
+              </button></Link>
 
           </div>}
         </div>

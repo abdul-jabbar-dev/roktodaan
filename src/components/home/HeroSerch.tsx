@@ -58,7 +58,7 @@ export default function HeroSearch({ setOpen, open }: { setOpen: React.Dispatch<
                 <div className="flex gap-x-2 w-full mt-3">
                     {/* Division */}
                     <div className="w-full">
-                        <label className="label my-1">Division</label>
+                        <label className="label my-1">বিভাগ</label>
                         <select
                             value={selectedDivision?.id ?? ""}
                             className="select"
@@ -72,7 +72,7 @@ export default function HeroSearch({ setOpen, open }: { setOpen: React.Dispatch<
                                 }
                             }}
                         >
-                            <option value="" disabled>Select Division</option>
+                            <option value="" disabled>বিভাগ নির্বাচন করুন</option>
                             {division.map(divi => (
                                 <option key={divi.id} value={divi.id}>{divi.bn_name}</option>
                             ))}

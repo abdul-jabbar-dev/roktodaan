@@ -1,5 +1,6 @@
 'use client'
 import { X } from 'lucide-react'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -29,12 +30,12 @@ export default function TopNotify() {
         <p className="md:text-sm/6 text-xs  text-gray-100">
           আজই রক্তদাতা হিসেবে নিবন্ধন করুন, কারো জীবনের পরম সহায়ক হোন।
         </p>
-        <a
+        <Link
           href="/register"
           className="flex-none rounded-full bg-white/20 px-5 py-1 text-xs font-semibold text-white shadow-xs inset-ring-white/20 hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
           স্বেচ্ছাসেবক হোন <span aria-hidden="true">&rarr;</span>
-        </a>
+        </Link>
       </div>
       <div className="flex flex-1 justify-end">
         <button
