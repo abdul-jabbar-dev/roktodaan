@@ -1,9 +1,10 @@
-import React from 'react'
+
+import React, { useState } from 'react'
 import Nibondhon from '../client/NibondhonButton'
 export default function LastDonation_Th() {
-
+    const [lastDonation, setLastDonation] = useState({ date: '', location: '' })
     return (
-        <section className="max-w-6xl mx-auto  px-12 xl:px-0">
+        <section className="max-w-6xl mx-auto px-12 xl:px-0">
             <div className="lg:w-4/5 w-full">
 
                 {/* Title */}
@@ -24,8 +25,10 @@ export default function LastDonation_Th() {
                             সর্বশেষ রক্তদানের তারিখ
                         </label>
                         <input
+                            onChange={(e) => setLastDonation({ ...lastDonation, date: e.target.value })}
                             type="date"
-                            className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                            required
+                            className="w-full required  border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
                         />
                     </div>
 
@@ -34,9 +37,10 @@ export default function LastDonation_Th() {
                             রক্তদানের স্থান
                         </label>
                         <input
-                            type="text"
+                            type="text" required
+                            onChange={(e) => setLastDonation({ ...lastDonation, location: e.target.value })}
                             placeholder="যেমনঃ Dhaka Medical College"
-                            className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                            className="w-full required  border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
                         />
                     </div>
                 </div>
@@ -44,9 +48,9 @@ export default function LastDonation_Th() {
             </div>
             {/* Buttons */}
             <div className="font-bold lg:text-end text-center mt-8 space-x-4">
-                 <Nibondhon state={3} />
-
+                <Nibondhon step={3} />
+                {/* <button onClick={() => console.log(lastDonation)}>d</button> */}
             </div>
-        </section>
+        </form>
     )
 }

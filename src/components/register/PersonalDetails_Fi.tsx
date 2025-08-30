@@ -184,7 +184,7 @@ export default function PersonalDetails_Fi() {
             {/* Buttons */}
             <div className="font-bold lg:text-end text-center mt-8 space-x-4">
                 
-                 <Nibondhon state={5} />
+                 <Nibondhon step={5} />
             </div>
         </section>
     )

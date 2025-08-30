@@ -1,6 +1,6 @@
 
 import React from 'react'
-import Nibondhon from '../client/NibondhonButton' 
+import Nibondhon from '../client/NibondhonButton'
 export default function RegisterFirtsStep() {
     return (
         <section className="max-w-6xl mx-auto  px-12 xl:px-0">
@@ -20,8 +20,8 @@ export default function RegisterFirtsStep() {
                 </p>
             </div>
             <div className="font-bold lg:text-end text-center">
-               
-                <Nibondhon state={1} />
+
+                <Nibondhon step={1} state={{ motivation: true }} />
             </div>
         </section>
     )

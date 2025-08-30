@@ -11,14 +11,14 @@ import PersonalDetails_Fi from './PersonalDetails_Fi'
 import { RegisterState } from '@/redux/slice/registerSlice';
 
 export default function HeroRegister() {
-    const currentStep = useSelector(({ register }: { register: RegisterState }) => register.step)
+    const { step: currentStep, step2 } = useSelector(({ register }: { register: RegisterState }) => register)
     const [prevStep, setPrevStep] = useState(currentStep)
 
     useEffect(() => {
         setPrevStep(currentStep)
     }, [currentStep])
 
-    const direction = currentStep > prevStep ? 1 : -1 // step barle 1, komle -1
+    const direction = currentStep > prevStep ? 1 : -1
 
     const stepVariants = {
         hidden: { opacity: 0, x: 100 * direction },   // right or left start
@@ -33,11 +33,13 @@ export default function HeroRegister() {
         <BloodInfo_Fo key="s4" />,
         <PersonalDetails_Fi key="s5" />,
     ]
-
+    const effectiveStep = !step2.experience && currentStep === 3 ?
+        4
+        : currentStep
     return (
         <section className="py-28 bg-red-50 overflow-x-hidden">
             {steps.map((StepComponent, i) => {
-                if (i + 1 !== currentStep) return null
+                if (i + 1 !== effectiveStep) return null
                 return (
                     <motion.div
                         key={i}

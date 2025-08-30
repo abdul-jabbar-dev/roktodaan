@@ -1,9 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+
+
+
 const initialState = {
   step: 1,
   step1: { motivation: false },
-  step2: { experience: true },
+  step2: { experience: false },
   step3: { lastDonationDate: "", lastDonationLocation: "", experience: true },
   step4: {
     bloodGroup: "",
@@ -27,12 +30,16 @@ const registerSlice = createSlice({
       state.step += 1;
     },
     prevStep: (state) => {
+      const resetStep = state.step 
+      //reset prev state
       state.step -= 1;
     },
 
     setStepData: (state, action) => {
-      const { step, data } = action.payload;
+      const { step, data } = action.payload; 
       state[`step${step}`] = { ...state[`step${step}`], ...data };
+
+      state.step = state.step + 1;
     },
 
     resetRegister: () => initialState,

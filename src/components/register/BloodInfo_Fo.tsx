@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Nibondhon from "../client/NibondhonButton";
 
 
 
@@ -122,17 +123,7 @@ export default function BloodInfo_Fo() {
             </div>
             {/* Buttons */}
             <div className="font-bold lg:text-end text-center mt-8 space-x-4">
-                <button
-                    // onClick={onBack}
-                    className="btn rounded-xl bg-gray-200 text-gray-600 hover:bg-gray-300 transition">
-                    পূর্বে
-                </button>
-                <button
-                    // onClick={() => onNext({ bloodGroup, weight, hasMedicalCondition })}
-                    className="bg-red-500 btn rounded-xl  text-white hover:bg-red-400 transition"
-                >
-                    পরবর্তী  →
-                </button>
+                 <Nibondhon step={4} />
             </div>
         </section>
     );

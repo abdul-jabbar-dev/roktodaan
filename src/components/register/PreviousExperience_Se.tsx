@@ -1,5 +1,5 @@
 import React from 'react'
-import Nibondhon from '../client/NibondhonButton' 
+import Nibondhon from '../client/NibondhonButton'
 export default function PreviousExperience_Se() {
     return (
         <section className="max-w-6xl mx-auto  px-12 xl:px-0">
@@ -24,7 +24,7 @@ export default function PreviousExperience_Se() {
 
             {/* Buttons */}
             <div className="font-bold lg:text-end text-center mt-8 space-x-4">
-               <Nibondhon state={2} />
+                <Nibondhon step={2} state={{ experience: true }} />
 
             </div>
 
