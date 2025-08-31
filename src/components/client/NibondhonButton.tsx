@@ -1,5 +1,6 @@
 'use client'
-import { nextStep, prevStep, setStepData } from '@/redux/slice/registerSlice';
+import { prevStep, setStepData } from '@/redux/slice/registerSlice';
+import validationLastDonation, { ValidationLastDonationType } from '@/validation/register/lastDonation';
 import { useDispatch } from 'react-redux';
 
 
@@ -21,7 +22,8 @@ type Step5 = {
 
 type NibondhonProps<T extends keyof StepStateMap> = {
     step: T
-    state?: StepStateMap[T]
+    state?: StepStateMap[T],
+    setError?: React.Dispatch<ValidationLastDonationType | undefined>
 }
 type StepStateMap = {
     1: Step1
@@ -33,9 +35,31 @@ type StepStateMap = {
 export default function Nibondhon<T extends keyof StepStateMap>({
     step,
     state,
+    setError
 }: NibondhonProps<T>) {
     const dispatch = useDispatch();
     // const step3 = useSelector(({ register }: { register: RegisterState }) => register.step1);
+
+    const hitNext = () => {
+        let error: ValidationLastDonationType | undefined = undefined
+
+
+
+
+        // if (step === 1) error = validationStep1(state as Step1)
+        // if (step === 2) error = validationStep2(state as Step2)
+        if (step === 3) error = validationLastDonation(state as Step3)
+        // if (step === 4) error = validationStep4(state as Step4)
+        // if (step === 5) error = validationStep5(state as Step5)
+
+        setError(error)
+
+        if (error != undefined && error.success)
+            dispatch(setStepData({ step, data: state as Step3 | Step4 | Step5 }))
+    }
+
+
+
 
 
     if (step == 1) {
@@ -62,9 +86,7 @@ export default function Nibondhon<T extends keyof StepStateMap>({
             </button>
         </>)
     } else {
-        const hitNext = () => {
-            dispatch(setStepData({ step, data: state as Step3 | Step4 | Step5 }))
-        }
+
         return (<>
 
             <button
