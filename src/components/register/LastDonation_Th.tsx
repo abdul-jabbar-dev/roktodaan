@@ -32,7 +32,7 @@ export default function LastDonation_Th() {
                             type="date"
                             className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
                         />
-                        {(error as ValidationLastDonationType).errors?.lastDonationDate && (
+                        {(error as ValidationLastDonationType)?.errors?.lastDonationDate && (
                             <p className="text-red-500 text-sm">{(error as ValidationLastDonationType).errors?.lastDonationDate?._errors[0]}</p>
                         )}
                     </div>
@@ -50,7 +50,7 @@ export default function LastDonation_Th() {
                             placeholder="যেমনঃ Dhaka Medical College"
                             className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
                         />
-                        {(error as ValidationLastDonationType).errors?.lastDonationLocation && (
+                        {(error as ValidationLastDonationType)?.errors?.lastDonationLocation && (
                             <p className="text-red-500 text-sm">{(error as ValidationLastDonationType).errors?.lastDonationLocation?._errors[0]}</p>
                         )}
                     </div>

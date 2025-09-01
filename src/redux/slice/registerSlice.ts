@@ -1,8 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
-
-
 const initialState = {
   step: 1,
   step1: { motivation: false },
@@ -30,13 +27,15 @@ const registerSlice = createSlice({
       state.step += 1;
     },
     prevStep: (state) => {
-      const resetStep = state.step 
-      //reset prev state
+      const resetStep = state.step;
       state.step -= 1;
+    },
+    updatePhoneNumber: (state, action) => {
+      state.step5.phoneNumber = action.payload;
     },
 
     setStepData: (state, action) => {
-      const { step, data } = action.payload; 
+      const { step, data } = action.payload;
       state[`step${step}`] = { ...state[`step${step}`], ...data };
 
       state.step = state.step + 1;
@@ -46,8 +45,13 @@ const registerSlice = createSlice({
   },
 });
 
-export const { nextStep, prevStep, setStepData, resetRegister } =
-  registerSlice.actions;
+export const {
+  nextStep,
+  prevStep,
+  setStepData,
+  resetRegister,
+  updatePhoneNumber,
+} = registerSlice.actions;
 
 export default registerSlice.reducer;
 export type RegisterState = typeof initialState;

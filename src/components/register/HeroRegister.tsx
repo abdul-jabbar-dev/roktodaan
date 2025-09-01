@@ -9,6 +9,7 @@ import LastDonation_Th from './LastDonation_Th'
 import BloodInfo_Fo from './BloodInfo_Fo'
 import PersonalDetails_Fi from './PersonalDetails_Fi'
 import { RegisterState } from '@/redux/slice/registerSlice';
+import Varification_Last from './Varification_Last'
 
 export default function HeroRegister() {
     const { step: currentStep, step2 } = useSelector(({ register }: { register: RegisterState }) => register)
@@ -32,6 +33,7 @@ export default function HeroRegister() {
         <LastDonation_Th key="s3" />,
         <BloodInfo_Fo key="s4" />,
         <PersonalDetails_Fi key="s5" />,
+        <Varification_Last key="s6" />,
     ]
     const effectiveStep = !step2.experience && currentStep === 3 ?
         4

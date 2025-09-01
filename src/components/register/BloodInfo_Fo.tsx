@@ -1,15 +1,21 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Nibondhon from "../client/NibondhonButton";
+import BloodGroup from "@/types/blood/group";
+import { ValidationBloodInfoType } from "@/validation/register/bloodInfo";
 
 
 
 export default function BloodInfo_Fo() {
 
-    const [bloodGroup, setBloodGroup] = useState("");
-    const [weight, setWeight] = useState("");
-    const [hasMedicalCondition, setHasMedicalCondition] = useState(false);
+    const [bloodInfoError, setBloodInfoError] = useState<ValidationBloodInfoType | undefined>(undefined)
+    const [bloodGroup, setBloodGroup] = useState<BloodGroup>("A+");
+    const [weight, setWeight] = useState(0);
+    const [age, setAge] = useState(0);
 
+    useEffect(() => {
+        console.log(bloodInfoError)
+    }, [bloodInfoError])
     return (
         <section className="max-w-6xl mx-auto  px-12 xl:px-0">
             <div className="lg:w-4/5 w-full">
@@ -29,15 +35,15 @@ export default function BloodInfo_Fo() {
                     {/* Blood Group */}
                     <div>
                         <label className="block text-gray-700 font-medium mb-2">
-                            রক্তের গ্রুপ
+                            রক্তের গ্রুপ <sup className="text-xs text-neutral">*</sup>
                         </label>
                         <select
-                            className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
-                            value={bloodGroup}
-                            onChange={(e) => setBloodGroup(e.target.value)}
+                            className="w-full border validator border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                            value={bloodGroup as BloodGroup}
+                            onChange={(e) => setBloodGroup(e.target.value as BloodGroup)}
                         >
                             <option disabled className="text-gray-400" value="">রক্তের গ্রুপ নির্বাচন করুন</option>
-                            <option value="A+">A+</option>
+                            <option defaultChecked value="A+">A+</option>
                             <option value="A-">A-</option>
                             <option value="B+">B+</option>
                             <option value="B-">B-</option>
@@ -46,33 +52,46 @@ export default function BloodInfo_Fo() {
                             <option value="O+">O+</option>
                             <option value="O-">O-</option>
                         </select>
+                        {(bloodInfoError as ValidationBloodInfoType)?.errors?.bloodGroup && (
+                            <p className="text-red-500 text-sm">{(bloodInfoError as ValidationBloodInfoType).errors?.bloodGroup?._errors[0] == "Invalid input" ? "আপনার রক্ত গ্রুপ নির্বাচন করুন" : (bloodInfoError as ValidationBloodInfoType).errors?.bloodGroup?._errors[0]}</p>
+                        )}
                     </div>
 
                     {/* Weight */}
                     <div className="flex item-center gap-x-4">
                         <div className="w-4/6">
                             <label className="block text-gray-700 font-medium mb-2">
-                                আপনার বয়স
+                                আপনার বয়স <sup className="text-xs text-neutral">*</sup>
                             </label>
                             <input
                                 type="number"
+                                required
                                 placeholder="আপনার বয়স কত ?"
-                                className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
-                                value={weight}
-                                onChange={(e) => setWeight(e.target.value)}
+                                className="w-full border validator border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                                value={age}
+                                onChange={(e) => setAge(Number(e.target.value))}
                             />
+                            {(bloodInfoError as ValidationBloodInfoType)?.errors?.age && (
+                                <p className="text-red-500 text-sm">{(bloodInfoError as ValidationBloodInfoType).errors?.age?._errors[0]}</p>
+                            )}
                         </div>
                         <div className="w-2/6">
                             <label className="block text-gray-700 font-medium mb-2">
-                                আপনার ওজন
+                                আপনার ওজন <sup className="text-xs text-neutral">*</sup>
                             </label>
                             <input
+                                min={18}
+                                max={65}
+                                required
                                 type="number"
                                 placeholder="আপনার ওজন কত ?"
-                                className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                                className="w-full border validator border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
                                 value={weight}
-                                onChange={(e) => setWeight(e.target.value)}
+                                onChange={(e) => setWeight(Number(e.target.value))}
                             />
+                            {(bloodInfoError as ValidationBloodInfoType)?.errors?.weight && (
+                                <p className="text-red-500 text-sm">{(bloodInfoError as ValidationBloodInfoType).errors?.weight?._errors[0]}</p>
+                            )}
                         </div>
 
                     </div>
@@ -123,7 +142,7 @@ export default function BloodInfo_Fo() {
             </div>
             {/* Buttons */}
             <div className="font-bold lg:text-end text-center mt-8 space-x-4">
-                 <Nibondhon step={4} />
+                <Nibondhon step={4} state={{ age, bloodGroup: bloodGroup!, weight }} setError={setBloodInfoError} />
             </div>
         </section>
     );
