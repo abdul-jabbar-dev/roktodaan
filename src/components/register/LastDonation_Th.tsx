@@ -2,10 +2,15 @@
 import React, { useState, useEffect } from 'react'
 import Nibondhon from '../client/NibondhonButton'
 import { ValidationLastDonationType } from '@/validation/register/lastDonation';
+import { useSelector } from 'react-redux'
+import { RegisterState } from '@/redux/slice/registerSlice';
 export default function LastDonation_Th() {
+    const { step, step3: { experience, lastDonationDate, lastDonationLocation } } = useSelector(
+        ({ register }: { register: RegisterState }) => register
+    ) 
     const [lastDonation, setLastDonation] = useState({
-        lastDonationDate: "",
-        lastDonationLocation: ""
+        lastDonationDate: lastDonationDate,
+        lastDonationLocation: lastDonationLocation
     });
     const [error, setError] = useState<ValidationLastDonationType | undefined>(undefined);
     useEffect(() => {

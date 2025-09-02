@@ -1,6 +1,37 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState = {
+type Address = {
+  division: string;
+  district: string;
+  upazila: string;
+};
+
+type Step1 = { motivation: boolean };
+type Step2 = { experience: boolean };
+type Step3 = {
+  lastDonationDate: string;
+  lastDonationLocation: string;
+  experience: boolean;
+};
+type Step4 = { bloodGroup: string; weight: number; age: number };
+type Step5 = {
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  gender: string;
+  address: Address;
+};
+
+type RegisterState = {
+  step: number;
+  step1: Step1;
+  step2: Step2;
+  step3: Step3;
+  step4: Step4;
+  step5: Step5;
+  userData: unknown;
+};
+const initialState: RegisterState = {
   step: 1,
   step1: { motivation: false },
   step2: { experience: false },
@@ -17,6 +48,7 @@ const initialState = {
     gender: "",
     address: { division: "", district: "", upazila: "" },
   },
+  userData: {},
 };
 
 const registerSlice = createSlice({
@@ -27,18 +59,52 @@ const registerSlice = createSlice({
       state.step += 1;
     },
     prevStep: (state) => {
-      const resetStep = state.step;
-      state.step -= 1;
+      if (state.step > 1) state.step -= 1; // negative হওয়া ঠেকানোর জন্য
     },
-    updatePhoneNumber: (state, action) => {
+    updatePhoneNumber: (state, action: PayloadAction<string>) => {
       state.step5.phoneNumber = action.payload;
     },
 
-    setStepData: (state, action) => {
+    setStepData: (
+      state,
+      action: PayloadAction<{ step: number; data: unknown }>
+    ) => {
       const { step, data } = action.payload;
-      state[`step${step}`] = { ...state[`step${step}`], ...data };
+      const stepKey = `step${step}` as keyof RegisterState;
 
-      state.step = state.step + 1;
+      if (state[stepKey] && typeof state[stepKey] === "object") {
+        state[stepKey] = { ...(state[stepKey] as object), ...data } as unknown;
+      }
+
+      state.step += 1;
+    },
+
+    setUserData: (state) => {
+      return {
+        ...initialState,
+        userData: {
+          profile: {
+            fullName: state.step5.fullName,
+            age: state.step4.age,
+            phoneNumber: state.step5.phoneNumber,
+            gender: state.step5.gender,
+            email: state.step5.email,
+            weight: state.step4.weight,
+          },
+          bloodGroup: state.step4.bloodGroup,
+          experience: state.step3.experience
+            ? {
+                lastDonationDate: state.step3.lastDonationDate,
+                lastDonationLocation: state.step3.lastDonationLocation,
+              }
+            : false,
+          address: {
+            division: state.step5.address.division,
+            district: state.step5.address.district,
+            upazila: state.step5.address.upazila,
+          },
+        },
+      };
     },
 
     resetRegister: () => initialState,
@@ -51,7 +117,7 @@ export const {
   setStepData,
   resetRegister,
   updatePhoneNumber,
+  setUserData,
 } = registerSlice.actions;
-
+export type { RegisterState };
 export default registerSlice.reducer;
-export type RegisterState = typeof initialState;

@@ -1,11 +1,11 @@
 'use client'
-import { RegisterState, updatePhoneNumber } from '@/redux/slice/registerSlice';
+import { RegisterState, setUserData, updatePhoneNumber } from '@/redux/slice/registerSlice';
 import { PencilIcon } from 'lucide-react';
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function Varification_Last() {
-    const { step: currentStep, step5 } = useSelector(({ register }: { register: RegisterState }) => register)
+  const { step5 } = useSelector(({ register }: { register: RegisterState }) => register)
   const [otp, setOtp] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [otpPhoneNumber, setOtpPhoneNumber] = useState(step5.phoneNumber);
@@ -13,14 +13,16 @@ export default function Varification_Last() {
   const dispatch = useDispatch()
 
   const handleSubmit = () => {
-    // TODO: otpSchema দিয়ে validate করো
     if (!otp) {
       setError("অবশ্যই OTP লিখতে হবে");
       return;
     }
 
-    console.log("OTP Verified:", data);
+    console.log("OTP Verified:");
     setError(null);
+    dispatch(setUserData())
+
+
   };
   const setPhone = () => {
     dispatch(updatePhoneNumber(otpPhoneNumber))

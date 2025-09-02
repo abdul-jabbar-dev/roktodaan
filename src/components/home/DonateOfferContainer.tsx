@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link';
 import React from 'react';
 
 export default function DonateOfferContainer() {
@@ -553,9 +554,11 @@ export default function DonateOfferContainer() {
                 <p className="text-lg text-gray-600 mb-8">
                     আপনার একটি ছোট দান কারো জীবন বাঁচাতে পারে। আমরা আপনাকে আমন্ত্রণ জানাচ্ছি রক্তদানের জন্য। এটি সহজ, নিরাপদ এবং সবার জন্য উপকারী। আপনার অবদান মানবতার জন্য মহৎ কাজ হবে।
                 </p>
+                <Link href="/register">
                 <button className="bg-red-600 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg hover:bg-red-800 transition duration-300">
                     এখনই দান করুন
                 </button>
+                </Link>
                 <p className="mt-4 text-sm text-gray-500">
                     দয়া করে নিশ্চিত করুন যে আপনি সুস্থ এবং রক্তদানের জন্য উপযুক্ত।
                 </p>

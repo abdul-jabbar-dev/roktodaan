@@ -3,15 +3,20 @@ import { useEffect, useState } from "react";
 import Nibondhon from "../client/NibondhonButton";
 import BloodGroup from "@/types/blood/group";
 import { ValidationBloodInfoType } from "@/validation/register/bloodInfo";
-
+import { useSelector } from 'react-redux'
+import { RegisterState } from '@/redux/slice/registerSlice';
 
 
 export default function BloodInfo_Fo() {
+    const { step, step4} = useSelector(
+        ({ register }: { register: RegisterState }) => register
+    ) 
+
 
     const [bloodInfoError, setBloodInfoError] = useState<ValidationBloodInfoType | undefined>(undefined)
-    const [bloodGroup, setBloodGroup] = useState<BloodGroup>("A+");
-    const [weight, setWeight] = useState(0);
-    const [age, setAge] = useState(0);
+    const [bloodGroup, setBloodGroup] = useState<BloodGroup>((step4.bloodGroup as BloodGroup)||"A+");
+    const [weight, setWeight] = useState(Number(step4.weight)|0);
+    const [age, setAge] = useState(Number(step4.age)||0);
 
     useEffect(() => {
         console.log(bloodInfoError)

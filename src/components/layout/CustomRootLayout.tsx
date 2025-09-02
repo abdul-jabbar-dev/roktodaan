@@ -1,21 +1,26 @@
 'use client'
 import { Droplet } from 'lucide-react'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
+import { useSelector } from 'react-redux'
+import { RegisterState } from '@/redux/slice/registerSlice'
 export default function CustomRootLayout() {
-  const [user] = useState({ id: null })
 
+
+  const { userData } = useSelector(
+    ({ register }: { register: RegisterState }) => register
+  )
   return (
 
     <div className=" bg-base-100 shadow-sm  ">
       <div className="container mx-auto navbar">
         <div className="flex-1">
-          <a className=" cursor-pointer text-red-500 font-extrabold text-xl">রক্তদান</a>
+          <Link href="/" className=" cursor-pointer text-red-500 font-extrabold text-xl">রক্তদান</Link>
         </div>
         <div className="flex gap-2">
 
-          {user.id ? <div className="dropdown dropdown-end">
+          {userData?.profile?.fullName ? <div className="dropdown dropdown-end">
 
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
 
@@ -31,10 +36,9 @@ export default function CustomRootLayout() {
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
               <li>
-                <a className="justify-between">
+                <Link href="/profile">
                   Profile
-                  <span className="badge">New</span>
-                </a>
+                </Link>
               </li>
               <li><a>Settings</a></li>
               <li><a>Logout</a></li>
@@ -46,6 +50,13 @@ export default function CustomRootLayout() {
               <button className="btn btn-lg text-red-400  no-underline underline-offset-4  btn-link ">
                 <Droplet className='text-red-400' />
                 রক্তদাতা হোন
+              </button></Link>
+
+            <Link
+              href="/profile">
+              <button className="btn btn-lg text-red-400  no-underline underline-offset-4  btn-link ">
+                <Droplet className='text-red-400' />
+                profile
               </button></Link>
 
           </div>}

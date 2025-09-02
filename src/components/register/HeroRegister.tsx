@@ -12,7 +12,10 @@ import { RegisterState } from '@/redux/slice/registerSlice';
 import Varification_Last from './Varification_Last'
 
 export default function HeroRegister() {
-    const { step: currentStep, step2 } = useSelector(({ register }: { register: RegisterState }) => register)
+    const { step: currentStep, step2, userData } = useSelector(
+        ({ register }: { register: RegisterState }) => register
+    )
+
     const [prevStep, setPrevStep] = useState(currentStep)
 
     useEffect(() => {
@@ -22,7 +25,7 @@ export default function HeroRegister() {
     const direction = currentStep > prevStep ? 1 : -1
 
     const stepVariants = {
-        hidden: { opacity: 0, x: 100 * direction },   // right or left start
+        hidden: { opacity: 0, x: 100 * direction },
         visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } },
         exit: { opacity: 0, x: -100 * direction, transition: { duration: 0.4 } }
     }
@@ -35,26 +38,32 @@ export default function HeroRegister() {
         <PersonalDetails_Fi key="s5" />,
         <Varification_Last key="s6" />,
     ]
-    const effectiveStep = !step2.experience && currentStep === 3 ?
-        4
+
+    // যদি step2.experience না থাকে আর currentStep = 3 হয় → তখন skip করে 4 এ যাবে
+    const effectiveStep = !step2.experience && currentStep === 3
+        ? 4
         : currentStep
+
     return (
         <section className="py-28 bg-red-50 overflow-x-hidden">
-            {steps.map((StepComponent, i) => {
-                if (i + 1 !== effectiveStep) return null
-                return (
-                    <motion.div
-                        key={i}
-                        variants={stepVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        className="mb-10"
-                    >
-                        {StepComponent}
-                    </motion.div>
-                )
-            })}
+            {steps.slice(effectiveStep - 1, effectiveStep).map((StepComponent, i) => (
+                <motion.div
+                    key={effectiveStep} // step অনুযায়ী key change হবে
+                    variants={stepVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="mb-10"
+                >
+                    {StepComponent}
+                </motion.div>
+            ))}
+
+            {userData?.profile?.fullName && (
+                <p className="text-center mt-5">
+                    Welcome, {userData?.profile.fullName}!
+                </p>
+            )}
         </section>
     )
 }

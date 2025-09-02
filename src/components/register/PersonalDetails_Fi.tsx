@@ -4,18 +4,42 @@ import React, { useState, useEffect } from 'react'
 import Nibondhon from '../client/NibondhonButton'
 import { Division, District, Upazila } from '@/types/location/destination';
 import { ValidationPersonalInfoType } from '@/validation/register/personalInfo';
+import { useSelector } from 'react-redux'
+import { RegisterState } from '@/redux/slice/registerSlice';
+
 export default function PersonalDetails_Fi() {
 
-    const [personalInfoError, setPersonalInfoError] = useState<ValidationPersonalInfoType>()
-    const [selectedDivision, setSelectedDivision] = useState<{ id: number, name: string } | null>(null);
-    const [selectedDistrict, setSelectedDistrict] = useState<{ id: number, name: string } | null>(null);
-    const [selectedUpazila, setSelectedUpazila] = useState<{ id: number, name: string } | null>(null);
-    const [personalInfo, setPersonalInfo] = useState<{ fullName: string, email?: string, phoneNumber: string, gender: 'Male' | 'Female' }>
-        ({ fullName: "", phoneNumber: "", gender: 'Male' })
+    const { step5 } = useSelector(
+        ({ register }: { register: RegisterState }) => register
+    )
+
 
     const [division, setDivision] = useState<Division[]>([]);
     const [district, setDistrict] = useState<District[]>([]);
     const [upazila, setUpazila] = useState<Upazila[]>([]);
+
+    const [personalInfoError, setPersonalInfoError] = useState<ValidationPersonalInfoType>()
+
+    const [selectedDivision, setSelectedDivision] = useState<{ id: number; name: string } | null>(() => {
+        const match = division.find(e => e.name === step5.address.division);
+        return match ? { id: match.id, name: match.name } : null;
+    });
+
+    const [selectedDistrict, setSelectedDistrict] = useState<{ id: number; name: string } | null>(() => {
+        const match = district.find(e => e.name === step5.address.district);
+        return match ? { id: match.id, name: match.name } : null;
+    });
+
+    const [selectedUpazila, setSelectedUpazila] = useState<{ id: number; name: string } | null>(() => {
+        const match = upazila.find(e => e.name === step5.address.upazila);
+        return match ? { id: match.id, name: match.name } : null;
+    });
+
+
+    const [personalInfo, setPersonalInfo] = useState<{ fullName: string, email?: string, phoneNumber: string, gender: 'Male' | 'Female' }>
+        ({ fullName: step5.fullName, phoneNumber: step5.phoneNumber, gender: (step5.gender as 'Male' | 'Female') || 'Male' })
+
+
     useEffect(() => {
         fetch('/api/location/division.json')
             .then(res => res.json())
