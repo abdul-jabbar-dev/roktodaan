@@ -12,7 +12,7 @@ import { RegisterState } from '@/redux/slice/registerSlice';
 import Varification_Last from './Varification_Last'
 
 export default function HeroRegister() {
-    const { step: currentStep, step2, userData } = useSelector(
+    const { step: currentStep, step2 } = useSelector(
         ({ register }: { register: RegisterState }) => register
     )
 
@@ -59,11 +59,11 @@ export default function HeroRegister() {
                 </motion.div>
             ))}
 
-            {userData?.profile?.fullName && (
+            {/* {userData?.profile?.fullName && (
                 <p className="text-center mt-5">
                     Welcome, {userData?.profile.fullName}!
                 </p>
-            )}
+            )} */}
         </section>
     )
 }

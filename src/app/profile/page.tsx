@@ -3,7 +3,7 @@ import { RegisterState } from '@/redux/slice/registerSlice'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-export default function page() {
+export default function Page() {
 
     const { userData } = useSelector(
         ({ register }: { register: RegisterState }) => register

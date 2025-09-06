@@ -20,6 +20,7 @@ type Step5 = {
   phoneNumber: string;
   gender: string;
   address: Address;
+  credential: { password: string };
 };
 
 type RegisterState = {
@@ -42,6 +43,7 @@ const initialState: RegisterState = {
     age: 0,
   },
   step5: {
+    credential: { password: "" },
     fullName: "",
     email: "",
     phoneNumber: "",
@@ -71,40 +73,48 @@ const registerSlice = createSlice({
     ) => {
       const { step, data } = action.payload;
       const stepKey = `step${step}` as keyof RegisterState;
-
+ 
       if (state[stepKey] && typeof state[stepKey] === "object") {
-        state[stepKey] = { ...(state[stepKey] as object), ...data } as unknown;
+        (state as Record<typeof stepKey, unknown>)[stepKey] = {
+          ...(state[stepKey] as object),
+          ...(data as object),
+        } as unknown;
       }
 
       state.step += 1;
     },
 
     setUserData: (state) => {
-      return {
-        ...initialState,
-        userData: {
-          profile: {
-            fullName: state.step5.fullName,
-            age: state.step4.age,
-            phoneNumber: state.step5.phoneNumber,
-            gender: state.step5.gender,
-            email: state.step5.email,
-            weight: state.step4.weight,
-          },
+      const userData = {
+        credential: { password: state.step5.credential.password },
+        profile: {
+          fullName: state.step5.fullName,
+          age: state.step4.age,
+          phoneNumber: state.step5.phoneNumber,
+          gender: state.step5.gender,
+          email: state.step5.email,
+          weight: state.step4.weight,
           bloodGroup: state.step4.bloodGroup,
-          experience: state.step3.experience
-            ? {
+        },
+        experience: state.step3.experience
+          ? [
+              {
                 lastDonationDate: state.step3.lastDonationDate,
                 lastDonationLocation: state.step3.lastDonationLocation,
-              }
-            : false,
-          address: {
-            division: state.step5.address.division,
-            district: state.step5.address.district,
-            upazila: state.step5.address.upazila,
-          },
+              },
+            ]
+          : [],
+        address: {
+          division: state.step5.address.division,
+          district: state.step5.address.district,
+          upazila: state.step5.address.upazila,
         },
       };
+
+      // Object.assign(state, initialState);
+
+      // userData আলাদা করে বসাও
+      state.userData = userData;
     },
 
     resetRegister: () => initialState,

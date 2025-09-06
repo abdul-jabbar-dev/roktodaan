@@ -1,10 +1,12 @@
 'use client'
-import { RegisterState, setUserData, updatePhoneNumber } from '@/redux/slice/registerSlice';
+import { RegisterState, updatePhoneNumber, prevStep } from '@/redux/slice/registerSlice';
 import { PencilIcon } from 'lucide-react';
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
+
 export default function Varification_Last() {
+  
   const { step5 } = useSelector(({ register }: { register: RegisterState }) => register)
   const [otp, setOtp] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -18,9 +20,8 @@ export default function Varification_Last() {
       return;
     }
 
-    console.log("OTP Verified:");
+
     setError(null);
-    dispatch(setUserData())
 
 
   };
@@ -76,7 +77,12 @@ export default function Varification_Last() {
           আপনার অ্যাকাউন্টের সুরক্ষা নিশ্চিত করতে সঠিক OTP প্রবেশ করুন।
         </p>
       </div>
-
+      <button
+        onClick={() => dispatch(prevStep())}
+        className="btn rounded-xl bg-gray-200 text-gray-600 hover:bg-gray-300 transition"
+      >
+        পূর্বে
+      </button>
       {/* OTP Input */}
       {!edit && (
         <div className="lg:text-end text-center mt-8">

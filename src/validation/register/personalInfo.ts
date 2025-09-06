@@ -20,6 +20,7 @@ const personalInfoSchema = z.object({
     district: requiredString("জেলা অবশ্যই দিতে হবে"),
     upazila: requiredString("উপজেলা অবশ্যই দিতে হবে"),
   }),
+    credential:z.object({ password: requiredString("পাসওয়ার্ড অবশ্যই দিতে হবে") })
 });
 
 // Validation function
@@ -33,7 +34,9 @@ const validationPersonalInfo = (params: {
     district: string;
     upazila: string;
   };
+    credential: { password: string}
 }) => {
+ 
   const result = personalInfoSchema.safeParse(params);
 
   if (!result.success) {
