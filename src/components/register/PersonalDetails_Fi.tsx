@@ -7,6 +7,7 @@ import { prevStep, setStepData, setUserData } from "@/redux/slice/registerSlice"
 import validationPersonalInfo, { ValidationPersonalInfoType } from "@/validation/register/personalInfo";
 import { store } from "@/redux/store";
 import URLS from "@/config";
+import { setUserDataFetch } from "@/redux/slice/userSlice";
 
 function validatePassword(password: string): string[] {
   const errors: string[] = [];
@@ -61,7 +62,7 @@ function useLocationSelect(step5Address: { division: string; district: string; u
 
 export default function PersonalDetails_Fi() {
   const dispatch = useDispatch();
-  const { step5, userData ,} = useSelector(({ register }: { register: RegisterState }) => register);
+  const { step5 } = useSelector(({ register }: { register: RegisterState }) => register);
 
   const [personalInfo, setPersonalInfo] = useState({
     fullName: step5.fullName,
@@ -97,9 +98,7 @@ export default function PersonalDetails_Fi() {
     setPersonalInfoError(err);
 
     if (!err.success) return;
-
-    console.log(err)
-    // Redux save
+ 
     dispatch(setStepData({ step: 5, data: userProfile }));
     dispatch(setUserData());
     const currentUserData = (store.getState() as { register: RegisterState }).register.userData;
@@ -119,7 +118,22 @@ export default function PersonalDetails_Fi() {
         }
 
         const data = await res.json();
-        console.log(data)
+        if (data.user.id) {
+          const localData = {
+            token: data.token as string,
+            user: {
+              id: data.user.id,
+              fullName: data.user.profile.fullName,
+              phoneNumber: data.user.profile.phoneNumber,
+              bloodGroup: data.user.profile.bloodGroup
+            },
+            fetchedAt: Date.now()
+          };
+ 
+          dispatch(setUserDataFetch(data.user));
+
+          localStorage.setItem(URLS.LOCAL_STORE.SET_USER, JSON.stringify(localData));
+        }
         if (data.error) {
           setGlobalError(data);
         } else {
@@ -136,8 +150,7 @@ export default function PersonalDetails_Fi() {
 
   // Auto hide success/error
   useEffect(() => { if (success) { const t = setTimeout(() => setSuccess(false), 3000); return () => clearTimeout(t); } }, [success]);
-  useEffect(() => { if (Object.keys(globalError).length > 0) { const t = setTimeout(() => setGlobalError({}), 3000); return () => clearTimeout(t); } }, [globalError]);
-  useEffect(() => { }, []);
+  useEffect(() => { if (Object.keys(globalError).length > 0) { const t = setTimeout(() => setGlobalError({}), 3000); return () => clearTimeout(t); } }, [globalError]); 
 
   return (
     <section className="max-w-6xl mx-auto px-12 xl:px-0">
@@ -325,7 +338,7 @@ export default function PersonalDetails_Fi() {
       {/* Buttons */}
       <div className="mt-8 text-center lg:text-end flex justify-center lg:justify-end gap-4">
         <button onClick={() => dispatch(prevStep())} className="btn rounded-xl bg-gray-200 text-gray-600 hover:bg-gray-300 transition">← পূর্বে</button>
-        <button onClick={createUser} className="btn rounded-xl bg-red-500 text-white hover:bg-red-400 transition">পরবর্তী →</button> 
+        <button onClick={createUser} className="btn rounded-xl bg-red-500 text-white hover:bg-red-400 transition">পরবর্তী →</button>
       </div>
 
       {/* Success / Error */}

@@ -73,7 +73,7 @@ const registerSlice = createSlice({
     ) => {
       const { step, data } = action.payload;
       const stepKey = `step${step}` as keyof RegisterState;
- 
+
       if (state[stepKey] && typeof state[stepKey] === "object") {
         (state as Record<typeof stepKey, unknown>)[stepKey] = {
           ...(state[stepKey] as object),

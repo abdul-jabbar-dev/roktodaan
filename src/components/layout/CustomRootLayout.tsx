@@ -3,14 +3,15 @@ import { Droplet } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 import Link from 'next/link'
-import { useSelector } from 'react-redux'
-import { RegisterState } from '@/redux/slice/registerSlice'
+import { useSelector } from 'react-redux' 
+import { UserState } from '@/redux/slice/userSlice'
+import { useUser } from '@/redux/hook/userHook'
+
 export default function CustomRootLayout() {
+  const user = useSelector(({ user }: { user: UserState }) => user)
+ 
+  useUser() 
 
-
-  const { userData } = useSelector(
-    ({ register }: { register: RegisterState }) => register
-  )
   return (
 
     <div className=" bg-base-100 shadow-sm  ">
@@ -20,7 +21,7 @@ export default function CustomRootLayout() {
         </div>
         <div className="flex gap-2">
 
-          {userData?.profile?.fullName ? <div className="dropdown dropdown-end">
+          {user?.profile?.fullName ? <div className="dropdown dropdown-end">
 
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
 
