@@ -1,55 +1,93 @@
-import React from 'react'
-import { UserState } from '@/redux/slice/userSlice'
-export default function Profile({ user }: { user: UserState }) {
+import { UserState } from "@/redux/slice/userSlice";
+import React, { useEffect } from "react";
+import CDInputToText from "../ui/CDInputToText";
+import CDSelectToText from "../ui/CDSelectToText";
+
+export default function Profile({ user, edit, setUser }: { user: UserState; edit: boolean, setUser: React.Dispatch<React.SetStateAction<UserState>> }) {
+  useEffect(() => {
+    console.log(user)
+  }, [user])
   return (
     <div className="bg-white p-3 shadow-sm rounded-xl">
       <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
-        <span className="text-red-500">
-          <svg className="h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        <span className="text-gray-500">
+          <svg
+            className="h-5"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            />
           </svg>
         </span>
         <span className="tracking-wide">About</span>
       </div>
       <div className="text-gray-700">
         <div className="grid md:grid-cols-2 text-sm">
-          <div className="grid grid-cols-2">
-            <div className="px-4 py-2 font-semibold">Full Name</div>
-            <div className="px-4 py-2">{user?.profile?.fullName}</div>
-          </div>
-          <div className="grid grid-cols-2">
-            <div className="px-4 py-2 font-semibold">Gender</div>
-            <div className="px-4 py-2">{user?.profile?.gender}</div>
-          </div>
-          <div className="grid grid-cols-2">
-            <div className="px-4 py-2 font-semibold">Contact No.</div>
-            <div className="px-4 py-2">{user?.profile?.phoneNumber}</div>
-          </div>
-          <div className="grid grid-cols-2">
-            <div className="px-4 py-2 font-semibold">Current Address</div>
-            <div className="px-4 py-2">Beech Creek, PA, Pennsylvania</div>
-          </div>
-          <div className="grid grid-cols-2">
-            <div className="px-4 py-2 font-semibold">Weight</div>
-            <div className="px-4 py-2">{user?.profile?.weight}</div>
-          </div>
-          <div className="grid grid-cols-2">
-            <div className="px-4 py-2 font-semibold">Email.</div>
-            <div className="px-4 py-2">
-              <a className="text-blue-800" href={"mailto:" + user?.profile?.fullName}>{user?.profile?.email || "Not Set"}</a>
-            </div>
-          </div>
-          <div className="grid grid-cols-2">
-            <div className="px-4 py-2 font-semibold">Birthday</div>
-            <div className="px-4 py-2">Feb 06, 1998</div>
-          </div>
+          {CDInputToText({
+            label: "Contact No.", value: user?.profile?.phoneNumber, edit, name: "phoneNumber", onChange: (e => {
+              setUser((prev) => ({
+                ...prev,
+                profile: {
+                  ...prev.profile,
+                  phoneNumber: e.target.value,
+                },
+              }))
+            })
+          })}
+          {CDInputToText({ label: "Current Address", value: user?.address?.district, edit, name: "address", onChange: (e => { }) })}
+          {CDSelectToText({
+            label: "Gender",
+            value: user?.profile?.gender,
+            edit: edit,
+            name: "gender",
+            options: [
+
+              { label: "Male", value: "Male" },
+              { label: "Female", value: "Female" },
+            ],
+            onChange: (e => {
+              setUser((prev) => ({
+                ...prev,
+                profile: {
+                  ...prev.profile,
+                  gender: e.target.value,
+                },
+              }))
+            })
+
+          })}
+          {CDInputToText({
+            label: "Weight", value: user?.profile?.weight, edit, name: "weight", onChange: (e => {
+              setUser((prev) => ({
+                ...prev,
+                profile: {
+                  ...prev.profile,
+                  weight: Number(e.target.value),
+                },
+              }))
+            })
+          })}
+          {CDInputToText({
+            label: "Email", value: user?.profile?.email, edit, name: "email", onChange: (e => {
+              setUser((prev) => ({
+                ...prev,
+                profile: {
+                  ...prev.profile,
+                  email: e.target.value,
+                },
+              }))
+            })
+          })}
+          {CDInputToText({ label: "Birthday ", value: "Feb 06, 1998", edit, name: "birthday", onChange: (e => { }) })}
         </div>
       </div>
-      {/* <button
-                                className="block w-full text-blue-800 text-sm font-semibold rounded-xl hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:bg-gray-100 hover:shadow-xs p-3 my-4">Show
-                                Full Information</button> */}
     </div>
-  )
+  );
 }

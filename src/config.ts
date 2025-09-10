@@ -1,16 +1,21 @@
 const SERVER_URL = "http://localhost:5555";
-const USER_KEY = "uck"
+const USER_KEY = "uck";
 
 // Base API
 const API_BASE = "api";
 
 // User endpoints
 const USER_BASE = `${SERVER_URL}/${API_BASE}/user`;
+const MEDIA_BASE = `${SERVER_URL}/${API_BASE}/media`;
 
 const URLS = {
-  LOCAL_STORE:{SET_USER:USER_KEY},
+  LOCAL_STORE: { SET_USER: USER_KEY },
   SERVER_URL,
-
+  CLOUDINARY_URL: "https://api.cloudinary.com/v1_1/dnkwv76h3/upload",
+  MEDIA: {
+    DELETE_MEDIA: (public_id: string) =>
+      `${MEDIA_BASE}/delete/?public_id=${public_id}`,
+  },
   USER: {
     GET_USERS: `${USER_BASE}/get_users`,
     GET_MY_PROFILE: `${USER_BASE}/me`,
@@ -18,6 +23,8 @@ const URLS = {
       `${USER_BASE}/exist_user/${number}`,
     CREATE_USER: `${USER_BASE}/create_user`,
     GET_USER: (user_id: string | number) => `${USER_BASE}/get_user/${user_id}`,
+    UPDATE_PASSWORD: `${USER_BASE}/update_password`,
+    UPDATE_USER: `${USER_BASE}/update_profile`,
   },
 };
 
