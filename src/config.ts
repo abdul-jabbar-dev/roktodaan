@@ -17,6 +17,7 @@ const URLS = {
       `${MEDIA_BASE}/delete/?public_id=${public_id}`,
   },
   USER: {
+    
     GET_USERS: `${USER_BASE}/get_users`,
     GET_MY_PROFILE: `${USER_BASE}/me`,
     GET_EXIST_USER: (number: string | number) =>
@@ -25,6 +26,8 @@ const URLS = {
     GET_USER: (user_id: string | number) => `${USER_BASE}/get_user/${user_id}`,
     UPDATE_PASSWORD: `${USER_BASE}/update_password`,
     UPDATE_USER: `${USER_BASE}/update_profile`,
+    UPDATE_ADDRESS: `${USER_BASE}/update_address`,
+    UPDATE_EXPERIANCE: `${USER_BASE}/update_experiance`,
   },
 };
 

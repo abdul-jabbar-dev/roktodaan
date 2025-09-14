@@ -6,6 +6,7 @@ type Props = {
   edit: boolean;
   name: string;
   placeholder?: string;
+  error?: boolean;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   className?: string;
 };
@@ -14,6 +15,7 @@ export default function CDInputToText({
   label,
   placeholder,
   value,
+  error = false,
   edit,
   name,
   onChange,
@@ -33,7 +35,10 @@ export default function CDInputToText({
             className={`w-full border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 ${className}`}
           />
         ) : (
-          <span>{value || "Not Set"}</span>
+          <span>
+            {value ? (error ? <span className="text-red-500">{value}</span> : value) : "Not Set"}
+          </span>
+
         )}
       </div>
     </div>

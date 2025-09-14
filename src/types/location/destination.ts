@@ -12,7 +12,8 @@ export type District = {
 };
 export type Division = { id: number; name: string; bn_name: string };
 export type Location = {
-  district: District;
-  division: Division;
-  upazila: Upazila;
+  area?:string;
+  district: District|string;
+  division: Division|string;
+  upazila: Upazila|string;
 };

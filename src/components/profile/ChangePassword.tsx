@@ -72,9 +72,9 @@ const ChangePassword = () => {
     };
 
     return (
-        <div className="bg-white p-3 shadow-sm rounded-xl relative">
-            <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
-                <span className="text-gray-500">
+        <div className=" bg-gray-50  p-3 shadow-sm rounded-xl relative">
+            <div className="flex items-center space-x-2 font-semibold text-gray-800 leading-8">
+                <span className="text-gray-600">
                     <KeyRound className="h-[16px]" />
                 </span>
                 <span className="tracking-wide">Password</span>

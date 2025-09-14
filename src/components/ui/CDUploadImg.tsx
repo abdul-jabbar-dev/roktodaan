@@ -73,7 +73,7 @@ const CDUploadImg = (
                     ) : (
                         <img
                             src={
-                                user.profile.img ||
+                                user?.profile?.img ||
                                 "https://res.cloudinary.com/dnkwv76h3/image/upload/v1757350374/roktodan/hvt5xegpafmeix4thrjp.png"
                             }
                             width="100%"
@@ -86,7 +86,7 @@ const CDUploadImg = (
 
                     <img
                         src={
-                            user.profile.img ||
+                            user?.profile?.img ||
                             "https://res.cloudinary.com/dnkwv76h3/image/upload/v1757350374/roktodan/hvt5xegpafmeix4thrjp.png"
                         }
                         width="100%"

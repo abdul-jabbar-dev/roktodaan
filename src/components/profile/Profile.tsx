@@ -8,9 +8,9 @@ export default function Profile({ user, edit, setUser }: { user: UserState; edit
     console.log(user)
   }, [user])
   return (
-    <div className="bg-white p-3 shadow-sm rounded-xl">
-      <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
-        <span className="text-gray-500">
+    <div className="bg-gray-50  p-3 shadow-sm rounded-xl">
+      <div className="flex items-center space-x-2 font-semibold text-gray-800 leading-8">
+        <span className="text-gray-600">
           <svg
             className="h-5"
             xmlns="http://www.w3.org/2000/svg"
@@ -30,17 +30,24 @@ export default function Profile({ user, edit, setUser }: { user: UserState; edit
       </div>
       <div className="text-gray-700">
         <div className="grid md:grid-cols-2 text-sm">
+
           {CDInputToText({
-            label: "Contact No.", value: user?.profile?.phoneNumber, edit, name: "phoneNumber", onChange: (e => {
+            label: "Contact No.",
+            value: user?.profile?.phoneNumber,
+            edit,
+            error: !(user?.credential?.isVerify),
+            name: "phoneNumber",
+            onChange: (e) => {
               setUser((prev) => ({
                 ...prev,
                 profile: {
                   ...prev.profile,
                   phoneNumber: e.target.value,
                 },
-              }))
-            })
+              }));
+            },
           })}
+
           {CDInputToText({ label: "Current Address", value: user?.address?.district, edit, name: "address", onChange: (e => { }) })}
           {CDSelectToText({
             label: "Gender",
