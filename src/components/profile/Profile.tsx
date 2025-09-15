@@ -48,7 +48,13 @@ export default function Profile({ user, edit, setUser }: { user: UserState; edit
             },
           })}
 
-          {CDInputToText({ label: "Current Address", value: user?.address?.district, edit, name: "address", onChange: (e => { }) })}
+          {CDInputToText({ label: "Age", value: user?.profile?.age, edit, name: "age", onChange: (e => { setUser((prev) => ({
+                ...prev,
+                profile: {
+                  ...prev.profile,
+                  age: Number(e.target.value),
+                },
+              })) }) })}
           {CDSelectToText({
             label: "Gender",
             value: user?.profile?.gender,

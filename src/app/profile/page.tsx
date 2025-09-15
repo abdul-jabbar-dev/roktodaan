@@ -12,7 +12,7 @@ import VerifyPhone from '@/components/profile/VerifyPhone'
 import DonationExperiance from '@/components/profile/DonationExperiance'
 import API from '@/api'
 import DonationStat from '@/components/profile/DonationStat'
-import { Check, Pencil, RefreshCcw } from 'lucide-react'
+import { Check, Pencil } from 'lucide-react'
 
 export default function Page() {
     const data = useSelector(({ user }: { user: UserState }) => user)
@@ -126,7 +126,7 @@ export default function Page() {
 
                     <div className='flex justify-center w-full space-x-4'>
                         <VerifyPhone phoneNumber={user?.profile?.phoneNumber} />
-                        <DonationStat />
+                        <DonationStat user={user} rootEdit={false}  />
                     </div>
                     <div className="my-4"></div>
                     <Profile user={user} edit={edit} setUser={setUser} />
