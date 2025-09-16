@@ -2,12 +2,14 @@
 import React, { useState, useEffect } from "react";
 import { Check, MessageCircleCode, Send } from "lucide-react";
 import API from "@/api";
+import { useRouter } from "next/navigation";
 
-const VerifyPhone = ({ phoneNumber }: { phoneNumber: string }) => {
+const VerifyEmail = ({ email }: { email: string }) => {
   const [step, setStep] = useState<"initial" | "otp">("initial");
   const [code, setCode] = useState("");
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-
+  const router = useRouter();
   // Auto hide message
   useEffect(() => {
     if (message) {
@@ -16,9 +18,15 @@ const VerifyPhone = ({ phoneNumber }: { phoneNumber: string }) => {
     }
   }, [message]);
 
+
   const sendCode = async () => {
-    setStep("otp"); // demo only
-    setMessage({ type: "success", text: `OTP sent to ${phoneNumber}` });
+    setLoading(true)
+    const rs = await API.user.genOTP(email)
+    if (rs.status) {
+      setLoading(false)
+      setStep("otp");
+      setMessage({ type: "success", text: `OTP sent to ${email}` });
+    }
   };
 
   const verifyCode = async () => {
@@ -26,9 +34,16 @@ const VerifyPhone = ({ phoneNumber }: { phoneNumber: string }) => {
       setMessage({ type: "error", text: "Please enter the OTP!" });
       return;
     }
-    setMessage({ type: "success", text: "Phone verified successfully ✅" });
-    setStep("initial");
-    setCode("");
+
+    const rs = await API.user.varifyOTP(code) 
+    if (rs.data?.msg) {
+      setMessage({ type: "error", text: rs.data.msg });
+    } else {
+      setMessage({ type: "success", text: "Email Verified Successfully ✅" });
+      setStep("initial");
+      setCode("");
+      router.refresh();
+    }
   };
 
   return (
@@ -36,32 +51,32 @@ const VerifyPhone = ({ phoneNumber }: { phoneNumber: string }) => {
       {/* Header */}
       <div className="flex items-center mb-2">
         <MessageCircleCode className="h-4 w-4 mr-2 text-gray-600" />
-        <h3 className="font-semibold text-md">Phone Verification</h3>
+        <h3 className="font-semibold text-md">Email Verification</h3>
       </div>
 
       {/* Content */}
       {step === "initial" && (
         <div className="space-y-2">
           <p className="text-clip text-gray-600">
-            Verify your phone number <span className="font-medium text-md ">{phoneNumber}</span> for account security.
+            Verify your Email <span className="font-medium text-md ">{email}</span> for account security.
           </p>
           <p className="text-xs p-1 text-red-400">
             "কারো রক্ত প্রয়োজন হলে আপনার সাথে এই নম্বরে যোগাযোগ করবে। <br /> তাই নম্বরটি সবসময় কাছে রাখুন এবং এখনই নম্বরটি যাচাই করুন।"
           </p>
-          <button
+          {!loading ? <button
             onClick={sendCode}
             className="flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm transition-all"
           >
             <Send className="h-3.5 w-3.5" />
             <span>Send OTP</span>
-          </button>
+          </button> : <progress className="progress w-full"></progress>}
         </div>
       )}
 
       {step === "otp" && (
         <div className="space-y-2">
           <p className="text-clip text-gray-600">
-            OTP sent to <span className="font-medium text-md px-1">{phoneNumber}</span>. Enter below:
+            OTP sent to <span className="font-medium text-md px-1">{email}</span>. Enter below:
           </p>
           <div className="flex space-x-2">
             <input
@@ -79,9 +94,9 @@ const VerifyPhone = ({ phoneNumber }: { phoneNumber: string }) => {
               Verify
             </button>
           </div>
+          {!loading ? <button onClick={sendCode} className="btn btn-link"> Resend</button> : <progress className="progress w-full"></progress>}
         </div>
       )}
-
       {/* Message */}
       {message && (
         <p
@@ -95,4 +110,4 @@ const VerifyPhone = ({ phoneNumber }: { phoneNumber: string }) => {
   );
 };
 
-export default VerifyPhone;
+export default VerifyEmail;

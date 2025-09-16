@@ -1,7 +1,7 @@
 import BloodGroup from "../blood/group";
 
 export type Address = {
-  area?: string ;
+  area?: string;
   division?: string;
   district?: string;
   upazila?: string;
@@ -24,7 +24,7 @@ type Profile = {
 type UserUpdateInput = {
   id?: number;
   userId?: number;
-  profile: Profile; 
+  profile: Profile;
 };
 
 export default UserUpdateInput;

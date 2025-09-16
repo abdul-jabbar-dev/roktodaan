@@ -8,7 +8,7 @@ import CDUploadImg from '@/components/ui/CDUploadImg'
 import CDInputToText from '@/components/ui/CDInputToText'
 import ChangePassword from '@/components/profile/ChangePassword'
 import ChangeAddress from '@/components/profile/ChangeAddress'
-import VerifyPhone from '@/components/profile/VerifyPhone'
+import VerifyEmail from '@/components/profile/VerifyEmail'
 import DonationExperiance from '@/components/profile/DonationExperiance'
 import API from '@/api'
 import DonationStat from '@/components/profile/DonationStat'
@@ -20,6 +20,15 @@ export default function Page() {
     const [edit, setEdit] = useState(false)
     const [updatedImg, setUpdatedImg] = useState({ public_id: '', secure_url: '' })
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+    const [showVerify, setShowVerify] = useState(false);
+
+    useEffect(() => {
+        if (user?.credential?.isVerify === false) {
+            setShowVerify(true);  
+        } else {
+            setShowVerify(false);  
+        }
+    }, [user?.credential?.isVerify]);
 
     useEffect(() => setUser(data), [data])
 
@@ -75,7 +84,7 @@ export default function Page() {
             <div className="md:flex no-wrap md:-mx-2">
                 <div className="w-full md:w-3/12 md:mx-2">
                     <div className="bg-white p-3 border-t-4 border-red-400">
-                        <div className="image overflow-hidden relative">
+                        <div className="image overflow-hidden relative max-h-80">
                             <CDUploadImg edit={edit} updatedImg={updatedImg} setUpdatedImg={setUpdatedImg} setUser={setUser} user={user} />
                         </div>
                         <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">
@@ -125,8 +134,8 @@ export default function Page() {
                     </div>
 
                     <div className='flex justify-center w-full space-x-4'>
-                        <VerifyPhone phoneNumber={user?.profile?.phoneNumber} />
-                        <DonationStat user={user} rootEdit={false}  />
+                        {showVerify && <VerifyEmail email={user?.profile?.email} />}
+                        <DonationStat user={user} rootEdit={false} />
                     </div>
                     <div className="my-4"></div>
                     <Profile user={user} edit={edit} setUser={setUser} />

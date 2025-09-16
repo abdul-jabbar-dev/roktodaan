@@ -63,8 +63,8 @@ const registerSlice = createSlice({
     prevStep: (state) => {
       if (state.step > 1) state.step -= 1; // negative হওয়া ঠেকানোর জন্য
     },
-    updatePhoneNumber: (state, action: PayloadAction<string>) => {
-      state.step5.phoneNumber = action.payload;
+    updateEmail: (state, action: PayloadAction<string>) => {
+      state.step5.email = action.payload;
     },
 
     setStepData: (
@@ -126,7 +126,7 @@ export const {
   prevStep,
   setStepData,
   resetRegister,
-  updatePhoneNumber,
+  updateEmail,
   setUserData,
 } = registerSlice.actions;
 export type { RegisterState };

@@ -84,6 +84,7 @@ export default function PersonalDetails_Fi() {
               id: data.user.id,
               fullName: data.user.profile.fullName,
               phoneNumber: data.user.profile.phoneNumber,
+              email: data.user.profile.email,
               bloodGroup: data.user.profile.bloodGroup
             },
             fetchedAt: Date.now()
@@ -143,11 +144,12 @@ export default function PersonalDetails_Fi() {
             {/* ইমেল + জেন্ডার */}
             <div className="w-full flex gap-4">
               <div className="w-9/12">
-                <label className="block text-gray-700 font-medium mb-2">ইমেল</label>
+                <label className="block text-gray-700 font-medium mb-2">ইমেল <sup className="text-xs text-neutral">*</sup></label>
                 <input
                   value={personalInfo.email || ""}
                   onChange={e => setPersonalInfo({ ...personalInfo, email: e.target.value })}
                   placeholder="আপনার ইমেল"
+                  required
                   type="text"
                   className="w-full border border-gray-300 rounded-xl px-3 py-[10px] focus:outline-none focus:ring-2 focus:ring-gray-400"
                 />
@@ -242,7 +244,7 @@ export default function PersonalDetails_Fi() {
                   setSelectedUpazila(null);
                 }
               }}
-              className="select border border-gray-300 w-full rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400 bg-transparent"
+              className="select border border-gray-300 w-full rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400 "
             >
               <option value="" disabled>বিভাগ নির্বাচন করুন</option>
               {division.map(d => <option key={d.id} value={d.id}>{d.bn_name}</option>)}
@@ -262,7 +264,7 @@ export default function PersonalDetails_Fi() {
                 const dist = district.find(d => d.id === Number(e.target.value));
                 if (dist) { setSelectedDistrict({ id: dist.id, name: dist.bn_name }); setSelectedUpazila(null); }
               }}
-              className="select border border-gray-300 w-full rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400 bg-transparent"
+              className="select border border-gray-300 w-full rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400 "
             >
               <option value="" disabled>জেলা নির্বাচন করুন</option>
               {district.filter(d => d.division_id === selectedDivision?.id).map(d => <option key={d.id} value={d.id}>{d.bn_name}</option>)}
@@ -282,7 +284,7 @@ export default function PersonalDetails_Fi() {
                 const upz = upazila.find(u => u.id === Number(e.target.value));
                 if (upz) setSelectedUpazila({ id: upz.id, name: upz.bn_name });
               }}
-              className="select border border-gray-300 w-full rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400 bg-transparent"
+              className="select border border-gray-300 w-full rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400 b"
             >
               <option value="" disabled>উপজেলা নির্বাচন করুন</option>
               {upazila.filter(u => u.district_id === selectedDistrict?.id).map(u => <option key={u.id} value={u.id}>{u.bn_name}</option>)}

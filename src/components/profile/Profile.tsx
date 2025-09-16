@@ -1,12 +1,10 @@
 import { UserState } from "@/redux/slice/userSlice";
-import React, { useEffect } from "react";
+import React  from "react";
 import CDInputToText from "../ui/CDInputToText";
 import CDSelectToText from "../ui/CDSelectToText";
 
 export default function Profile({ user, edit, setUser }: { user: UserState; edit: boolean, setUser: React.Dispatch<React.SetStateAction<UserState>> }) {
-  useEffect(() => {
-    console.log(user)
-  }, [user])
+ 
   return (
     <div className="bg-gray-50  p-3 shadow-sm rounded-xl">
       <div className="flex items-center space-x-2 font-semibold text-gray-800 leading-8">
@@ -35,7 +33,6 @@ export default function Profile({ user, edit, setUser }: { user: UserState; edit
             label: "Contact No.",
             value: user?.profile?.phoneNumber,
             edit,
-            error: !(user?.credential?.isVerify),
             name: "phoneNumber",
             onChange: (e) => {
               setUser((prev) => ({
@@ -48,13 +45,17 @@ export default function Profile({ user, edit, setUser }: { user: UserState; edit
             },
           })}
 
-          {CDInputToText({ label: "Age", value: user?.profile?.age, edit, name: "age", onChange: (e => { setUser((prev) => ({
+          {CDInputToText({
+            label: "Age", value: user?.profile?.age, edit, name: "age", onChange: (e => {
+              setUser((prev) => ({
                 ...prev,
                 profile: {
                   ...prev.profile,
                   age: Number(e.target.value),
                 },
-              })) }) })}
+              }))
+            })
+          })}
           {CDSelectToText({
             label: "Gender",
             value: user?.profile?.gender,
@@ -88,7 +89,8 @@ export default function Profile({ user, edit, setUser }: { user: UserState; edit
             })
           })}
           {CDInputToText({
-            label: "Email", value: user?.profile?.email, edit, name: "email", onChange: (e => {
+            label: "Email", value: user?.profile?.email, edit,
+            error: !(user?.credential?.isVerify), name: "email", onChange: (e => {
               setUser((prev) => ({
                 ...prev,
                 profile: {

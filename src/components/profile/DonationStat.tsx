@@ -33,7 +33,7 @@ const DonationStat = ({
     : 'No Date';
 
   return (
-    <div className="bg-gray-50 border border-gray-200 text-gray-800 px-4 py-3 rounded-lg shadow-sm w-full md:w-1/2">
+    <div className="bg-gray-50 border border-gray-200 text-gray-800 px-4 py-3 rounded-lg shadow-sm w-full xl:w-2/3 2xl:w-1/2">
       {/* Header */}
       <div className="flex items-center mb-2">
         <MessageCircle className="h-4 w-4 mr-2 text-gray-600" />

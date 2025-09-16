@@ -1,5 +1,5 @@
 'use client'
-import { RegisterState, updatePhoneNumber, prevStep } from '@/redux/slice/registerSlice';
+import { RegisterState, updateEmail, prevStep } from '@/redux/slice/registerSlice';
 import { PencilIcon } from 'lucide-react';
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,7 +26,7 @@ export default function Varification_Last() {
 
   };
   const setPhone = () => {
-    dispatch(updatePhoneNumber(otpPhoneNumber))
+    dispatch(updateEmail(otpPhoneNumber))
     setEdit(false)
   }
 

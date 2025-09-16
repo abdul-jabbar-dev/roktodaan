@@ -7,7 +7,7 @@ const requiredString = (message: string) =>
 // Step5 personal info er jonno Zod schema
 const personalInfoSchema = z.object({
   fullName: requiredString("নাম অবশ্যই দিতে হবে"),
-  email: z.string().optional(),
+  email: z.string().nonempty({ message: "Email অবশ্যই দিতে হবে" }),
   phoneNumber: z
     .string()
     .nonempty({ message: "ফোন নম্বর অবশ্যই দিতে হবে" })
@@ -20,7 +20,9 @@ const personalInfoSchema = z.object({
     district: requiredString("জেলা অবশ্যই দিতে হবে"),
     upazila: requiredString("উপজেলা অবশ্যই দিতে হবে"),
   }),
-    credential:z.object({ password: requiredString("পাসওয়ার্ড অবশ্যই দিতে হবে") })
+  credential: z.object({
+    password: requiredString("পাসওয়ার্ড অবশ্যই দিতে হবে"),
+  }),
 });
 
 // Validation function
@@ -34,9 +36,8 @@ const validationPersonalInfo = (params: {
     district: string;
     upazila: string;
   };
-    credential: { password: string}
+  credential: { password: string };
 }) => {
- 
   const result = personalInfoSchema.safeParse(params);
 
   if (!result.success) {

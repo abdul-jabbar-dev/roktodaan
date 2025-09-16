@@ -125,6 +125,50 @@ const updateExperiance = async (experiance: {
   }
 };
 
+const genOTP = async (email: string) => {
+  try {
+    const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
+    const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
+
+    if (!token) throw new Error("No token found");
+    const res = await axios.post(
+      URLS.USER.NEW_OTP,
+      { email },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return res.data;
+  } catch (err: any) {
+    throw new Error(err?.response?.data?.message || "Failed to OTP");
+  }
+};
+
+const varifyOTP = async (otp: string) => {
+  try {
+    const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
+    const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
+
+    if (!token) throw new Error("No token found");
+    const res = await axios.post(
+      URLS.USER.VARIFY_OTP,
+      { otp },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return res.data;
+  } catch (err: any) {
+    throw new Error(err?.response?.data?.message || "Failed to OTP");
+  }
+};
+
 const user = {
   getMyInfo,
   updatePassword,
@@ -132,5 +176,6 @@ const user = {
   updateLocation,
   getUsers,
   updateExperiance,
+  genOTP,varifyOTP
 };
 export default user;

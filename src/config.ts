@@ -17,17 +17,17 @@ const URLS = {
       `${MEDIA_BASE}/delete/?public_id=${public_id}`,
   },
   USER: {
-    
     GET_USERS: `${USER_BASE}/get_users`,
     GET_MY_PROFILE: `${USER_BASE}/me`,
-    GET_EXIST_USER: (number: string | number) =>
-      `${USER_BASE}/exist_user/${number}`,
+    GET_EXIST_USER: (email: string) => `${USER_BASE}/exist_user/${email}`,
     CREATE_USER: `${USER_BASE}/create_user`,
     GET_USER: (user_id: string | number) => `${USER_BASE}/get_user/${user_id}`,
     UPDATE_PASSWORD: `${USER_BASE}/update_password`,
     UPDATE_USER: `${USER_BASE}/update_profile`,
     UPDATE_ADDRESS: `${USER_BASE}/update_address`,
     UPDATE_EXPERIANCE: `${USER_BASE}/update_experiance`,
+    NEW_OTP: `${USER_BASE}/email_verify_send_otp`,
+    VARIFY_OTP: `${USER_BASE}/email_verify_otp`,
   },
 };
 
