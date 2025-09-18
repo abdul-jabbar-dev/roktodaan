@@ -61,8 +61,8 @@ export default function PersonalDetails_Fi() {
     dispatch(setStepData({ step: 5, data: userProfile }));
     dispatch(setUserData());
     const currentUserData = (store.getState() as { register: RegisterState }).register.userData;
-    if (currentUserData?.profile?.fullName) {
-      console.log("currentUserData")
+    if ((currentUserData as { profile?: { fullName?: string } })?.profile?.fullName) {
+ 
       try {
         const res = await fetch(URLS.USER.CREATE_USER, {
           method: "POST",
@@ -100,8 +100,7 @@ export default function PersonalDetails_Fi() {
           setGlobalError({});
           setSuccess(true);
         }
-      } catch (err) {
-        console.log(err)
+      } catch (err) { 
         setGlobalError(err instanceof Error ? { message: err.message } : { message: "Unexpected error" });
       }
     }

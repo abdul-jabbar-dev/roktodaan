@@ -1,20 +1,10 @@
 
 import API from '@/api'
-import URLS from '@/config'
-import React, { useState, useEffect } from 'react'
- 
+import { UserState } from '@/redux/slice/userSlice';
+import React from "react";
+const RelatedProfile = async () => {
 
-const RelatedProfile = () => {
-    const [users, setUsers] = useState([])
-
-    useEffect(() => {
-         async function fetchData() {
-        const allUsers = await API.user.getUsers()
-        setUsers(allUsers)
-    }
-fetchData()
-    },
-        [])
+    const users = await API.user.getUsers();
     return (
         <div className="bg-white p-3 hover:shadow">
             <div className="flex items-center space-x-3 font-semibold text-gray-900 text-xl leading-8">
@@ -38,7 +28,7 @@ fetchData()
             </div>
 
             <div className="grid grid-cols-3">
-                {users?.data?.map((user: any, i: number) => (
+                {users?.data?.map((user: UserState, i: number) => (
                     <div key={i} className="text-center my-2">
                         <img
                             className="h-16 w-16 rounded-full mx-auto"

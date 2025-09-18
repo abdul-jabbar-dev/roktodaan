@@ -1,6 +1,6 @@
 import React from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import {Pagination } from 'swiper/modules';
+import { Pagination } from 'swiper/modules';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -10,14 +10,14 @@ import Image from "next/image";
 
 export default function HeroSerchDoner() {
     const doners = [
-        { id: 1, name: "Abdul Jabbar", age: 21, location: "Tongi Gazipur Dhaka Bangladesh.", bloodGroup: "O+", profileImage: "https://randomuser.me/api/portraits/men/30.jpg" },
-        { id: 2, name: "Hasan", age: 24, location: "Dhaka, Bangladesh.", bloodGroup: "A+", profileImage: "https://randomuser.me/api/portraits/men/32.jpg" },
-        { id: 3, name: "Rahim", age: 20, location: "Gazipur, Bangladesh.", bloodGroup: "B-", profileImage: "https://randomuser.me/api/portraits/men/45.jpg" },
-        { id: 4, name: "Karim", age: 29, location: "Uttara, Dhaka.", bloodGroup: "AB+", profileImage: "https://randomuser.me/api/portraits/men/12.jpg" },
-        { id: 5, name: "Jabed", age: 26, location: "Mirpur, Dhaka.", bloodGroup: "O-", profileImage: "https://randomuser.me/api/portraits/men/27.jpg" },
-        { id: 6, name: "Nayeem", age: 23, location: "Banani, Dhaka.", bloodGroup: "A-", profileImage: "https://randomuser.me/api/portraits/men/66.jpg" },
-        { id: 7, name: "Sakib", age: 22, location: "Barishal, Bangladesh.", bloodGroup: "B+", profileImage: "https://randomuser.me/api/portraits/men/77.jpg" },
-        { id: 8, name: "Fahim", age: 25, location: "Cumilla, Bangladesh.", bloodGroup: "AB-", profileImage: "https://randomuser.me/api/portraits/men/88.jpg" },
+        { id: 1, name: "Abdul Jabbar", age: 21, location: "Tongi Gazipur Dhaka Bangladesh.", bloodGroup: "O+", profileImage: "https://avatar.iran.liara.run/public/boy" },
+        { id: 2, name: "Hasan", age: 24, location: "Dhaka, Bangladesh.", bloodGroup: "A+", profileImage: "https://avatar.iran.liara.run/public/boy" },
+        { id: 3, name: "Rahim", age: 20, location: "Gazipur, Bangladesh.", bloodGroup: "B-", profileImage: "https://avatar.iran.liara.run/public/boy" },
+        { id: 4, name: "Karim", age: 29, location: "Uttara, Dhaka.", bloodGroup: "AB+", profileImage: "https://avatar.iran.liara.run/public/boy" },
+        { id: 5, name: "Jabed", age: 26, location: "Mirpur, Dhaka.", bloodGroup: "O-", profileImage: "https://avatar.iran.liara.run/public/boy" },
+        { id: 6, name: "Nayeem", age: 23, location: "Banani, Dhaka.", bloodGroup: "A-", profileImage: "https://avatar.iran.liara.run/public/boy" },
+        { id: 7, name: "Sakib", age: 22, location: "Barishal, Bangladesh.", bloodGroup: "B+", profileImage: "https://avatar.iran.liara.run/public/boy" },
+        { id: 8, name: "Fahim", age: 25, location: "Cumilla, Bangladesh.", bloodGroup: "AB-", profileImage: "https://avatar.iran.liara.run/public/boy" },
     ];
 
     const bloodGroups = [

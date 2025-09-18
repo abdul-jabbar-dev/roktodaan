@@ -22,7 +22,7 @@ const getMyInfo = async (token: string) => {
 const updatePassword = async (password: string) => {
   try {
     const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
-    const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
+    const token = tokenStr ? JSON?.parse(tokenStr)?.token : null;
 
     if (!token) throw new Error("No token found");
     const res = await axios.put(
@@ -43,11 +43,32 @@ const updatePassword = async (password: string) => {
     );
   }
 };
+async function getUser(id: string): Promise<any> {
+  try {
+    const res = await fetch(URLS.USER.GET_USER(id), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      console.error("getUser error:", res.statusText);
+      // throw new Error("Failed to fetch user");
+    }
+
+    return res.json();
+  } catch (err) {
+    console.error("getUser error:", err);
+    throw new Error("Failed to fetch user");
+  }
+}
 
 const updateuser = async (userData: UserUpdateInput) => {
   try {
     const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
-    const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
+    const token = tokenStr ? JSON?.parse(tokenStr)?.token : null;
 
     if (!token) throw new Error("No token found");
     const res = await axios.put(
@@ -61,7 +82,7 @@ const updateuser = async (userData: UserUpdateInput) => {
       }
     );
     return res.data;
-  } catch (err: any) {
+  } catch (err: Error | unknown | Record<string, unknown>) {
     console.error("Update Profile error:", err);
     throw new Error(err?.response?.data?.message || "Failed to update Profile");
   }
@@ -70,7 +91,7 @@ const updateuser = async (userData: UserUpdateInput) => {
 const updateLocation = async (locationData: Location) => {
   try {
     const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
-    const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
+    const token = tokenStr ? JSON?.parse(tokenStr)?.token : null;
 
     if (!token) throw new Error("No token found");
     const res = await axios.put(
@@ -84,7 +105,7 @@ const updateLocation = async (locationData: Location) => {
       }
     );
     return res.data;
-  } catch (err: any) {
+  } catch (err: Error | unknown) {
     throw new Error(err?.response?.data?.message || "Failed to update Profile");
   }
 };
@@ -94,6 +115,7 @@ const getUsers = async () => {
     const res = await axios.get(URLS.USER.GET_USERS);
     return res.data;
   } catch (err: any) {
+    console.error("getUsers error:", err);
     throw new Error(err?.response?.data?.message || "Failed to Users Profile");
   }
 };
@@ -105,7 +127,7 @@ const updateExperiance = async (experiance: {
 }) => {
   try {
     const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
-    const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
+    const token = tokenStr ? JSON?.parse(tokenStr)?.token : null;
 
     if (!token) throw new Error("No token found");
     const res = await axios.put(
@@ -128,7 +150,7 @@ const updateExperiance = async (experiance: {
 const genOTP = async (email: string) => {
   try {
     const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
-    const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
+    const token = tokenStr ? JSON?.parse(tokenStr)?.token : null;
 
     if (!token) throw new Error("No token found");
     const res = await axios.post(
@@ -150,7 +172,7 @@ const genOTP = async (email: string) => {
 const varifyOTP = async (otp: string) => {
   try {
     const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
-    const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
+    const token = tokenStr ? JSON?.parse(tokenStr)?.token : null;
 
     if (!token) throw new Error("No token found");
     const res = await axios.post(
@@ -168,6 +190,18 @@ const varifyOTP = async (otp: string) => {
     throw new Error(err?.response?.data?.message || "Failed to OTP");
   }
 };
+const login = async (email: string,password:string) => {
+  try {
+   
+     const res = await axios.post(
+      URLS.USER.LOGIN,
+      { email,password } 
+    );
+     return res.data;
+  } catch (err: any) {
+    throw new Error(err?.response?.data?.message || "Login Failed");
+  }
+};
 
 const user = {
   getMyInfo,
@@ -176,6 +210,9 @@ const user = {
   updateLocation,
   getUsers,
   updateExperiance,
-  genOTP,varifyOTP
+  genOTP,
+  varifyOTP,
+  getUser,
+  login
 };
 export default user;

@@ -13,9 +13,7 @@ export default function LastDonation_Th() {
         lastDonationLocation: lastDonationLocation
     });
     const [error, setError] = useState<ValidationLastDonationType | undefined>(undefined);
-    useEffect(() => {
-        console.log(error)
-    }, [error])
+ 
 
     return (
         <section className="max-w-6xl mx-auto px-12 xl:px-0">

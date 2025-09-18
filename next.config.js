@@ -6,8 +6,8 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "randomuser.me",
-        pathname: "/api/**",
+        hostname: "avatar.iran.liara.run",
+        pathname: "/public/**",
       },
     ],
   },

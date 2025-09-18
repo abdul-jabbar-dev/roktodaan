@@ -18,9 +18,7 @@ export default function BloodInfo_Fo() {
     const [weight, setWeight] = useState(Number(step4.weight)|0);
     const [age, setAge] = useState(Number(step4.age)||0);
 
-    useEffect(() => {
-        console.log(bloodInfoError)
-    }, [bloodInfoError])
+ 
     return (
         <section className="max-w-6xl mx-auto  px-12 xl:px-0">
             <div className="lg:w-4/5 w-full">

@@ -12,7 +12,8 @@ export function useUser() {
   
   useEffect(() => {
     const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
-    const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
+ 
+    const token = tokenStr ? JSON?.parse(tokenStr)?.token : null;
 
     if (token && !oldData.id) {
       (async () => {

@@ -2,6 +2,7 @@ import { Uploader, Message, Loader, useToaster } from 'rsuite';
 import React, { useState } from 'react';
 import URLS from '@/config';
 import { UserState } from '@/redux/slice/userSlice';
+import Image from 'next/image';
 
 function previewFile(file: File, callback: (value: string | ArrayBuffer | null) => void) {
     const reader = new FileReader();
@@ -47,7 +48,7 @@ const CDUploadImg = (
                     if (updatedImg.public_id && updatedImg.public_id !== response.public_id) {
                         try {
                             const res = await fetch(URLS.MEDIA.DELETE_MEDIA(updatedImg.public_id), { method: "DELETE" });
-                            console.log("Deleted last image:", updatedImg.public_id, await res.json());
+ 
                         } catch (err) {
                             console.error("Failed to delete last image", err);
                         }
@@ -69,30 +70,27 @@ const CDUploadImg = (
                 <button style={{ width: "100%", height: "100%" }}>
                     {uploading && <Loader backdrop center />}
                     {fileInfo ? (
-                        <img src={fileInfo} width="100%" height="100%" />
+                        <Image src={fileInfo} width="100" height="100" alt={''} />
                     ) : (
-                        <img
-                            src={
-                                user?.profile?.img ||
-                                "https://res.cloudinary.com/dnkwv76h3/image/upload/v1757350374/roktodan/hvt5xegpafmeix4thrjp.png"
-                            }
-                            width="100%"
-                            height="100%"
-                        />
+                        <Image
+                                src={user?.profile?.img ||
+                                    "https://avatar.iran.liara.run/public/"}
+                                className="mx-auto"
+                                width="300"
+                                height="300" alt={user?.profile?.fullName || ''} /> 
                     )}
                 </button>
             </Uploader>
                 : <span>
 
-                    <img
-                        src={
-                            user?.profile?.img ||
-                            "https://res.cloudinary.com/dnkwv76h3/image/upload/v1757350374/roktodan/hvt5xegpafmeix4thrjp.png"
-                        }
-                        width="100%"
-                        height="100%"
-                    />
-                </span>}</div>
+                    <Image
+                        src={user?.profile?.img ||
+                            "https://avatar.iran.liara.run/public/"}
+                        className="mx-auto"
+                        width="300"
+                        height="300" alt={user?.profile?.fullName || ''}                    />
+                </span>}
+            </div>
     );
 };
 

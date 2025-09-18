@@ -133,11 +133,7 @@ export default function HeroSearch({ setOpen, open }: { setOpen: React.Dispatch<
 
                 <button className="btn btn-neutral text-white mt-4 rounded-xl"
                     onClick={() => {
-                        setOpen(!open);
-                        console.log("Selected BloodGroup:", selectedBloodGroup);
-                        console.log("Selected Division:", selectedDivision);
-                        console.log("Selected District:", selectedDistrict);
-                        console.log("Selected Upazila:", selectedUpazila);
+                        setOpen(!open); 
                     }}
                 >
                     Search

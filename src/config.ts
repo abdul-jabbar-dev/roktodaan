@@ -17,7 +17,7 @@ const URLS = {
       `${MEDIA_BASE}/delete/?public_id=${public_id}`,
   },
   USER: {
-    GET_USERS: `${USER_BASE}/get_users`,
+    GET_USERS: `${USER_BASE}/get_users`, 
     GET_MY_PROFILE: `${USER_BASE}/me`,
     GET_EXIST_USER: (email: string) => `${USER_BASE}/exist_user/${email}`,
     CREATE_USER: `${USER_BASE}/create_user`,
@@ -28,6 +28,7 @@ const URLS = {
     UPDATE_EXPERIANCE: `${USER_BASE}/update_experiance`,
     NEW_OTP: `${USER_BASE}/email_verify_send_otp`,
     VARIFY_OTP: `${USER_BASE}/email_verify_otp`,
+    LOGIN: `${USER_BASE}/login`,
   },
 };
 

@@ -1,6 +1,8 @@
+'use client'
 import API from "@/api";
 import { updateExperiance, UserState } from "@/redux/slice/userSlice";
-import { Clock12Icon, Plus, RefreshCcw, Pencil, Check } from "lucide-react";
+import ClientDate from "@/utils/DateFormet";
+import { Clock12Icon, Plus, Pencil, Check } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useDispatch } from 'react-redux';
 
@@ -129,7 +131,7 @@ export default function DonationExperiance({
             )}
 
             {/* Existing rows */}
-            {user?.donationExperience
+            {(user?.donationExperience && user.donationExperience.length > 0) ? user.donationExperience
               ?.slice()
               ?.sort(
                 (a, b) =>
@@ -150,7 +152,7 @@ export default function DonationExperiance({
                         }
                       />
                     ) : (
-                      new Date(exp.lastDonationDate).toLocaleDateString()
+                      <ClientDate dateString={exp.lastDonationDate} />
                     )}
                   </td>
                   <td>
@@ -203,7 +205,11 @@ export default function DonationExperiance({
                     </td>
                   )}
                 </tr>
-              ))}
+              )) : <tr>
+              <td colSpan={edit ? 4 : 3} className="text-center text-gray-500 py-3">
+                No Record exist
+              </td>
+            </tr>}
           </tbody>
         </table>
       </div>

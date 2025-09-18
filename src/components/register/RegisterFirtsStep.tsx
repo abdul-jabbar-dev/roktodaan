@@ -1,7 +1,7 @@
 
 import React from 'react'
 import Nibondhon from '../client/NibondhonButton'
-export default function RegisterFirtsStep() {
+export default function RegisterFirtsStep({ setVewLoginComp }: { setVewLoginComp: React.Dispatch<React.SetStateAction<boolean>> }) {
     return (
         <section className="max-w-6xl mx-auto  px-12 xl:px-0">
             <div className="lg:w-4/5 w-full">
@@ -22,6 +22,7 @@ export default function RegisterFirtsStep() {
             <div className="font-bold lg:text-end text-center">
 
                 <Nibondhon step={1} state={{ motivation: true }} />
+                <button onClick={e=>setVewLoginComp(prev=>!prev)}>Login</button>
             </div>
         </section>
     )

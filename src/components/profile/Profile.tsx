@@ -1,12 +1,29 @@
 import { UserState } from "@/redux/slice/userSlice";
-import React  from "react";
+import React from "react";
 import CDInputToText from "../ui/CDInputToText";
 import CDSelectToText from "../ui/CDSelectToText";
 
-export default function Profile({ user, edit, setUser }: { user: UserState; edit: boolean, setUser: React.Dispatch<React.SetStateAction<UserState>> }) {
- 
+type ProfileProps = {
+  user: UserState;
+  edit: boolean;
+  setUser?: React.Dispatch<React.SetStateAction<UserState>>; // optional
+};
+
+export default function Profile({ user, edit, setUser }: ProfileProps) {
+  // 🔹 Safe state updater → parent যদি client হয় তখন কাজ করবে
+  const updateProfile = (field: string, value: unknown) => {
+    if (!setUser) return; // server হলে কিছু করবে না
+    setUser((prev) => ({
+      ...prev,
+      profile: {
+        ...prev.profile,
+        [field]: value,
+      },
+    }));
+  };
+
   return (
-    <div className="bg-gray-50  p-3 shadow-sm rounded-xl">
+    <div className="bg-gray-50 p-3 shadow-sm rounded-xl">
       <div className="flex items-center space-x-2 font-semibold text-gray-800 leading-8">
         <span className="text-gray-600">
           <svg
@@ -26,81 +43,63 @@ export default function Profile({ user, edit, setUser }: { user: UserState; edit
         </span>
         <span className="tracking-wide">About</span>
       </div>
+
       <div className="text-gray-700">
         <div className="grid md:grid-cols-2 text-sm">
-
           {CDInputToText({
             label: "Contact No.",
             value: user?.profile?.phoneNumber,
             edit,
             name: "phoneNumber",
-            onChange: (e) => {
-              setUser((prev) => ({
-                ...prev,
-                profile: {
-                  ...prev.profile,
-                  phoneNumber: e.target.value,
-                },
-              }));
-            },
+            onChange: (e) => updateProfile("phoneNumber", e.target.value),
           })}
 
           {CDInputToText({
-            label: "Age", value: user?.profile?.age, edit, name: "age", onChange: (e => {
-              setUser((prev) => ({
-                ...prev,
-                profile: {
-                  ...prev.profile,
-                  age: Number(e.target.value),
-                },
-              }))
-            })
+            label: "Age",
+            value: user?.profile?.age,
+            edit,
+            name: "age",
+            onChange: (e) =>
+              updateProfile("age", e.target.value ? Number(e.target.value) : 0),
           })}
+
           {CDSelectToText({
             label: "Gender",
             value: user?.profile?.gender,
-            edit: edit,
+            edit,
             name: "gender",
             options: [
-
               { label: "Male", value: "Male" },
               { label: "Female", value: "Female" },
             ],
-            onChange: (e => {
-              setUser((prev) => ({
-                ...prev,
-                profile: {
-                  ...prev.profile,
-                  gender: e.target.value,
-                },
-              }))
-            })
+            onChange: (e) => updateProfile("gender", e.target.value),
+          })}
 
-          })}
           {CDInputToText({
-            label: "Weight", value: user?.profile?.weight, edit, name: "weight", onChange: (e => {
-              setUser((prev) => ({
-                ...prev,
-                profile: {
-                  ...prev.profile,
-                  weight: Number(e.target.value),
-                },
-              }))
-            })
+            label: "Weight",
+            value: user?.profile?.weight,
+            edit,
+            name: "weight",
+            onChange: (e) =>
+              updateProfile("weight", e.target.value ? Number(e.target.value) : 0),
           })}
+
           {CDInputToText({
-            label: "Email", value: user?.profile?.email, edit,
-            error: !(user?.credential?.isVerify), name: "email", onChange: (e => {
-              setUser((prev) => ({
-                ...prev,
-                profile: {
-                  ...prev.profile,
-                  email: e.target.value,
-                },
-              }))
-            })
+            label: "Email",
+            value: user?.profile?.email,
+            edit,
+            error: !(user?.credential?.isVerify),
+            name: "email",
+            onChange: (e) => updateProfile("email", e.target.value),
           })}
-          {CDInputToText({ label: "Birthday ", value: "Feb 06, 1998", edit, name: "birthday", onChange: (e => { }) })}
+
+          {CDInputToText({
+            label: "Birthday",
+            value: "Feb 06, 1998", // 👉 এটা পরে dynamic করলে updateProfile("birthday", e.target.value)
+            edit,
+            name: "birthday",
+            onChange: () => {},
+          })}
         </div>
       </div>
     </div>

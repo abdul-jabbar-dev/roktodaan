@@ -3,14 +3,19 @@ import { Droplet } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 import Link from 'next/link'
-import { useSelector } from 'react-redux' 
-import { UserState } from '@/redux/slice/userSlice'
+import { useSelector, useDispatch } from 'react-redux'
+import { clearUserData, UserState } from '@/redux/slice/userSlice'
 import { useUser } from '@/redux/hook/userHook'
+import URLS from '@/config'
 
 export default function CustomRootLayout() {
   const user = useSelector(({ user }: { user: UserState }) => user)
- 
-  useUser() 
+  const dispatch = useDispatch()
+  useUser()
+  const hitLogout = () => {
+    localStorage.removeItem(URLS.LOCAL_STORE.SET_USER)
+    dispatch(clearUserData())
+  }
 
   return (
 
@@ -20,17 +25,16 @@ export default function CustomRootLayout() {
           <Link href="/" className=" cursor-pointer text-red-500 font-extrabold text-xl">রক্তদান</Link>
         </div>
         <div className="flex gap-2">
-
-          {user?.profile?.fullName ? <div className="dropdown dropdown-end">
+          {(user?.id) ? <div className="dropdown dropdown-end">
 
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
 
               <div className="w-10 rounded-full">
                 <Image
-                  alt="Tailwind CSS Navbar component"
+                  alt={user?.profile?.fullName||"Donor"}
                   width={20}
                   height={20}
-                  src="https://randomuser.me/api/portraits/men/32.jpg" />
+                  src={user?.profile?.img||"https://avatar.iran.liara.run/public/boy"} />
               </div>
             </div>
             <ul
@@ -40,9 +44,8 @@ export default function CustomRootLayout() {
                 <Link href="/profile">
                   Profile
                 </Link>
-              </li>
-              <li><a>Settings</a></li>
-              <li><a>Logout</a></li>
+              </li> 
+              <li onClick={hitLogout}><a>Logout</a></li>
             </ul>
           </div> : <div className=' flex items-center'>
             <button className='btn btn-lg btn-link no-underline underline-offset-4  text-gray-600'>রক্তদাতা খুঁজুন</button>

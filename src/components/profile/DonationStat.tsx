@@ -1,4 +1,5 @@
 import { UserState } from '@/redux/slice/userSlice';
+import ClientDate from '@/utils/DateFormet';
 import { MapPin, MessageCircle } from 'lucide-react';
 import React from 'react';
 
@@ -57,7 +58,7 @@ const DonationStat = ({
 
         <div className="stat place-items-center">
           <div className="stat-title">Last Donation</div>
-          <div className="stat-value">{lastDonationDate}</div>
+          <div className="stat-value"><ClientDate dateString={lastDonationDate} /></div>
           <div className="stat-desc flex gap-x-1 items-center">
             <MapPin className="w-3" />
             {lastDonation?.lastDonationLocation || 'Unknown'}
