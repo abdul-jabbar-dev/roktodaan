@@ -1,18 +1,26 @@
 "use client"
 
+import LoginView from "@/components/home/LoginView";
 import Effect from "@/components/register/Effect"
 import HeroResigser from "@/components/register/HeroRegister"
 import ImportenceOfDonation from "@/components/register/ImportenceOfDonation"
+import { UserState } from '@/redux/slice/userSlice';
+import { useSelector } from 'react-redux'
+import React, { useState, useEffect } from 'react';
 
+const RegisterPage=()=> {
+    const user = useSelector(({ user }: { user: UserState }) => user)
+    const [isLogin, setIsLogin] = useState(!!user.id )
+    useEffect(() => {
+        setIsLogin(!!user?.id)
+    }, [user?.id])
 
-
-export default function RegisterPage() {
     return (
         <div className="bg-white text-gray-800">
 
             {/* ✅ Hero Section */}
-            <HeroResigser />
-
+            {isLogin ?
+                <LoginView /> : <HeroResigser />}
             {/* ✅ Why Blood Donation */}
             <Effect />
             {/* ✅ Extended Info Section */}
@@ -30,3 +38,4 @@ export default function RegisterPage() {
         </div>
     )
 }
+export default RegisterPage

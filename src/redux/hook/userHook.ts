@@ -1,38 +1,48 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux"; 
 import URLS from "@/config";
 import { UserState } from "../slice/userSlice";
 import { setUserDataFetch } from "@/redux/slice/userSlice";
 import API from "@/api";
 
 export function useUser() {
-
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); 
   const oldData = useSelector(({ user }: { user: UserState }) => user);
-  
+
   useEffect(() => {
     const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
- 
-    const token = tokenStr ? JSON?.parse(tokenStr)?.token : null;
+    if (!tokenStr) { 
+      return;
+    }
+    
+    const token = JSON.parse(tokenStr)?.token;
+    console.log("token:", token);
+    if (!token) { 
+      return;
+    }
 
-    if (token && !oldData.id) {
+    // যদি user data না থাকে Redux এ
+    if (!oldData?.credential?.id) {
       (async () => {
         try {
-          const data = await API.user.getMyInfo(token);
+          const res = await API.user.getMyInfo(token);
 
-          if (data) {
-            dispatch(setUserDataFetch(data.data));
+          // API return format { error?, ...data }
+          if (res.error) {
+            console.error("Failed to load user profile:", res.error);
+ 
+          } else if (!res || !res.credential?.id) {
+            console.error("User data invalid or missing:", res); 
           } else {
-            console.log("Failed to load user profile");
+            // Successfully fetched
+            dispatch(setUserDataFetch(res.data));
           }
-          // {note} if data.data nathake or error pawa jay tahile login pathate hobe
         } catch (err) {
-          console.error("Failed to fetch user:", err);
+          console.error("Failed to fetch user:", err); // network বা unexpected error → redirect
         }
       })();
     }
-    
-  }, [dispatch, oldData.id]);
+  }, [dispatch, oldData?.credential?.id]);
 
   return null;
 }

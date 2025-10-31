@@ -1,14 +1,15 @@
 import API from '@/api';
 import { Check, KeyRound, Pencil } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
-
+import { toast } from 'react-toastify';
+import CDSpinner from '../ui/CDSpinner';
 const ChangePassword = () => {
     const [edit, setEdit] = useState(false);
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
     const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-
+    const [loading, setLoading] = useState(false);
     // auto clear message after 3s
     useEffect(() => {
         if (message) {
@@ -44,31 +45,35 @@ const ChangePassword = () => {
 
     const setPassword = async () => {
         setMessage(null);
-
+        setLoading(true)
         const errors = validatePassword(newPassword);
         if (errors.length > 0) {
             setPasswordErrors(errors);
+            setLoading(false)
             return;
         }
         if (newPassword !== confirmPassword) {
             setMessage({ type: "error", text: "Password এবং Confirm Password মিলছে না" });
+            setLoading(false)
             return;
         }
 
         try {
+
             const res = await API.user.updatePassword(newPassword);
             if (res.data.status) {
                 setNewPassword("");
                 setConfirmPassword("");
                 setEdit(false);
                 setPasswordErrors([]);
-                setMessage({ type: "success", text: "Password পরিবর্তন হয়েছে ✅" });
+                toast.success("Password পরিবর্তন হয়েছে ✅");
             } else {
-                setMessage({ type: "error", text: "Password পরিবর্তন ব্যর্থ ❌" });
+                toast.error("Password পরিবর্তন ব্যর্থ ❌");
             }
         } catch {
-            setMessage({ type: "error", text: "Password পরিবর্তন ব্যর্থ ❌" });
+            toast.error("Password পরিবর্তন ব্যর্থ ❌");
         }
+        setLoading(false)
     };
 
     return (
@@ -124,7 +129,7 @@ const ChangePassword = () => {
                                 onClick={setPassword}
                                 className="btn rounded-xl bg-red-400 hover:bg-red-500 text-white btn-sm"
                             >
-                                <Check className="size-[1.2em]" />
+                                {loading ? <CDSpinner /> : <Check className="size-[1.2em]" />}
                             </button>
                         ) : (
                             <button
@@ -140,9 +145,8 @@ const ChangePassword = () => {
                 {/* Message */}
                 {message && (
                     <p
-                        className={`mt-3 text-sm  ${
-                            message.type === "success" ? "text-green-600" : "text-red-500"
-                        }`}
+                        className={`mt-3 text-sm  ${message.type === "success" ? "text-green-600" : "text-red-500"
+                            }`}
                     >
                         {message.text}
                     </p>

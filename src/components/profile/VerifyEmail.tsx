@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import { Check, MessageCircleCode, Send } from "lucide-react";
 import API from "@/api";
 import { useRouter } from "next/navigation";
-
-const VerifyEmail = ({ email }: { email: string }) => {
+import { toast } from 'react-toastify';
+const VerifyEmail = ({ email,setShowVerify }: { email: string ,setShowVerify:React.Dispatch<React.SetStateAction<boolean>>}) => {
   const [step, setStep] = useState<"initial" | "otp">("initial");
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,11 +21,16 @@ const VerifyEmail = ({ email }: { email: string }) => {
 
   const sendCode = async () => {
     setLoading(true)
-    const rs = await API.user.genOTP(email)
-    if (rs.status) {
+    const data = await API.user.genOTP(email)
+    console.log(data)
+    if (data.status) {
       setLoading(false)
       setStep("otp");
       setMessage({ type: "success", text: `OTP sent to ${email}` });
+      toast.success(`OTP sent to ${email}`);
+    } else {
+      setLoading(false)
+      toast.error(data.error || "Failed to send OTP ❌");
     }
   };
 
@@ -35,14 +40,16 @@ const VerifyEmail = ({ email }: { email: string }) => {
       return;
     }
 
-    const rs = await API.user.varifyOTP(code) 
-    if (rs.data?.msg) {
-      setMessage({ type: "error", text: rs.data.msg });
+    const data = await API.user.varifyOTP(code,{otpType:"emailVerification"});
+    if (data?.error) {
+      toast.error(data.error || data.msg || "Failed to verify OTP ❌");
     } else {
-      setMessage({ type: "success", text: "Email Verified Successfully ✅" });
+      toast.success("Email Verified Successfully ✅");
+
+      router.refresh();
       setStep("initial");
       setCode("");
-      router.refresh();
+      setShowVerify(false)
     }
   };
 
@@ -65,7 +72,7 @@ const VerifyEmail = ({ email }: { email: string }) => {
           </p>
           {!loading ? <button
             onClick={sendCode}
-            className="flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm transition-all"
+            className="flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg text-sm transition-all"
           >
             <Send className="h-3.5 w-3.5" />
             <span>Send OTP</span>
@@ -84,11 +91,11 @@ const VerifyEmail = ({ email }: { email: string }) => {
               value={code}
               onChange={(e) => setCode(e.target.value)}
               placeholder="Enter OTP"
-              className="flex-1 border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+              className="flex-1 border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
             <button
               onClick={verifyCode}
-              className="flex items-center justify-center bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-md text-sm transition-all"
+              className="flex items-center justify-center bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg text-sm transition-all"
             >
               <Check className="h-3.5 w-3.5 mr-1" />
               Verify

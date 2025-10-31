@@ -2,11 +2,15 @@
 import API from '@/api'
 import { UserState } from '@/redux/slice/userSlice';
 import React from "react";
-const RelatedProfile = async () => {
+import getDefaultImg from '@/utils/DefaultImg';
+import Link from 'next/link';
+import Image from 'next/image';
 
+const RelatedProfile = async () => {
     const users = await API.user.getUsers();
-    return (
-        <div className="bg-white p-3 hover:shadow">
+    if (users?.error) return <h1 className="text-red-500 font-bold">{users?.error}</h1>
+    else return (
+        <div className="bg-white p-3 ">
             <div className="flex items-center space-x-3 font-semibold text-gray-900 text-xl leading-8">
                 <span className="text-red-500">
                     <svg
@@ -29,13 +33,17 @@ const RelatedProfile = async () => {
 
             <div className="grid grid-cols-3">
                 {users?.data?.map((user: UserState, i: number) => (
-                    <div key={i} className="text-center my-2">
-                        <img
-                            className="h-16 w-16 rounded-full mx-auto"
-                            src={user?.profile?.img || "https://lavinephotography.com.au/wp-content/uploads/2017/01/PROFILE-Photography-112.jpg"}
-                            alt={user?.profile?.fullName || "User"}
-                        />
-                        <span className="text-main-color">{user?.profile?.fullName || "Anonymous"}</span>
+                    <div key={i} className="my-2 ">
+                        <div className="text-center">
+                            <Link className={'active:text-red-600 visited:text-blue-900 '} href={'/donor/' + user.id} > <Image
+                                height={60}
+                                width={60}
+                                className="h-16 hover:scale-110 w-16 rounded-full mx-auto"
+                                src={user?.profile?.img || getDefaultImg(user.profile.gender as "male" | "female")}
+                                alt={user?.profile?.fullName || "User"}
+                            /></Link>
+                                <Link className={'active:text-red-600 visited:text-blue-900'} href={'/donor/' + user.id} ><span  className="text-main-color ">{user?.profile?.fullName || "Anonymous"}</span></Link>
+                        </div>
                     </div>
                 ))}
             </div>

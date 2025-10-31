@@ -1,6 +1,8 @@
 'use client'
+
 import React, { useState, Suspense, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { useRouter } from 'next/navigation'
 import { UserState } from '@/redux/slice/userSlice'
 import RelatedProfile from '@/components/profile/RelatedProfile.server'
 import Profile from '@/components/profile/Profile'
@@ -10,84 +12,89 @@ import ChangePassword from '@/components/profile/ChangePassword'
 import ChangeAddress from '@/components/profile/ChangeAddress'
 import VerifyEmail from '@/components/profile/VerifyEmail'
 import DonationExperiance from '@/components/profile/DonationExperiance'
-import API from '@/api'
 import DonationStat from '@/components/profile/DonationStat'
+import API from '@/api'
 import { Check, Pencil } from 'lucide-react'
+import { toast } from 'react-toastify';
 
 export default function Page() {
-    const data = useSelector(({ user }: { user: UserState }) => user)
-    const [user, setUser] = useState(data)
+    const router = useRouter()
+    const reduxUser = useSelector(({ user }: { user: UserState }) => user)
+    const [user, setUser] = useState(reduxUser)
     const [edit, setEdit] = useState(false)
-    const [updatedImg, setUpdatedImg] = useState({ public_id: '', secure_url: '' })
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+    const [loading, setLoading] = useState<boolean>(true)
+    const [saving, setSaving] = useState<boolean>(false)
     const [showVerify, setShowVerify] = useState(false)
-    const [loading, setLoading] = useState(true)
-
-    useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 1200)
-        return () => clearTimeout(timer)
-    }, [])
-
-
 
 
     useEffect(() => {
+        setUser(reduxUser)
+        setLoading(reduxUser.loading)
+    }, [reduxUser])
 
-        setUser(data)
-        if (user?.credential?.isVerify === false) {
-            setShowVerify(true)
+
+    // Fetch user data / check reduxUser
+    useEffect(() => {
+
+        if (loading || reduxUser.loading) return
+        if (!reduxUser || !reduxUser?.id) {
+            toast.error('User data not found! Redirecting...')
+            setTimeout(() => router.replace('/register'), 1500)
         } else {
-            setShowVerify(false)
+            setShowVerify(!user.credential?.isVerify)
         }
         setLoading(false)
-    }, [data, user?.credential?.isVerify])
+    }, [reduxUser, router, loading])
+
 
     useEffect(() => {
-        return () => {
-            if (updatedImg.public_id) {
-                (async () => {
-                    try {
-                        await API.media.deleteAMedia(updatedImg.public_id)
-                    } catch (err) {
-                        console.error('Failed to delete last image', err)
-                    }
-                })()
-            }
-        }
-    }, [updatedImg.public_id])
-
-    useEffect(() => {
-        if (message) {
-            const timer = setTimeout(() => setMessage(null), 3000)
-            return () => clearTimeout(timer)
-        }
+        if (!message) return
+        const timer = setTimeout(() => setMessage(null), 3000)
+        return () => clearTimeout(timer)
     }, [message])
 
+    // Save profile updates
     const saveUpdate = async () => {
-        try {
-            if (updatedImg.public_id) {
-                setUser(prev => ({
-                    ...prev,
-                    profile: { ...prev.profile, img: updatedImg.secure_url },
-                }))
-            }
-
-            const { id, userId, ...profile } = user.profile
-            const UpdatedData = {
-                profile: { ...profile, img: updatedImg.secure_url || profile.img },
-            }
-
-            const result = await API.user.updateuser(UpdatedData)
-            if (result.status) {
-                setMessage({ type: 'success', text: 'প্রোফাইল আপডেট হয়েছে ✅' })
-                setEdit(false)
-            } else {
-                setMessage({ type: 'error', text: 'আপডেট ব্যর্থ হয়েছে ❌' })
-            }
-        } catch (err) {
-            setMessage({ type: 'error', text: 'কিছু সমস্যা হয়েছে ❌' })
+        if (!user?.id) {
+            setMessage({ type: 'error', text: 'User ID not found ❌' })
+            return
         }
+
+        setSaving(true)
+        try {
+            // 🧩 Clone first so we don’t mutate original state
+            const updateUser = {
+                ...user,
+                profile: { ...user.profile }
+            }
+
+            delete updateUser.profile.img
+
+            const response = await API.user.updateuser(updateUser)
+
+            if (response?.status) {
+                toast.success('প্রোফাইল আপডেট হয়েছে ✅')
+                setEdit(false)
+
+                // Optionally reload latest user data
+                // await reloadUser()
+            } else {
+                toast.error(response?.error || 'আপডেট ব্যর্থ হয়েছে ❌')
+            }
+        } catch (err:any) {
+            console.error('Error updating profile:', err)
+            toast.error('message' in err || 'আপডেট ব্যর্থ হয়েছে ❌')
+        }
+
+        setSaving(false)
     }
+
+    if (loading || reduxUser.loading) {
+        return <div className="container mx-auto my-5 p-5 text-center">Loading...</div>
+    }
+
+    if (!user || !user?.id) return null // Already redirecting in useEffect
 
     return (
         <div className="container mx-auto my-5 p-5 relative">
@@ -96,68 +103,44 @@ export default function Page() {
                 <div className="w-full md:w-3/12 md:mx-2">
                     <div className="bg-white p-3 border-t-4 border-red-400">
                         <div className="image overflow-hidden relative max-h-80">
-                            {loading ? (
-                                <div className="skeleton h-62 rounded w-full"></div>
-                            ) : (
-                                <CDUploadImg
-                                    edit={edit}
-                                    updatedImg={updatedImg}
-                                    setUpdatedImg={setUpdatedImg}
-                                    setUser={setUser}
-                                    user={user}
-                                />
-                            )}
+                            <CDUploadImg
+                                edit={edit}
+                                setUser={setUser}
+                                user={user}
+                            />
                         </div>
-
-                        {loading ? (
-                            <div className="skeleton h-6 mt-6 rounded w-4/5"></div>
-                        ) : (
-                            <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">
-                                {CDInputToText({
-                                    placeholder: 'Full Name',
-                                    value: user?.profile?.fullName,
-                                    edit,
-                                    name: 'fullName',
-                                    onChange: e =>
-                                        setUser(prev => ({
-                                            ...prev,
-                                            profile: { ...prev.profile, fullName: e.target.value },
-                                        })),
-                                })}
-                            </h1>
-                        )}
-
-                        {loading ? (
-                            <div className="skeleton h-6 mt-4 rounded w-3/5"></div>
-                        ) : (
-                            <h3 className="text-gray-600 font-lg text-semibold leading-6">
-                                {CDInputToText({
-                                    placeholder: 'Occupation',
-                                    value: user?.profile?.occupation,
-                                    edit,
-                                    name: 'occupation',
-                                    onChange: e =>
-                                        setUser(prev => ({
-                                            ...prev,
-                                            profile: { ...prev.profile, occupation: e.target.value },
-                                        })),
-                                })}
-                            </h3>
-                        )}
+                        <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">
+                            <CDInputToText
+                                placeholder="Full Name"
+                                value={user?.profile?.fullName}
+                                edit={edit}
+                                name="fullName"
+                                onChange={e =>
+                                    setUser(prev => ({
+                                        ...prev,
+                                        profile: { ...prev.profile, fullName: e.target.value },
+                                    }))
+                                }
+                            />
+                        </h1>
+                        <h3 className="text-gray-600 font-lg text-semibold leading-6">
+                            <CDInputToText
+                                placeholder="Occupation"
+                                value={user?.profile?.occupation}
+                                edit={edit}
+                                name="occupation"
+                                onChange={e =>
+                                    setUser(prev => ({
+                                        ...prev,
+                                        profile: { ...prev.profile, occupation: e.target.value },
+                                    }))
+                                }
+                            />
+                        </h3>
                     </div>
 
                     <div className="my-4"></div>
-
-
-                    <Suspense fallback={<div>
-                        <div className="skeleton h-6 mt-12 rounded w-6/12"></div>
-                        <div className="flex w-full space-x-3 mt-4">
-                            <div className="skeleton h-12 w-12 rounded-full"></div>
-                            <div className="skeleton h-12 w-12 rounded-full"></div>
-                            <div className="skeleton h-12 w-12 rounded-full"></div>
-                            <div className="skeleton h-12 w-12 rounded-full"></div>
-                        </div>
-                    </div>}>
+                    <Suspense fallback={<div>Loading related profiles...</div>}>
                         <RelatedProfile />
                     </Suspense>
                 </div>
@@ -165,20 +148,19 @@ export default function Page() {
                 {/* Right Content */}
                 <div className="w-full md:w-9/12 mx-2 h-64 relative">
                     <div className="flex justify-end w-full top-0 absolute">
-                        {loading ? (
-                            <div ></div>
-                        ) : edit ? (
+                        {edit ? (
                             <button
+                                disabled={saving}
                                 onClick={saveUpdate}
-                                className="flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm transition-all"
+                                className={`flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg text-sm transition-all ${saving ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
                                 <Check className="h-3.5 w-3.5" />
-                                <span>Done</span>
+                                <span>{saving ? 'Saving...' : 'Done'}</span>
                             </button>
                         ) : (
                             <button
                                 onClick={() => setEdit(true)}
-                                className="flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm transition-all"
+                                className="flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg text-sm transition-all"
                             >
                                 <Pencil className="h-3.5 w-3.5" />
                                 <span>Edit Profile</span>
@@ -187,27 +169,14 @@ export default function Page() {
                     </div>
 
                     <div className="flex justify-center w-full space-x-4 mt-8">
-                        {loading ? (
-                            <>
-                                <div className="skeleton h-44 w-full rounded-lg"></div>
-                                <div className="skeleton h-44 w-full rounded-lg"></div>
-                            </>
-                        ) : (
-                            <>
-                                {showVerify && <VerifyEmail email={user?.profile?.email} />}
-                                <DonationStat user={user} rootEdit={false} />
-                            </>
-                        )}
+                        {showVerify && <VerifyEmail setShowVerify={setShowVerify} email={user?.profile?.email} />}
+                        <DonationStat user={user} rootEdit={false} />
                     </div>
 
                     <div className="my-4"></div>
-                    {loading ? (
-                        <div className="skeleton h-40 w-full rounded"></div>
-                    ) : (
-                        <Profile user={user} edit={edit} setUser={setUser} />
-                    )}
+                    <Profile user={user} edit={edit} setUser={setUser} />
 
-                    {edit && !loading && (
+                    {edit && (
                         <>
                             <div className="my-4"></div>
                             <ChangePassword />
@@ -215,25 +184,17 @@ export default function Page() {
                     )}
 
                     <div className="my-4"></div>
-                    {loading ? (
-                        <div className="skeleton h-36 w-full rounded-lg"></div>
-                    ) : (
-                        <ChangeAddress rootEdit={edit} user={user} />
-                    )}
+                    <ChangeAddress rootEdit={edit} user={user} />
 
                     <div className="my-4"></div>
-                    {loading ? (
-                        <div className="skeleton h-44 w-full rounded-lg"></div>
-                    ) : (
-                        <DonationExperiance rootEdit={edit} user={user} />
-                    )}
+                    <DonationExperiance rootEdit={edit} user={user} />
                 </div>
             </div>
 
+            {/* Global message */}
             {message && (
                 <p
-                    className={`mt-3 w-full text-center fixed bottom-[60px] text-sm transition-opacity duration-500 ${message.type === 'success' ? 'text-green-600' : 'text-red-500'
-                        }`}
+                    className={`mt-3 w-full text-center fixed bottom-[60px] text-sm transition-opacity duration-500 ${message.type === 'success' ? 'text-green-600' : 'text-red-500'}`}
                 >
                     {message.text}
                 </p>

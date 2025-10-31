@@ -1,10 +1,28 @@
-import AboutBlood from "@/components/home/AboutBlood";
-import CompatibilitySection from "@/components/home/CompatibilitySection";
-import DonateOfferContainer from "@/components/home/DonateOfferContainer";
-import DonationProcessSection from "@/components/home/DonationProcessSection";
-import DonerToReciver from "@/components/home/DonerToReciver";
-import Hero from "@/components/home/Hero";
-import WhyDonateBlood from "@/components/home/WhyDonateBlood"; 
+// app/layout.tsx
+import WhyDonateBlood from '@/components/home/WhyDonateBlood';
+import './globals.css'
+import type { Metadata } from 'next'
+import Hero from '@/components/home/Hero';
+import AboutBlood from '@/components/home/AboutBlood';
+import CompatibilitySection from '@/components/home/CompatibilitySection';
+import DonerToReciver from '@/components/home/DonerToReciver';
+import DonationProcessSection from '@/components/home/DonationProcessSection';
+import DonateOfferContainer from '@/components/home/DonateOfferContainer';
+
+export const metadata: Metadata = {
+  title: 'Roktodaan',
+  description: 'A description of my awesome app.',
+  keywords: ['nextjs', 'app router', 'metadata'],
+  openGraph: {
+    title: 'My Awesome App',
+    description: 'A description for social media sharing.',
+    url: 'https://example.com',
+  },
+  }
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 export default function Home() {
   return (

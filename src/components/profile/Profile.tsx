@@ -9,10 +9,9 @@ type ProfileProps = {
   setUser?: React.Dispatch<React.SetStateAction<UserState>>; // optional
 };
 
-export default function Profile({ user, edit, setUser }: ProfileProps) {
-  // 🔹 Safe state updater → parent যদি client হয় তখন কাজ করবে
+export default function Profile({ user, edit, setUser }: ProfileProps) { 
   const updateProfile = (field: string, value: unknown) => {
-    if (!setUser) return; // server হলে কিছু করবে না
+    if (!setUser) return;  
     setUser((prev) => ({
       ...prev,
       profile: {
@@ -77,7 +76,7 @@ export default function Profile({ user, edit, setUser }: ProfileProps) {
 
           {CDInputToText({
             label: "Weight",
-            value: user?.profile?.weight,
+            value: user?.profile?.weight+" kg",
             edit,
             name: "weight",
             onChange: (e) =>
@@ -88,7 +87,7 @@ export default function Profile({ user, edit, setUser }: ProfileProps) {
             label: "Email",
             value: user?.profile?.email,
             edit,
-            error: !(user?.credential?.isVerify),
+            error: edit&&!(user?.credential?.isVerify),
             name: "email",
             onChange: (e) => updateProfile("email", e.target.value),
           })}

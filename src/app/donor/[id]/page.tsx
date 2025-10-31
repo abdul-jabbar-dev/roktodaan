@@ -1,4 +1,3 @@
-// app/profile/page.tsx
 import API from "@/api";
 import ChangeAddress from "@/components/profile/ChangeAddress";
 import DonationExperiance from "@/components/profile/DonationExperiance";
@@ -6,25 +5,32 @@ import DonationStat from "@/components/profile/DonationStat";
 import Profile from "@/components/profile/Profile";
 import RelatedProfile from "@/components/profile/RelatedProfile.server";
 import CDInputToText from "@/components/ui/CDInputToText";
-import React from "react";
-
+import React from "react"; 
+import getDefaultImg from '@/utils/DefaultImg';
 const Page = async ({ params }: { params: { id: string } }) => {
-    const {data:user} = await API.user.getUser(params.id);
- 
+
+    const data = await API.user.getUser(params.id);
+
+    const { data: user, error } = data;
+    if (error) {
+        return <div className="text-center py-10 text-red-500 font-bold">{error}</div>;
+    }
     if (!user) {
         return <div className="text-center py-10 text-gray-500">User data not found</div>;
     }
 
     return (
         <div className="container mx-auto my-5 p-5 relative">
+            
             <div className="md:flex no-wrap md:-mx-2">
 
                 {/* Left Sidebar */}
                 <div className="w-full md:w-3/12 md:mx-2">
+            
                     <div className="bg-white p-3 border-t-4 border-red-400">
-                        <div className="image overflow-hidden relative max-h-80">
+                        <div className="image overflow-hidden  rounded-lg relative max-h-80">
                             <img
-                                src={user?.profile?.img || "https://res.cloudinary.com/dnkwv76h3/image/upload/v1757350374/roktodan/hvt5xegpafmeix4thrjp.png"}
+                                src={user?.profile?.img || getDefaultImg(user.profile.gender as "male" | "female")}
                                 alt="Profile Image"
                                 className="w-full h-full object-cover"
                             />
@@ -50,13 +56,12 @@ const Page = async ({ params }: { params: { id: string } }) => {
                     </div>
 
                     <div className="my-4"></div>
-
                     <RelatedProfile />
                 </div>
 
                 {/* Right Content */}
-                <div className="w-full md:w-9/12 mx-2 h-auto relative">
-                    <div className="flex justify-center w-full space-x-4 mt-8">
+                <div className="w-full md:w-9/12   mx-2 h-auto relative">
+                     <div className="flex justify-center w-full space-x-4 mt-8">
                         <DonationStat user={user} rootEdit={false} />
                     </div>
 

@@ -12,11 +12,12 @@ import LoginStep from './LoginStep'
 import { RegisterState } from '@/redux/slice/registerSlice';
 import { UserState } from '@/redux/slice/userSlice';
 
+
 export default function HeroRegister() {
   const [isLogin, setIsLogin] = useState(false)
+  const user = useSelector(({ user }: { user: UserState }) => user)
   const [viewLoginComp, setViewLoginComp] = useState(false)
 
-  const user = useSelector(({ user }: { user: UserState }) => user)
   const { step: currentStep, step2 } = useSelector(
     ({ register }: { register: RegisterState }) => register
   )
@@ -25,9 +26,11 @@ export default function HeroRegister() {
 
   // steps কে viewLoginComp এর উপর নির্ভর করে build করব
   const steps = useMemo(() => {
+ 
     if (viewLoginComp) {
       return [<LoginStep key="s6" setVewLoginComp={setViewLoginComp} />]
     }
+
     return [
       <RegisterFirtsStep key="s1" setVewLoginComp={setViewLoginComp} />,
       <PreviousExperience_Se key="s2" />,
@@ -65,6 +68,7 @@ export default function HeroRegister() {
 
   return (
     <section className="py-28 bg-red-50 overflow-x-hidden">
+      
       {steps.slice(effectiveStep - 1, effectiveStep).map((StepComponent) => (
         <motion.div
           key={effectiveStep}

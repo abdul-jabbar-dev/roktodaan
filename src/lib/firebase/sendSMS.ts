@@ -7,7 +7,7 @@ export const sendOTP = async (phone: string) => {
   if (!recaptchaVerifier) {
     recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
       size: "invisible",
-      callback: (response:Any) => console.log("reCAPTCHA solved!", response),
+      callback: (response:any) => console.log("reCAPTCHA solved!", response),
     });
     await recaptchaVerifier.render(); // important
   }

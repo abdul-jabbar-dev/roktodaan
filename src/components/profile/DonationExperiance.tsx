@@ -1,11 +1,12 @@
 'use client'
 import API from "@/api";
-import { updateExperiance, UserState } from "@/redux/slice/userSlice";
+import { setUserDonationExperianceDataFetch, UserState } from "@/redux/slice/userSlice";
 import ClientDate from "@/utils/DateFormet";
 import { Clock12Icon, Plus, Pencil, Check } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useDispatch } from 'react-redux';
 
+import { toast } from 'react-toastify';
 export default function DonationExperiance({
   user,
   rootEdit,
@@ -15,7 +16,7 @@ export default function DonationExperiance({
 }) {
   const dispatch = useDispatch();
   const [edit, setEdit] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [newExperiance, setNewExperiance] = useState<{ date: string; location: string }>({ date: "", location: "" });
 
@@ -28,19 +29,19 @@ export default function DonationExperiance({
   }, [message]);
 
   const saveUpdate = () => {
+
     setEdit(false);
     setEditingId(null);
     setNewExperiance({ date: "", location: "" });
   };
 
-  const addExperiance = async (prop?: { date: string; id?: any; location: any }) => {
+  const addExperiance = async (prop?: { date: string; id?: number; location: any }) => {
     try {
       const payload = {
         id: prop?.id,
         lastDonationDate: prop?.date || newExperiance.date,
         lastDonationLocation: prop?.location || newExperiance.location,
       };
-
       if (!payload.lastDonationDate || !payload.lastDonationLocation) {
         setMessage({ type: "error", text: "Date & Location required!" });
         return;
@@ -48,17 +49,17 @@ export default function DonationExperiance({
 
       const res = await API.user.updateExperiance(payload);
 
-      if (res?.data?.donationExperience) {
-        dispatch(updateExperiance(res?.data?.donationExperience));
-        setMessage({ type: "success", text: prop?.id ? "Experience updated!" : "Experience added!" });
+      if (res?.data?.data) {
+        dispatch(setUserDonationExperianceDataFetch(res?.data?.data));
+        toast.success("রক্ত প্রদানের অভিজ্ঞতা যোগ হয়েছে")
         saveUpdate();
-      } else {
-        setMessage({ type: "error", text: "Failed to save experience." });
-      }
 
-    } catch (err) {
-      console.error("Failed to save experience", err);
-      setMessage({ type: "error", text: "Something went wrong!" });
+      } else {
+        toast.error(res?.error)
+      }
+    } catch (err: any) {
+      toast.error(err?.error || err.message || "দুঃখিত আবার চেষ্টা করুন ")
+
     }
   };
 
@@ -84,7 +85,7 @@ export default function DonationExperiance({
           </thead>
           <tbody>
             {/* Add new row */}
-            {edit && !editingId && (
+            {(edit && !editingId) && (
               <tr>
                 <th></th>
                 <td>
@@ -139,10 +140,10 @@ export default function DonationExperiance({
                   new Date(a.lastDonationDate).getTime()
               )
               ?.map((exp, i) => (
-                <tr key={i}>
+                <tr key={i + 1}>
                   <th>{i + 1}</th>
                   <td>
-                    {editingId === exp.id ? (
+                    {editingId === i + 1 ? (
                       <input
                         type="date"
                         max={new Date().toISOString().split("T")[0]}
@@ -152,11 +153,11 @@ export default function DonationExperiance({
                         }
                       />
                     ) : (
-                      <ClientDate dateString={exp.lastDonationDate} />
+                      <ClientDate dateString={exp?.lastDonationDate} />
                     )}
                   </td>
                   <td>
-                    {editingId === exp.id ? (
+                    {editingId === i + 1 ? (
                       <input
                         type="text"
                         value={newExperiance.location}
@@ -168,12 +169,12 @@ export default function DonationExperiance({
                         }
                       />
                     ) : (
-                      exp.lastDonationLocation
+                      exp?.lastDonationLocation
                     )}
                   </td>
                   {edit && (
                     <td>
-                      {editingId === exp.id ? (
+                      {editingId === i + 1 ? (
                         <button
                           className="text-green-600"
                           onClick={() =>
@@ -190,12 +191,13 @@ export default function DonationExperiance({
                         <button
                           className="text-blue-600"
                           onClick={() => {
-                            setEditingId(exp.id);
+
+                            setEditingId(i + 1);
                             setNewExperiance({
                               date: new Date(exp.lastDonationDate)
                                 .toISOString()
                                 .split("T")[0],
-                              location: exp.lastDonationLocation,
+                              location: exp?.lastDonationLocation,
                             });
                           }}
                         >
@@ -219,7 +221,7 @@ export default function DonationExperiance({
           {edit ? (
             <button
               onClick={saveUpdate}
-              className="flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm transition-all"
+              className="flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg text-sm transition-all"
             >
               <Check className="h-3.5 w-3.5" />
               <span>Done</span>
@@ -227,7 +229,7 @@ export default function DonationExperiance({
           ) : (
             <button
               onClick={() => setEdit(true)}
-              className="flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm transition-all"
+              className="flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg text-sm transition-all"
             >
               <Pencil className="h-3.5 w-3.5" />
               <span>Edit History</span>

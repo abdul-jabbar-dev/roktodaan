@@ -9,6 +9,7 @@ import { store } from "@/redux/store";
 import URLS from "@/config";
 import { setUserDataFetch } from "@/redux/slice/userSlice";
 import { useLocationSelect } from "@/hooks/useLocationSelect";
+import AXIOS from "@/lib/axios";
 
 function validatePassword(password: string): string[] {
   const errors: string[] = [];
@@ -36,6 +37,7 @@ export default function PersonalDetails_Fi() {
   const [showInput, setShowInput] = useState(true);
   const [globalError, setGlobalError] = useState<{ message?: string }>({});
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { division, district, upazila, selectedDivision, setSelectedDivision, selectedDistrict, setSelectedDistrict, selectedUpazila, setSelectedUpazila } = useLocationSelect(step5.address);
 
@@ -47,6 +49,8 @@ export default function PersonalDetails_Fi() {
 
   // ✅ Create user / next step
   const createUser = async () => {
+    if (loading) return;
+    setLoading(true);
     const address = {
       division: selectedDivision?.name || "",
       district: selectedDistrict?.name || "",
@@ -58,25 +62,23 @@ export default function PersonalDetails_Fi() {
 
     if (!err.success) return;
 
+
     dispatch(setStepData({ step: 5, data: userProfile }));
     dispatch(setUserData());
     const currentUserData = (store.getState() as { register: RegisterState }).register.userData;
     if ((currentUserData as { profile?: { fullName?: string } })?.profile?.fullName) {
- 
       try {
-        const res = await fetch(URLS.USER.CREATE_USER, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(currentUserData),
+        const res: Record<string, any> = await AXIOS.post(URLS.USER.CREATE_USER, currentUserData, {
+          headers: { "Content-Type": "application/json" }, timeout: 10000
         });
-
-        if (!res.ok) {
-          const errorData = await res.json().catch(() => ({}));
-          setGlobalError(errorData || { message: "Unknown error occurred" });
+        if (res?.error) {
+          setGlobalError(res?.error || { message: "Unknown error occurred" });
+          setLoading(false);
           return;
         }
-
-        const data = await res.json();
+        const data = res.data;
+        setLoading(false);
+        // যদি user id থাকে 
         if (data.user.id) {
           const localData = {
             token: data.token as string,
@@ -100,7 +102,8 @@ export default function PersonalDetails_Fi() {
           setGlobalError({});
           setSuccess(true);
         }
-      } catch (err) { 
+      } catch (err) {
+        console.log("ddd", err);
         setGlobalError(err instanceof Error ? { message: err.message } : { message: "Unexpected error" });
       }
     }
@@ -298,7 +301,7 @@ export default function PersonalDetails_Fi() {
       {/* Buttons */}
       <div className="mt-8 text-center lg:text-end flex justify-center lg:justify-end gap-4">
         <button onClick={() => dispatch(prevStep())} className="btn rounded-xl bg-gray-200 text-gray-600 hover:bg-gray-300 transition">← পূর্বে</button>
-        <button onClick={createUser} className="btn rounded-xl bg-red-500 text-white hover:bg-red-400 transition">পরবর্তী →</button>
+        <button onClick={createUser} className="btn rounded-xl bg-red-500 text-white hover:bg-red-400 transition">{loading ? "লোডিং..." : "পরবর্তী →"}</button>
       </div>
 
       {/* Success / Error */}

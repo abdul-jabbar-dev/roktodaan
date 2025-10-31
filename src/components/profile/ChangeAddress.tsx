@@ -2,11 +2,11 @@
 import { useLocationSelect } from '@/hooks/useLocationSelect';
 import { MapPinCheckIcon, Pencil, RefreshCcw } from 'lucide-react';
 import React, { useState } from 'react';
-import { updateAddress, UserState } from '@/redux/slice/userSlice';
+import { UserState, setUserAddressDataFetch } from '@/redux/slice/userSlice';
 import { Location } from '@/types/location/destination';
 import API from '@/api';
 import { useDispatch } from 'react-redux';
-
+import { toast } from 'react-toastify';
 const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean }) => {
 
     const dispatch = useDispatch();
@@ -35,8 +35,16 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
 
         // Redux এ save করুন 
         const res = await API.user.updateLocation(updatedAddress)
-        dispatch(updateAddress(res?.data?.address))
-        setEdit(false);
+        console.log(res);
+        if (res?.error) {
+            toast.error(res.error)
+        } else {
+            console.log(res)
+            dispatch(setUserAddressDataFetch(res.data.data))
+            setEdit(false);
+            toast.success("ঠিকানা সফলভাবে আপডেট করা হয়েছে")
+        }
+        return
     };
 
     return (
@@ -71,7 +79,7 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
 
                     {/* Upazila */}
                     <div className="grid grid-cols-2 gap-3 items-center  w-full">
-                        <label className="text-gray-700 font-medium ml-4">উপজেলা *</label>
+                        <label className="text-gray-700 font-medium ml-4">উপজেলা {edit&&"*"}</label>
                         {edit ? (
                             <select
                                 value={selectedUpazila?.id ?? ""}
@@ -99,7 +107,7 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
 
                     {/* District */}
                     <div className="grid grid-cols-2 gap-3 items-center w-full">
-                        <label className="text-gray-700 font-medium ml-4">জেলা *</label>
+                        <label className="text-gray-700 font-medium ml-4">জেলা {edit&&"*"}</label>
                         {edit ? (
                             <select
                                 value={selectedDistrict?.id ?? ""}
@@ -126,7 +134,7 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
 
                     {/* Division */}
                     <div className="grid grid-cols-2 gap-3 items-center  w-full">
-                        <label className="text-gray-700 font-medium ml-4">বিভাগ *</label>
+                        <label className="text-gray-700 font-medium ml-4">বিভাগ {edit &&"*"}</label>
                         {edit ? (
                             <select
                                 value={selectedDivision?.id ?? ""}
@@ -156,7 +164,7 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
                 {edit ? (
                     <button
                         onClick={saveUpdate}
-                        className="flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm transition-all"
+                        className="flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg text-sm transition-all"
                     >
                         <RefreshCcw className="h-3.5 w-3.5" />
                         <span>Update</span>
@@ -164,7 +172,7 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
                 ) : (
                     <button
                         onClick={() => setEdit(true)}
-                        className="flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm transition-all"
+                        className="flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg text-sm transition-all"
                     >
                         <Pencil className="h-3.5 w-3.5" />
                         <span>Edit Address</span>

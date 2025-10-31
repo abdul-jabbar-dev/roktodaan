@@ -5,6 +5,9 @@ export type Address = {
   division?: string;
   district?: string;
   upazila?: string;
+  coords?:
+    | { latitude: number; longitude: number }
+    | [number, number][]; // polygon
 };
 
 type Profile = {
@@ -21,8 +24,17 @@ type Profile = {
   activeDoner?: boolean;
 };
 
+export type DonorInfo = {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  profile: Profile;
+  address: Address;
+  donationExperience: [];
+};
+
 type UserUpdateInput = {
-  id?: number;
+  id?: number | string;
   userId?: number;
   profile: Profile;
 };

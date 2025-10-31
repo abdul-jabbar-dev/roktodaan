@@ -1,97 +1,109 @@
-import { Uploader, Message, Loader, useToaster } from 'rsuite';
-import React, { useState } from 'react';
-import URLS from '@/config';
-import { UserState } from '@/redux/slice/userSlice';
-import Image from 'next/image';
+'use client';
 
-function previewFile(file: File, callback: (value: string | ArrayBuffer | null) => void) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-        callback(reader.result);
-    };
-    reader.readAsDataURL(file);
+import React, { useState, useRef } from 'react';
+import Image from 'next/image';
+import { UserState } from '@/redux/slice/userSlice';
+import API from '@/api';
+import CDSpinner from './CDSpinner';
+import { toast } from 'react-toastify';
+
+interface CDUploadImgSimpleProps {
+    edit: boolean;
+    user: UserState;
+    setUser: React.Dispatch<React.SetStateAction<UserState>>;
+    size?: number; // optional custom size
+    fallback?: string; // optional fallback image
 }
 
-const CDUploadImg = (
-    { edit, user, setUser, updatedImg, setUpdatedImg }:
-        {
-            edit: boolean;
-            user: UserState;
-            setUser: React.Dispatch<React.SetStateAction<UserState>>,
-            updatedImg: { public_id: string, secure_url: string },
-            setUpdatedImg: React.Dispatch<React.SetStateAction<{ public_id: string, secure_url: string }>>
-        }) => {
-    const toaster = useToaster();
+const CDUploadImgSimple: React.FC<CDUploadImgSimpleProps> = ({
+    edit,
+    user,
+    setUser,
+    size = 300,
+    fallback = 'https://avatar.iran.liara.run/public/',
+}) => {
     const [uploading, setUploading] = useState(false);
-    const [fileInfo, setFileInfo] = useState<string | null>(null);
+    const [preview, setPreview] = useState<string | null>(null);
+    const inputRef = useRef<HTMLInputElement | null>(null);
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // create a local preview
+        setPreview(URL.createObjectURL(file));
+        setUploading(true);
+
+        try {
+            const formData = new FormData();
+            formData.append('profile', file);
+
+            // Call your backend API (which uploads to Cloudinary)
+            const res = await API.user.upload_img(formData);
+
+            if (!res?.imageUrl) throw new Error('Upload failed');
+
+            toast.success('Profile uploaded successfully ✅');
+
+            // Update local state with the uploaded image
+            setUser(prev => ({
+                ...prev,
+                profile: { ...prev.profile, img: res.imageUrl },
+            }));
+
+            // clear preview
+            setPreview(null);
+        } catch (err: any) {
+            console.error('Upload error:', err);
+            toast.error(err?.response?.data?.error || err.message || 'Upload failed ❌');
+            // reset preview if upload fails
+            setPreview(null);
+        } finally {
+            setUploading(false);
+            // reset input value so same file can be re-uploaded if needed
+            if (inputRef.current) inputRef.current.value = '';
+        }
+    };
+
+    const handleClick = () => {
+        if (edit && inputRef.current) inputRef.current.click();
+    };
+
+    const displayImg = preview || user?.profile?.img || fallback;
+
     return (
-        <div>
-            {edit ? <Uploader
+        <div
+            className="relative rounded-lg overflow-hidden border border-gray-300 hover:border-blue-500 cursor-pointer"
+            style={{ width: size, height: size }}
+            onClick={handleClick}
+            title={edit ? 'Click to change image' : ''}
+        >
+            {uploading && (
+                <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40">
+                    <CDSpinner />
+                </div>
+            )}
 
-                fileListVisible={false}
-                listType="picture"
-                action={URLS.CLOUDINARY_URL}
-                data={{
-                    upload_preset: "roktodan"
-                }}
-                onUpload={(file) => {
-                    setUploading(true);
-                    previewFile(file?.blobFile, (value) => {
-                        if (typeof value === "string") setFileInfo(value);
-                    });
-                }}
-                onSuccess={async (response, file) => {
-                    setUploading(false);
-                    toaster.push(<Message type="success">Uploaded successfully</Message>);
+            <Image
+                src={displayImg}
+                width={size}
+                height={size}
+                alt={user?.profile?.fullName || 'Profile Image'}
+                className="object-cover w-full h-full"
+            />
 
-                    // ✅ আগের image delete করা
-                    if (updatedImg.public_id && updatedImg.public_id !== response.public_id) {
-                        try {
-                            const res = await fetch(URLS.MEDIA.DELETE_MEDIA(updatedImg.public_id), { method: "DELETE" });
- 
-                        } catch (err) {
-                            console.error("Failed to delete last image", err);
-                        }
-                    }
-
-                    // ✅ নতুন image state এ set করা
-                    setUpdatedImg({
-                        public_id: response.public_id as string,
-                        secure_url: response.secure_url
-                    });
-                }}
-
-                onError={() => {
-                    setFileInfo(null);
-                    setUploading(false);
-                    toaster.push(<Message type="error">Upload failed</Message>);
-                }}
-            >
-                <button style={{ width: "100%", height: "100%" }}>
-                    {uploading && <Loader backdrop center />}
-                    {fileInfo ? (
-                        <Image src={fileInfo} width="100" height="100" alt={''} />
-                    ) : (
-                        <Image
-                                src={user?.profile?.img ||
-                                    "https://avatar.iran.liara.run/public/"}
-                                className="mx-auto"
-                                width="300"
-                                height="300" alt={user?.profile?.fullName || ''} /> 
-                    )}
-                </button>
-            </Uploader>
-                : <span>
-
-                    <Image
-                        src={user?.profile?.img ||
-                            "https://avatar.iran.liara.run/public/"}
-                        className="mx-auto"
-                        width="300"
-                        height="300" alt={user?.profile?.fullName || ''}                    />
-                </span>}
-            </div>
+            {edit && (
+                <input
+                    ref={inputRef}
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={handleFileChange}
+                    disabled={uploading}
+                />
+            )}
+        </div>
     );
 };
 
-export default CDUploadImg;
+export default CDUploadImgSimple;

@@ -1,10 +1,11 @@
-import BloodGroup from "@/types/blood/group";
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import AXIOS from "@/lib/axios";
+import BloodGroup from "@/types/blood/group";
+import URLS from "@/config";
 
-type DonationExperience = {
+export type DonationExperience = {
   id?: number;
-  lastDonationDate: string; // ISO Date string
+  lastDonationDate: string;
   lastDonationLocation: string;
 };
 
@@ -18,6 +19,7 @@ type Address = {
 };
 
 type Credential = {
+  [x: string]: any;
   randomPasswod?: false;
   isVerify?: false;
 };
@@ -41,15 +43,21 @@ type Profile = {
 export type UserState = {
   id?: number;
   userId?: number;
-  createdAt: string; // ISO Date string
-  updatedAt: string; // ISO Date string
+  createdAt: string;
+  updatedAt: string;
   profile: Profile;
   address: Address;
   donationExperience?: DonationExperience[];
   credential: Credential;
+  loading: boolean;
+  error?: string;
 };
 
-const initialState: UserState = {
+const initialState: UserState & {
+  loading: boolean;
+  error?: string;
+  success: boolean;
+} = {
   id: undefined,
   userId: undefined,
   createdAt: "",
@@ -63,72 +71,95 @@ const initialState: UserState = {
     email: "",
     phoneNumber: "",
     weight: 0,
-    bloodGroup: "A_POS" as BloodGroup, // ✅ default safe value
+    bloodGroup: "A+",
     activeDoner: false,
   },
   address: {
     id: undefined,
     userId: undefined,
-    area: null, // ✅ null default better than ""
+    area: null,
     division: "",
     district: "",
     upazila: "",
   },
   donationExperience: [],
-  credential: {
-    randomPasswod: false,
-    isVerify: false,
-  },
+  credential: { randomPasswod: false, isVerify: false },
+  loading: false,
+  error: undefined,
+  success: false,
 };
 
-export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
-  const res = await axios.get("/api/me");
-  return res.data;
-});
+export const fetchUser = createAsyncThunk(
+  "user/fetchUser",
+  async (_, { rejectWithValue }) => {
+    const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
+    const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
 
-const user = createSlice({
+    if (!token) return rejectWithValue("Token not found");
+
+    try {
+      const res = await AXIOS.get(URLS.USER.GET_MY_PROFILE, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || err.message || "Unexpected error"
+      );
+    }
+  }
+);
+
+const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUserDataFetch: (_state, action: PayloadAction<UserState>) => {
-      return action.payload;
+    clearUserData: () => {
+      localStorage.removeItem(URLS.LOCAL_STORE.SET_USER);
+      return initialState;
     },
-    clearUserData: () => initialState,
-    updateAddress: (state, action: PayloadAction<Address>) => {
-      if (state.address) {
-        state.address = { ...state.address, ...action.payload };
-      } else {
-        state.address = action.payload;
-      }
+    setUserDataFetch: (state, action: PayloadAction<UserState>) => {
+      Object.assign(state, action.payload);
     },
- updateExperiance: (state, action: PayloadAction<DonationExperience | DonationExperience[]>) => {
-  if (Array.isArray(action.payload)) {
-    // ✅ Type assertion: payload is DonationExperience[]
-    state.donationExperience = action.payload as DonationExperience[];
-  } else {
-    // Single object: update or add
-    if (state.donationExperience) {
-      const exists = state.donationExperience.find(e => e.id === action.payload.id);
-      if (exists) { 
-        state.donationExperience = state.donationExperience.map(e =>
-          e.id === action.payload.id ? action.payload : e
-        );
-      } else {
-        state.donationExperience = [...state.donationExperience, action.payload];
-      }
-    } else {
-      state.donationExperience = [action.payload];
-    }
-  }
-}
-
-
-
+    setUserAddressDataFetch: (state, action: PayloadAction<Address>) => {
+      Object.assign(state.address, action.payload);
+    },
+    setUserDonationExperianceDataFetch: (
+      state,
+      action: PayloadAction<DonationExperience[]>
+    ) => {
+      state.donationExperience /* array */ = action.payload /* array */;
+    },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchUser.fulfilled, (_, action) => action.payload);
+    builder
+      .addCase(fetchUser.pending, (state) => {
+        state.loading = true;
+        state.error = undefined;
+        state.success = false;
+      })
+      .addCase(
+        fetchUser.fulfilled,
+        (state, action: PayloadAction<UserState|any>) => {
+          if((action.payload as any).data) Object.assign(state, action.payload?.data);//note check why data 
+          else Object.assign(state, action.payload); // note maybe its ok
+
+          Object.assign(state, action.payload?.data);
+          state.loading = false;
+          state.success = true;
+        }
+      )
+      .addCase(fetchUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 
-export const { setUserDataFetch, clearUserData, updateAddress,updateExperiance } = user.actions;
-export default user.reducer;
+export const {
+  clearUserData,
+  setUserDataFetch,
+  setUserAddressDataFetch,
+  setUserDonationExperianceDataFetch,
+} = userSlice.actions;
+export default userSlice.reducer;

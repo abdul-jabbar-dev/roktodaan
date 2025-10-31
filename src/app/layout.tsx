@@ -2,8 +2,17 @@ import type { Metadata } from "next";
 import "./globals.css";
 import CustomRootLayout from "@/components/layout/CustomRootLayout";
 import TopNotify from "@/components/home/TopNotify";
+import { ToastContainer } from 'react-toastify';
 import RootHook from "@/hooks/RootHook";
 // import 'rsuite/dist/rsuite-no-reset.min.css';
+
+import { Hind_Siliguri } from 'next/font/google';
+const hind = Hind_Siliguri({
+  subsets: ['latin'], // or 'latin-ext' if needed
+  weight: ['400','500','600','700'],
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
   title: "RoktoDan - রক্ত দান করে জীবন বাঁচান",
   description:
@@ -45,9 +54,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="bn" data-theme="cmyk">
-      <body className="">
+      <body  className={hind.className}>
         <RootHook>
           <>
+            <ToastContainer position="bottom-right"
+              autoClose={5000} pauseOnFocusLoss />
             <TopNotify />
             <CustomRootLayout />
             {children}</>

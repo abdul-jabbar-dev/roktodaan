@@ -80,8 +80,9 @@ const registerSlice = createSlice({
           ...(data as object),
         } as unknown;
       }
+      if (state?.step === 5) {
 
-      state.step += 1;
+      } else state.step = state.step + 1;
     },
 
     setUserData: (state) => {
@@ -98,11 +99,11 @@ const registerSlice = createSlice({
         },
         experience: state.step3.experience
           ? [
-              {
-                lastDonationDate: state.step3.lastDonationDate,
-                lastDonationLocation: state.step3.lastDonationLocation,
-              },
-            ]
+            {
+              lastDonationDate: state.step3.lastDonationDate,
+              lastDonationLocation: state.step3.lastDonationLocation,
+            },
+          ]
           : [],
         address: {
           division: state.step5.address.division,
