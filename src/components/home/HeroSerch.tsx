@@ -8,9 +8,9 @@ export default function HeroSearch({ setOpen, open }: { setOpen: React.Dispatch<
     const [selectedDistrict, setSelectedDistrict] = useState<{ id: number, name: string } | null>(null);
     const [selectedUpazila, setSelectedUpazila] = useState<{ id: number, name: string } | null>(null);
 
-    const [division, setDivision] = useState<{ id: number, name: string, bn_name: string }[]>([]);
-    const [district, setDistrict] = useState<{ id: number, division_id: number, name: string, bn_name: string }[]>([]);
-    const [upazila, setUpazila] = useState<{ id: number, district_id: number, name: string, bn_name: string }[]>([]);
+    const [division, setDivision] = useState<{ id: number, name: string, name: string }[]>([]);
+    const [district, setDistrict] = useState<{ id: number, division_id: number, name: string, name: string }[]>([]);
+    const [upazila, setUpazila] = useState<{ id: number, district_id: number, name: string, name: string }[]>([]);
 
     useEffect(() => {
         fetch('/api/location/division.json')
@@ -66,7 +66,7 @@ export default function HeroSearch({ setOpen, open }: { setOpen: React.Dispatch<
                                 const id = Number(e.target.value);
                                 const divi = division.find(d => d.id === id);
                                 if (divi) {
-                                    setSelectedDivision({ id: divi.id, name: divi.bn_name });
+                                    setSelectedDivision({ id: divi.id, name: divi.name });
                                     setSelectedDistrict(null);
                                     setSelectedUpazila(null);
                                 }
@@ -74,7 +74,7 @@ export default function HeroSearch({ setOpen, open }: { setOpen: React.Dispatch<
                         >
                             <option value="" disabled>বিভাগ নির্বাচন করুন</option>
                             {division.map(divi => (
-                                <option key={divi.id} value={divi.id}>{divi.bn_name}</option>
+                                <option key={divi.id} value={divi.id}>{divi.name}</option>
                             ))}
                         </select>
                     </div>
@@ -90,7 +90,7 @@ export default function HeroSearch({ setOpen, open }: { setOpen: React.Dispatch<
                                 const id = Number(e.target.value);
                                 const dist = district.find(d => d.id === id);
                                 if (dist) {
-                                    setSelectedDistrict({ id: dist.id, name: dist.bn_name });
+                                    setSelectedDistrict({ id: dist.id, name: dist.name });
                                     setSelectedUpazila(null);
                                 }
                             }}
@@ -99,7 +99,7 @@ export default function HeroSearch({ setOpen, open }: { setOpen: React.Dispatch<
                             {district
                                 .filter(d => d.division_id === selectedDivision?.id)
                                 .map(d => (
-                                    <option key={d.id} value={d.id}>{d.bn_name}</option>
+                                    <option key={d.id} value={d.id}>{d.name}</option>
                                 ))}
                         </select>
                     </div>
@@ -117,7 +117,7 @@ export default function HeroSearch({ setOpen, open }: { setOpen: React.Dispatch<
                                 const id = Number(e.target.value);
                                 const upz = upazila.find(u => u.id === id);
                                 if (upz) {
-                                    setSelectedUpazila({ id: upz.id, name: upz.bn_name });
+                                    setSelectedUpazila({ id: upz.id, name: upz.name });
                                 }
                             }}
                         >
@@ -125,7 +125,7 @@ export default function HeroSearch({ setOpen, open }: { setOpen: React.Dispatch<
                             {upazila
                                 .filter(u => u.district_id === selectedDistrict?.id)
                                 .map(u => (
-                                    <option key={u.id} value={u.id}>{u.bn_name}</option>
+                                    <option key={u.id} value={u.id}>{u.name}</option>
                                 ))}
                         </select>
                     </span>

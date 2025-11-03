@@ -10,7 +10,7 @@ export const getAreaNameOSM = async (lat: number, lon: number) => {
 
   try {
     const res = await fetch(url, {
-      headers: { 'User-Agent': 'Roktodaan/1.0 (contact@roktodaan.com)' },
+      headers: { "User-Agent": "Roktodaan/1.0 (contact@roktodaan.com)" },
     });
     const data = await res.json();
     if (!data?.address) return adminLevels;
@@ -23,25 +23,23 @@ export const getAreaNameOSM = async (lat: number, lon: number) => {
 
     return adminLevels;
   } catch (err) {
-    console.error('💥 OSM reverse error:', err);
+    console.error("💥 OSM reverse error:", err);
     return adminLevels;
   }
 };
 
-/**
- * 🔎 Get Latitude/Longitude by Area Name
- * Smart fallback if area name too vague
- */
 export const getLatLonByArea = async (address: string) => {
- 
-  const query = encodeURIComponent(`${address}`); 
+  const query = encodeURIComponent(`${address}`);
   const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`;
 
-  const defaultLocation = { lat: null as number | null, lon: null as number | null };
+  const defaultLocation = {
+    lat: null as number | null,
+    lon: null as number | null,
+  };
 
   try {
     const response = await fetch(url, {
-      headers: { 'User-Agent': 'Roktodaan/1.0 (contact@roktodaan.com)' },
+      headers: { "User-Agent": "Roktodaan/1.0 (contact@roktodaan.com)" },
     });
 
     if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
@@ -57,7 +55,7 @@ export const getLatLonByArea = async (address: string) => {
       lon: parseFloat(data[0].lon),
     };
   } catch (err) {
-    console.error('💥 OSM search error:', err);
+    console.error("💥 OSM search error:", err);
     return defaultLocation;
   }
 };

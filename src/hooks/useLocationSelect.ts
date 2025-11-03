@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Division, District, Upazila } from "@/types/location/destination";
+
 export function useLocationSelect(step5Address: {
   division: string;
   district: string;
@@ -39,9 +40,9 @@ export function useLocationSelect(step5Address: {
       const match = division.find(
         (d) =>
           d.name === step5Address.division ||
-          d.bn_name === step5Address.division
+          d.name === step5Address.division
       );
-      if (match) setSelectedDivision({ id: match.id, name: match.bn_name });
+      if (match) setSelectedDivision({ id: match.id, name: match.name });
     }
   }, [division, step5Address?.division]);
 
@@ -50,9 +51,9 @@ export function useLocationSelect(step5Address: {
       const match = district.find(
         (d) =>
           d.name === step5Address.district ||
-          d.bn_name === step5Address.district
+          d.name === step5Address.district
       );
-      if (match) setSelectedDistrict({ id: match.id, name: match.bn_name });
+      if (match) setSelectedDistrict({ id: match.id, name: match.name });
     }
   }, [district, step5Address?.district]);
 
@@ -60,9 +61,9 @@ export function useLocationSelect(step5Address: {
     if (upazila.length && step5Address?.upazila) {
       const match = upazila.find(
         (u) =>
-          u.name === step5Address.upazila || u.bn_name === step5Address.upazila
+          u.name === step5Address.upazila || u.name === step5Address.upazila
       );
-      if (match) setSelectedUpazila({ id: match.id, name: match.bn_name });
+      if (match) setSelectedUpazila({ id: match.id, name: match.name });
     }
   }, [upazila, step5Address?.upazila]);
 

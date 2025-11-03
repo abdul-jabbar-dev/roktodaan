@@ -241,7 +241,7 @@ export default function PersonalDetails_Fi() {
               onChange={e => {
                 const divi = division.find(d => d.id === Number(e.target.value));
                 if (divi) {
-                  setSelectedDivision({ id: divi.id, name: divi.bn_name });
+                  setSelectedDivision({ id: divi.id, name: divi.name });
                   setSelectedDistrict(null);
                   setSelectedUpazila(null);
                 }
@@ -249,7 +249,7 @@ export default function PersonalDetails_Fi() {
               className="select border border-gray-300 w-full rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400 "
             >
               <option value="" disabled>বিভাগ নির্বাচন করুন</option>
-              {division.map(d => <option key={d.id} value={d.id}>{d.bn_name}</option>)}
+              {division.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
             </select>
             {personalInfoError?.errors?.address?.division && (
               <p className="text-red-500 text-sm">{personalInfoError.errors.address.division._errors[0]}</p>
@@ -264,12 +264,12 @@ export default function PersonalDetails_Fi() {
               disabled={!selectedDivision}
               onChange={e => {
                 const dist = district.find(d => d.id === Number(e.target.value));
-                if (dist) { setSelectedDistrict({ id: dist.id, name: dist.bn_name }); setSelectedUpazila(null); }
+                if (dist) { setSelectedDistrict({ id: dist.id, name: dist.name }); setSelectedUpazila(null); }
               }}
               className="select border border-gray-300 w-full rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400 "
             >
               <option value="" disabled>জেলা নির্বাচন করুন</option>
-              {district.filter(d => d.division_id === selectedDivision?.id).map(d => <option key={d.id} value={d.id}>{d.bn_name}</option>)}
+              {district.filter(d => d.division_id === selectedDivision?.id).map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
             </select>
             {personalInfoError?.errors?.address?.district && (
               <p className="text-red-500 text-sm">{personalInfoError.errors.address.district._errors[0]}</p>
@@ -284,12 +284,12 @@ export default function PersonalDetails_Fi() {
               disabled={!selectedDistrict}
               onChange={e => {
                 const upz = upazila.find(u => u.id === Number(e.target.value));
-                if (upz) setSelectedUpazila({ id: upz.id, name: upz.bn_name });
+                if (upz) setSelectedUpazila({ id: upz.id, name: upz.name });
               }}
               className="select border border-gray-300 w-full rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400 b"
             >
               <option value="" disabled>উপজেলা নির্বাচন করুন</option>
-              {upazila.filter(u => u.district_id === selectedDistrict?.id).map(u => <option key={u.id} value={u.id}>{u.bn_name}</option>)}
+              {upazila.filter(u => u.district_id === selectedDistrict?.id).map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
             </select>
             {personalInfoError?.errors?.address?.upazila && (
               <p className="text-red-500 text-sm">{personalInfoError.errors.address.upazila._errors[0]}</p>

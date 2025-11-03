@@ -86,7 +86,7 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
                                 disabled={!selectedDistrict}
                                 onChange={e => {
                                     const upz = upazila.find(u => u.id === Number(e.target.value));
-                                    if (upz) setSelectedUpazila({ id: upz.id, name: upz.bn_name });
+                                    if (upz) setSelectedUpazila({ id: upz.id, name: upz.name });
                                 }}
                                 className="select border border-gray-300 select-sm rounded-xl py-1 px-3 
                                    focus:outline-none focus:ring-2 focus:ring-gray-400 w-full"
@@ -94,7 +94,7 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
                                 <option value="" disabled>উপজেলা নির্বাচন করুন</option>
                                 {upazila
                                     .filter(u => u.district_id === selectedDistrict?.id)
-                                    .map(u => <option key={u.id} value={u.id}>{u.bn_name}</option>)}
+                                    .map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
                             </select>
                         ) : (
                             <span className="ml-2">{user.address?.upazila}</span>
@@ -115,7 +115,7 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
                                 onChange={e => {
                                     const dist = district.find(d => d.id === Number(e.target.value));
                                     if (dist) {
-                                        setSelectedDistrict({ id: dist.id, name: dist.bn_name });
+                                        setSelectedDistrict({ id: dist.id, name: dist.name });
                                         setSelectedUpazila(null);
                                     }
                                 }}
@@ -125,7 +125,7 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
                                 <option value="" disabled>জেলা নির্বাচন করুন</option>
                                 {district
                                     .filter(d => d.division_id === selectedDivision?.id)
-                                    .map(d => <option key={d.id} value={d.id}>{d.bn_name}</option>)}
+                                    .map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
                             </select>
                         ) : (
                             <span className="ml-2">{user.address?.district}</span>
@@ -141,7 +141,7 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
                                 onChange={e => {
                                     const divi = division.find(d => d.id === Number(e.target.value));
                                     if (divi) {
-                                        setSelectedDivision({ id: divi.id, name: divi.bn_name });
+                                        setSelectedDivision({ id: divi.id, name: divi.name });
                                         setSelectedDistrict(null);
                                         setSelectedUpazila(null);
                                     }
@@ -150,7 +150,7 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
                                    focus:outline-none focus:ring-2 focus:ring-gray-400 w-full"
                             >
                                 <option value="" disabled>বিভাগ নির্বাচন করুন</option>
-                                {division.map(d => <option key={d.id} value={d.id}>{d.bn_name}</option>)}
+                                {division.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
                             </select>
                         ) : (
                             <span className="ml-2">{user.address?.division}</span>

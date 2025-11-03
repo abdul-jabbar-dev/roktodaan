@@ -1,11 +1,13 @@
 
+import { useLocationSelect } from '@/hooks/useLocationSelect';
+import BloodGroup from '@/types/blood/group';
 import React, { useState } from 'react';
 
 const ChevronDownIcon: React.FC<{ className?: string }> = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 20 20" fill="currentColor">
         <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
     </svg>
-);
+);  
 
 const MapViewIcon: React.FC<{ className?: string }> = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 20 20" fill="currentColor">
@@ -35,32 +37,41 @@ interface DonorSearchProps {
 
 const DonorSearch: React.FC<DonorSearchProps> = ({ onLocationRequest, onRadiusChange, isLocating, locationError, view, setView }) => {
     const [activeTab, setActiveTab] = useState('new');
+    const [bloodGroup, setBloodGroup] = useState<BloodGroup>()
+    const [add, setAdd] = useState({
+        division: '',
+        district: '',
+        upazila: ''
+    });
+
+    const {
+        division,
+        district,
+        upazila,
+        selectedDivision,
+        setSelectedDivision,
+        selectedDistrict,
+        setSelectedDistrict,
+        selectedUpazila,
+        setSelectedUpazila
+    } = useLocationSelect(add);
 
     return (
         <div className="space-y-4">
+
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+
                 <div className="relative">
-                    <select className="w-full appearance-none bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-red-500">
-                        <option>শহর/জেলা (ঢাকা)</option>
-                        <option>চট্টগ্রাম</option>
-                        <option>খুলনা</option>
-                        <option>রাজশাহী</option>
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                        <ChevronDownIcon className="h-4 w-4" />
-                    </div>
-                </div>
-                <div className="relative">
-                    <select className="w-full appearance-none bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-red-500">
-                        <option>ব্লাড গ্রুপ (সব)</option>
-                        <option>A+</option>
-                        <option>A-</option>
-                        <option>B+</option>
-                        <option>B-</option>
-                        <option>AB+</option>
-                        <option>AB-</option>
-                        <option>O+</option>
-                        <option>O-</option>
+                    <select onChange={e => setBloodGroup(e.target.value as BloodGroup)} className="w-full appearance-none bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-red-500">
+                        <option value=""  >ব্লাড গ্রুপ (সব)</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                         <ChevronDownIcon className="h-4 w-4" />
@@ -90,17 +101,7 @@ const DonorSearch: React.FC<DonorSearchProps> = ({ onLocationRequest, onRadiusCh
                         <ChevronDownIcon className="h-4 w-4" />
                     </div>
                 </div>
-                <div className="relative">
-                    <select className="w-full appearance-none bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-red-500">
-                        <option>সংখ্যা</option>
-                        <option>১০</option>
-                        <option>২০</option>
-                        <option>৫০</option>
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                        <ChevronDownIcon className="h-4 w-4" />
-                    </div>
-                </div>
+          
             </div>
             <div className="flex flex-wrap items-center gap-4">
                 <input
@@ -126,18 +127,60 @@ const DonorSearch: React.FC<DonorSearchProps> = ({ onLocationRequest, onRadiusCh
             {locationError && <p className="text-sm text-red-600">{locationError}</p>}
             <div className="flex items-center space-x-2">
                 <div className="flex-1">
-                    <button
-                        onClick={() => setActiveTab('new')}
-                        className={`px-4 py-1.5 text-sm font-medium rounded-full ${activeTab === 'new' ? 'bg-red-100 text-red-700' : 'text-gray-600 hover:bg-gray-100'}`}
-                    >
-                        নতুন ডোনার
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('clear')}
-                        className={`px-4 py-1.5 text-sm font-medium rounded-full ${activeTab === 'clear' ? 'bg-red-100 text-red-700' : 'text-gray-600 hover:bg-gray-100'}`}
-                    >
-                        রিমুভ ফিল্টার
-                    </button>
+                    <div className="flex w-full gap-x-4"> <div className="relative">
+                        <select
+                            value={selectedDivision?.id ?? ""}
+                            onChange={e => {
+                                const divi = division.find(d => d.id === Number(e.target.value));
+                                if (divi) {
+                                    setSelectedDivision({ id: divi.id, name: divi.name });
+                                    setSelectedDistrict(null);
+                                    setSelectedUpazila(null);
+                                }
+                            }}
+                            className="w-full appearance-none bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-red-500">
+                            <option value="" disabled>বিভাগ নির্বাচন করুন</option>
+                            {division.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <ChevronDownIcon className="h-4 w-4" />
+                        </div>
+                    </div>  {/* District */}
+                        <div className="relative">
+                            <select
+                                value={selectedDistrict?.id ?? ""}
+                                disabled={!selectedDivision}
+                                onChange={e => {
+                                    const dist = district.find(d => d.id === Number(e.target.value));
+                                    if (dist) { setSelectedDistrict({ id: dist.id, name: dist.name }); setSelectedUpazila(null); }
+                                }}
+                                className={"w-full appearance-none bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-red-500 "}>
+                                <option value="" disabled>জেলা নির্বাচন করুন</option>
+                                {district.filter(d => d.division_id === selectedDivision?.id).map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+                            </select>
+                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <ChevronDownIcon className="h-4 w-4" />
+                            </div>
+                        </div>
+
+                        {/* Upazila */}
+                        <div className="relative">
+                            <select
+                                value={selectedUpazila?.id ?? ""}
+                                disabled={!selectedDistrict}
+                                onChange={e => {
+                                    const upz = upazila.find(u => u.id === Number(e.target.value));
+                                    if (upz) setSelectedUpazila({ id: upz.id, name: upz.name });
+                                }}
+                                className={"w-full appearance-none bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-red-500 "}>
+                                <option value="" disabled>উপজেলা নির্বাচন করুন</option>
+                                {upazila.filter(u => u.district_id === selectedDistrict?.id).map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
+                            </select>
+                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <ChevronDownIcon className="h-4 w-4" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div className="flex items-center space-x-2 bg-gray-200 p-1 rounded-lg ">
                     <button
