@@ -10,6 +10,7 @@ import URLS from "@/config";
 import { setUserDataFetch } from "@/redux/slice/userSlice";
 import { useLocationSelect } from "@/hooks/useLocationSelect";
 import AXIOS from "@/lib/axios";
+import { setItemFromStore } from "@/utils/store/localstore";
 
 function validatePassword(password: string): string[] {
   const errors: string[] = [];
@@ -94,7 +95,7 @@ export default function PersonalDetails_Fi() {
 
           dispatch(setUserDataFetch(data.user));
 
-          localStorage.setItem(URLS.LOCAL_STORE.SET_USER, JSON.stringify(localData));
+          setItemFromStore(localData);
         }
         if (data.error) {
           setGlobalError(data);

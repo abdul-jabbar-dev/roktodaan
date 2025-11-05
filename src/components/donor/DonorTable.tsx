@@ -1,5 +1,5 @@
 import { DonorInfo } from '@/types/user/user';
-import ClientDate, { getLastDonationDateRelativeToday } from '@/utils/DateFormet';
+import  { getLastDonationDateRelativeToday } from '@/utils/DateFormet';
 import getDefaultImg from '@/utils/DefaultImg';
 import Image from 'next/image';
 import React, { useState, useMemo, useEffect } from 'react';

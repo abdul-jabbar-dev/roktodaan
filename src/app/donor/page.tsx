@@ -6,7 +6,7 @@ import { getCoordsFromAI } from '@/lib/gimini/getLocation';
 import dynamic from 'next/dynamic'; // 💡 এই ইম্পোর্টটি 'window' এরর ফিক্স করার জন্য জরুরি
 import { DonorInfo } from '@/types/user/user';
 
-
+import { cookies } from 'next/headers';
 const DynamicDonorViewPoint = dynamic(
     () => import('@/components/donor/DonorViewPoint'),
     {
@@ -25,9 +25,11 @@ const UserLocation = dynamic(() => import('@/components/UserLocation'), {
     ssr: false,
 });
 
-const App: React.FC = async () => {
 
-    const { data: initialUsers } = await API.user.getUsers();
+const App: React.FC = async () => {
+    const cookiesAccessor = cookies()
+ 
+    const { data: initialUsers } = await API.user.getUsers(cookiesAccessor);
 
 
 
@@ -82,10 +84,8 @@ const App: React.FC = async () => {
         }
     };
 
-    // 3. সব ডেটা GeoCode করে অপেক্ষা করা
     const donorsWithCoords = await fetchDonorLocations(initialUsers);
 
-    // console.log("Updated Donors (with Coords):", donorsWithCoords[0].address);
     return (
         <div className="min-h-screen bg-gray-50 text-gray-800">
 

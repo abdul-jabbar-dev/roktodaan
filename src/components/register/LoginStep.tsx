@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import {  setUserDataFetch } from '@/redux/slice/userSlice';
 import ForgetPass from './ForgetPass'; 
 import { toast } from 'react-toastify';
+import { setItemFromStore } from '@/utils/store/localstore';
 
 export default function LoginStep({ setVewLoginComp }: { setVewLoginComp: Dispatch<SetStateAction<boolean>> }) {
  
@@ -56,7 +57,7 @@ export default function LoginStep({ setVewLoginComp }: { setVewLoginComp: Dispat
         };
          toast.success("সফলভাবে লগইন করা হয়েছে");
         dispatch(setUserDataFetch(data.data.user));
-        localStorage.setItem(URLS.LOCAL_STORE.SET_USER, JSON.stringify(localData));
+       setItemFromStore(localData);
 
       }
 

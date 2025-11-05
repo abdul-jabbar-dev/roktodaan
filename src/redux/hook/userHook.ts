@@ -4,13 +4,14 @@ import URLS from "@/config";
 import { UserState } from "../slice/userSlice";
 import { setUserDataFetch } from "@/redux/slice/userSlice";
 import API from "@/api";
+import { getItemFromStore } from "@/utils/store/localstore";
 
 export function useUser() {
   const dispatch = useDispatch(); 
   const oldData = useSelector(({ user }: { user: UserState }) => user);
 
   useEffect(() => {
-    const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
+    const tokenStr = getItemFromStore()
     if (!tokenStr) { 
       return;
     }

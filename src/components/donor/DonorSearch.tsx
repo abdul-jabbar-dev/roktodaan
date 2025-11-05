@@ -43,7 +43,7 @@ const DonorSearch: React.FC<DonorSearchProps> = ({
 
   const handleSearch = () => {
     setIsLoading(true);
-    setSearchString(inputValue); 
+    setSearchString(inputValue);
   };
 
   return (
@@ -113,15 +113,15 @@ const DonorSearch: React.FC<DonorSearchProps> = ({
         </select>
 
         {/* Distance */}<CDTooltip placement='top' tooltipText='Under Construction'>
-        <select
-          onChange={(e) => onRadiusChange(Number(e.target.value))}
-          className="bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:bg-white focus:border-gray-500"
-        >
-          <option value="0">দূরত্ব (সব)</option>
-          <option value="5">৫ কিমি</option>
-          <option value="10">১০ কিমি</option>
-          <option value="20">২০ কিমি</option>
-        </select></CDTooltip>
+          <select
+            onChange={(e) => onRadiusChange(Number(e.target.value))}
+            className="bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:bg-white focus:border-gray-500"
+          >
+            <option value="0">দূরত্ব (সব)</option>
+            <option value="5">৫ কিমি</option>
+            <option value="10">১০ কিমি</option>
+            <option value="20">২০ কিমি</option>
+          </select></CDTooltip>
       </div>
 
       {/* Search + Buttons */}

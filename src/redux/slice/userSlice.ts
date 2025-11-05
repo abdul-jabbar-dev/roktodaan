@@ -2,6 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import AXIOS from "@/lib/axios";
 import BloodGroup from "@/types/blood/group";
 import URLS from "@/config";
+import { getItemFromStore, removeItemFromStore } from "@/utils/store/localstore";
 
 export type DonationExperience = {
   id?: number;
@@ -92,7 +93,7 @@ const initialState: UserState & {
 export const fetchUser = createAsyncThunk(
   "user/fetchUser",
   async (_, { rejectWithValue }) => {
-    const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
+    const tokenStr = getItemFromStore()
     const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
 
     if (!token) return rejectWithValue("Token not found");
@@ -115,7 +116,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     clearUserData: () => {
-      localStorage.removeItem(URLS.LOCAL_STORE.SET_USER);
+      removeItemFromStore()
       return initialState;
     },
     setUserDataFetch: (state, action: PayloadAction<UserState>) => {

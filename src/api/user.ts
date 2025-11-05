@@ -2,6 +2,7 @@ import URLS from "@/config";
 import UserUpdateInput from "@/types/user/user";
 import { Location } from "@/types/location/destination";
 import AXIOS from "@/lib/axios";
+import { getItemFromStore } from "@/utils/store/localstore";
 
 // get user info
 const getMyInfo = async (token: string) => {
@@ -18,7 +19,7 @@ const getMyInfo = async (token: string) => {
 // update password
 const updatePassword = async (password: string) => {
   try {
-    const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
+    const tokenStr = getItemFromStore();
     const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
 
     if (!token) return { error: "No token found" };
@@ -84,7 +85,7 @@ const getUser = async (id: string): Promise<any> => {
 // update user info
 const updateuser = async (userData: UserUpdateInput) => {
   try {
-    const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
+    const tokenStr = getItemFromStore();
     const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
 
     if (!token) return { error: "No token found" };
@@ -104,7 +105,7 @@ const updateuser = async (userData: UserUpdateInput) => {
 // update user Img
 const update_profile_img = async (img: string) => {
   try {
-    const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
+    const tokenStr = getItemFromStore();
     const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
 
     if (!token) return { error: "No token found" };
@@ -151,7 +152,7 @@ const changePasswordWithOtp = async (userData: {
 // update location
 const updateLocation = async (locationData: Location) => {
   try {
-    const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
+    const tokenStr = getItemFromStore();
     const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
 
     if (!token) return { error: "No token found" };
@@ -169,11 +170,26 @@ const updateLocation = async (locationData: Location) => {
   }
 };
 
-// get all users
-const getUsers = async () => {
+// get all users (generic it call ssr and client also)
+const getUsers = async (tokenOrAccessor?: any | null) => {
   try {
-    const res: any = await AXIOS.get(URLS.USER.GET_USERS);
+    let tokenStr: string | null = null;
 
+    if (tokenOrAccessor && typeof tokenOrAccessor.get === "function") {
+      const tokenData = tokenOrAccessor.get(URLS.LOCAL_STORE.SET_USER)?.value;
+      tokenStr = tokenData || null;
+    } else if (typeof tokenOrAccessor === "string" || !tokenOrAccessor) {
+      tokenStr = getItemFromStore();
+    } 
+    
+    const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
+    console.log(token);
+    const res: any = await AXIOS.get(URLS.USER.GET_USERS, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
     if (res?.error) {
       return { error: res?.error || "Failed to fetch users" };
     } else return res.data;
@@ -189,7 +205,7 @@ const updateExperiance = async (experiance: {
   id?: string | number;
 }) => {
   try {
-    const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
+    const tokenStr = getItemFromStore();
     const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
 
     if (!token) return { error: "No token found" };
@@ -210,7 +226,7 @@ const updateExperiance = async (experiance: {
 // generate OTP
 const genOTP = async (email: string) => {
   try {
-    const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
+    const tokenStr = getItemFromStore();
     const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
 
     if (!token) return { error: "No token found" };
@@ -238,7 +254,7 @@ const varifyOTP = async (
   { otpType }: { otpType: "emailVerification" | "passwordReset" }
 ) => {
   try {
-    const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
+    const tokenStr = getItemFromStore();
     const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
 
     if (!token) return { error: "No token found" };
@@ -278,7 +294,7 @@ const login = async (email: string, password: string) => {
 
 // login
 const upload_img = async (formData: FormData) => {
-  const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
+  const tokenStr = getItemFromStore();
   const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
 
   if (!token) return { error: "No token found" };

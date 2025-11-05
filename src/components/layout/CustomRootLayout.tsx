@@ -4,21 +4,21 @@ import Image from 'next/image'
 import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { useSelector, useDispatch } from 'react-redux'
-import { clearUserData, fetchUser, UserState } from '@/redux/slice/userSlice' 
-import URLS from '@/config'
+import { clearUserData, fetchUser, UserState } from '@/redux/slice/userSlice'  
+import { getItemFromStore, removeItemFromStore } from '@/utils/store/localstore'
 
 export default function CustomRootLayout() {
   const user = useSelector(({ user }: { user: UserState & { loading: boolean; error?: string; success: boolean } }) => user);
   const dispatch = useDispatch<any>()
   useEffect(() => {
-    const tokenStr = localStorage.getItem(URLS.LOCAL_STORE.SET_USER);
+    const tokenStr =getItemFromStore()
     if (tokenStr) {
       dispatch(fetchUser());
     }
   }, [dispatch]);
 
   const hitLogout = () => {
-    localStorage.removeItem(URLS.LOCAL_STORE.SET_USER)
+    removeItemFromStore()
     dispatch(clearUserData())
   }
 
@@ -77,16 +77,7 @@ export default function CustomRootLayout() {
                   <Droplet className='text-red-400' />
                   রক্তদাতা হোন
                 </button>
-              </Link>
-
-              <Link
-                href="/profile">
-                <button className="btn btn-lg text-red-400  no-underline underline-offset-4  btn-link ">
-                  <Droplet className='text-red-400' />
-                  profile
-                </button>
-              </Link>
-
+              </Link> 
             </div>}
         </div>
       </div>
