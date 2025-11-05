@@ -3,6 +3,7 @@ import { useGetDonorsQuery } from '@/redux/services/homeDonor';
 import React, { useEffect, useState } from 'react'
 import { QueryState } from './Hero';
 import CloseIcon from '@rsuite/icons/Close';
+import CDTooltip from '../ui/CDTooltip';
 export default function HeroSearch({ open, setUseQuery, setOpen }: { open: boolean, setUseQuery: React.Dispatch<React.SetStateAction<QueryState>>, setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
 
     const [selectedDivision, setSelectedDivision] = useState<{ id: number, name: string } | null>(null);
@@ -162,7 +163,8 @@ export default function HeroSearch({ open, setUseQuery, setOpen }: { open: boole
                 </div>
                 <div className="divider">OR</div>
                 <div className="flex gap-x-2">
-                    <button
+                    <CDTooltip placement='auto' tooltipText='Under Constraction'>
+                        <button
                         className={`${coords?.latitude != null && coords?.longitude != null
                             ? "bg-gray-100 cursor-not-allowed" // অবস্থান থাকলে hover/active blocked
                             : "bg-red-100 hover:bg-gray-200 transition"
@@ -174,6 +176,7 @@ export default function HeroSearch({ open, setUseQuery, setOpen }: { open: boole
                             ? "অবস্থান পেয়েছি"
                             : "আমার অবস্থান"}
                     </button>
+                    </CDTooltip>
                     {coords?.latitude && coords?.longitude && <button
                         className={`text-gray-700 font-semibold py-2 px-4 rounded-lg disabled:opacity-50 w-12 bg-red-100 hover:bg-gray-200 transition`}
                         onClick={() => setCoords(null)}  >

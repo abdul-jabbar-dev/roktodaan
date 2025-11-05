@@ -64,18 +64,18 @@ const DonorViewPoint: React.FC<{ allDonors: DonorInfo[] }> = ({ allDonors }) => 
     }
 
     // 4️⃣ Filter by radius if user location exists
-    if (userLocation && searchRadius > 0) {
-      filteredDonors = filteredDonors.filter(donor => {
-        if (!donor.address.latitude || !donor.address.longitude) return false;
-        const distance = getDistanceFromLatLonInKm(
-          userLocation.latitude,
-          userLocation.longitude,
-          donor.address.latitude,
-          donor.address.longitude
-        );
-        return distance <= searchRadius;
-      });
-    }
+    // if (userLocation && searchRadius > 0) {
+    //   filteredDonors = filteredDonors.filter(donor => {
+    //     if (!donor.address.latitude || !donor.address.longitude) return false;
+    //     const distance = getDistanceFromLatLonInKm(
+    //       userLocation.latitude,
+    //       userLocation.longitude,
+    //       donor.address.latitude,
+    //       donor.address.longitude
+    //     );
+    //     return distance <= searchRadius;
+    //   });
+    // }
 
     // 5️⃣ Update your state (so table/map can use filtered donors)
     setFilteredDonors(filteredDonors);
