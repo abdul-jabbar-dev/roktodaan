@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useLocationSelect } from '@/hooks/useLocationSelect';
 import BloodGroup from '@/types/blood/group';
+import CDTooltip from '../ui/CDTooltip';
 
 interface DonorSearchProps {
   isLocating: boolean;
@@ -111,7 +112,7 @@ const DonorSearch: React.FC<DonorSearchProps> = ({
           ))}
         </select>
 
-        {/* Distance */}
+        {/* Distance */}<CDTooltip placement='top' tooltipText='Under Construction'>
         <select
           onChange={(e) => onRadiusChange(Number(e.target.value))}
           className="bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:bg-white focus:border-gray-500"
@@ -120,7 +121,7 @@ const DonorSearch: React.FC<DonorSearchProps> = ({
           <option value="5">৫ কিমি</option>
           <option value="10">১০ কিমি</option>
           <option value="20">২০ কিমি</option>
-        </select>
+        </select></CDTooltip>
       </div>
 
       {/* Search + Buttons */}

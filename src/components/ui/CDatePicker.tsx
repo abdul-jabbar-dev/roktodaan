@@ -1,7 +1,7 @@
 import React from 'react';
 import { CustomProvider, Container } from 'rsuite';
 import { DatePicker } from 'rsuite';
-import 'rsuite/dist/rsuite.min.css';
+// import 'rsuite/dist/rsuite.min.css';
 
 export default function CDatePicker() {
 

@@ -47,7 +47,7 @@ const SendOtp: React.FC<SendOtpProps> = ({ setIsOtpSend }) => {
 
     // 🔁 Resend OTP handler
     const sendAgain = async () => {
-        alert("Under Constraction")
+        alert("Under Construction")
         // setResendLoading(true);
         // try {
         //     const res = await API.user.sendOtpAgain({ email: 'a********@gmail.com' });

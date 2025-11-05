@@ -64,6 +64,7 @@ const BloodRequests: React.FC = () => {
 
     return (
         <div className="bg-white rounded-lg shadow-md p-6">
+            
             <h2 className="text-xl font-bold text-gray-800 mb-4">জরুরী রক্তের আবেদন</h2>
             <div className="space-y-2">
                 {sortedRequests.map(req => <BloodRequestCard key={req.id} request={req} />)}

@@ -163,7 +163,7 @@ export default function HeroSearch({ open, setUseQuery, setOpen }: { open: boole
                 </div>
                 <div className="divider">OR</div>
                 <div className="flex gap-x-2">
-                    <CDTooltip placement='auto' tooltipText='Under Constraction'>
+                    <CDTooltip placement='top' tooltipText='Under Construction'>
                         <button
                         className={`${coords?.latitude != null && coords?.longitude != null
                             ? "bg-gray-100 cursor-not-allowed" // অবস্থান থাকলে hover/active blocked

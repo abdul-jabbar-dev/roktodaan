@@ -1,30 +1,53 @@
+// CDTooltip.tsx
+
 import React, { ReactNode } from 'react';
-import { Tooltip, Whisper } from 'rsuite';
-import 'rsuite/dist/rsuite.min.css'; // rsuite CSS ইম্পোর্ট করা হয়েছে (যদি না করা থাকে)
-import { TypeAttributes } from 'rsuite/esm/internals/types';
+import * as Tooltip from '@radix-ui/react-tooltip'; // Radix UI Tooltip 
+// RSuite-এর TypeAttributes ব্যবহার না করে Radix-এর Type ব্যবহার করাই ভালো
 
-/**
- * @param {string} tooltipText - যে টেক্সটটি টুলটিপে দেখাবে।
- * @param {('top'|'bottom'|'left'|'right')} [placement='top'] - টুলটিপটি কোথায় দেখাবে।
- * @param {React.ReactNode} children - যার উপরে হোভার করলে টুলটিপটি দেখাবে।
- */
-function CDTooltip({ tooltipText, placement = 'top', children }:{ tooltipText:string, placement :TypeAttributes.Placement | undefined, children:ReactNode }) {
-  
-  // tooltipText-কে কন্টেন্ট হিসেবে নিয়ে একটি Tooltip কম্পোনেন্ট তৈরি করা হলো
-  const speaker = <Tooltip>{tooltipText}</Tooltip>;
+// আমরা এখন Radix-এর টাইপ ব্যবহার করব
+type Placement = 'top' | 'bottom' | 'left' | 'right'; 
 
+function CDTooltip({ 
+  tooltipText, 
+  placement = 'top', 
+  children 
+}: { 
+  tooltipText: string, 
+  placement?: Placement, // Radix-এর প্লেসমেন্ট
+  children: ReactNode 
+}) {
+
+  // Radix UI Tooltip ব্যবহার করে একটা সহজ কিন্তু কাস্টমাইজেবল টুলটিপ তৈরি
   return (
-    // Whisper কম্পোনেন্টটি hover ট্রিগারে Tooltip-কে দেখাবে
-    <Whisper 
-      placement={placement } 
-      trigger="hover" 
-      speaker={speaker}
-      // ডিফল্ট ডিলিং: মাউস সরানোর সাথে সাথে চলে যাবে
-      enterable 
-    >
-      {/* এই অংশটি ইউজার যেটা দেখতে পাবে, সেটার উপরে হোভার করলে ট্রিগার হবে */}
-      {children}
-    </Whisper>
+    <Tooltip.Provider delayDuration={150}> {/* সামান্য ডিলে দিলে UX ভালো হয় */}
+      <Tooltip.Root>
+        
+        {/* ট্রিগার: যে এলিমেন্টের উপর হোভার করা হবে */}
+        <Tooltip.Trigger asChild>
+          {children}
+        </Tooltip.Trigger>
+
+        {/* কন্টেন্ট: যা টুলটিপে দেখাবে */}
+        <Tooltip.Portal>
+          <Tooltip.Content 
+            className={`
+              bg-gray-800 text-white text-sm p-2 rounded-md 
+              shadow-lg z-50 animate-in fade-in-0 zoom-in-95 
+              data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 
+              data-[side=bottom]:slide-in-from-top-2 
+              data-[side=left]:slide-in-from-right-2
+            `}
+            side={placement} // Radix-এর 'side' prop RSuite-এর 'placement'-এর মতো
+            sideOffset={5} // ট্রিগার থেকে কত দূরে থাকবে
+          >
+            {tooltipText}
+            {/* টুলটিপের ছোট্ট তীর চিহ্ন */}
+            <Tooltip.Arrow className="fill-gray-800" />
+          </Tooltip.Content>
+        </Tooltip.Portal>
+        
+      </Tooltip.Root>
+    </Tooltip.Provider>
   );
 }
 
