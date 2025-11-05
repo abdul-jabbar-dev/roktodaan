@@ -71,7 +71,7 @@ export const DonorModal: React.FC<DonorModalProps> = ({ donor, trigger }) => {
 
                 <div className="h-full">
                   <div className="flex flex-col sm:flex-row gap-6 mb-8">
-                    <Image src={donor?.profile?.img || getDefaultImg(donor.profile.gender as "male" | "female")} alt={donor.profile.fullName||"Donor Name"} height={90} width={90} className="w-24 h-24 rounded-full object-cover border-4 border-red-200 shadow-md" />
+                    <Image src={donor?.profile?.img || getDefaultImg(donor.profile.gender as "male" | "female")} alt={donor.profile.fullName || "Donor Name"} height={90} width={90} className="w-24 h-24 rounded-full object-cover border-4 border-red-200 shadow-md" />
                     <div>
                       <div className="flex gap-x-2 ">
                         <h2 id=" donor-details-title" className="text-3xl font-bold text-gray-800">{donor.profile.fullName}</h2>

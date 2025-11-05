@@ -22,7 +22,7 @@ export default function ClientDate({ dateString }: { dateString?: string }) {
 export const getLastDonationDateRelativeToday = (donor: DonorInfo): string => {
   const donations = donor.donationExperience as DonationExperience[];
 
-  if (!donations?.length) return "No donations yet";
+  if (!donations?.length) return "অনুদান নেই";
 
   const latestDonation = donations
     .sort((a, b) => new Date(b.lastDonationDate).getTime() - new Date(a.lastDonationDate).getTime())[0];
@@ -34,7 +34,7 @@ export const getLastDonationDateRelativeToday = (donor: DonorInfo): string => {
 export const getLastDonationDate = (donor: DonorInfo): string | JSX.Element => {
   const donations = donor.donationExperience as DonationExperience[];
 
-  if (!donations?.length) return "No donations yet";
+  if (!donations?.length) return "অনুদান নেই";
 
   const latestDonation = donations
     .sort((a, b) => new Date(b.lastDonationDate).getTime() - new Date(a.lastDonationDate).getTime())[0];

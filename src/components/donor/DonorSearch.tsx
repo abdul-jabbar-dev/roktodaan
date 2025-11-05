@@ -1,208 +1,175 @@
-
+'use client';
+import React, { useState } from 'react';
 import { useLocationSelect } from '@/hooks/useLocationSelect';
 import BloodGroup from '@/types/blood/group';
-import React, { useState } from 'react';
-
-const ChevronDownIcon: React.FC<{ className?: string }> = ({ className }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 20 20" fill="currentColor">
-        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-    </svg>
-);  
-
-const MapViewIcon: React.FC<{ className?: string }> = ({ className }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 20 20" fill="currentColor">
-        <path d="M10 2a.75.75 0 01.75.75V5.5h4.75a.75.75 0 010 1.5H10.75V12h4.75a.75.75 0 010 1.5H10.75V17.25a.75.75 0 01-1.5 0V13.5H4.5a.75.75 0 010-1.5H9V7H4.5a.75.75 0 010-1.5H9V2.75A.75.75 0 0110 2z" />
-        <path fillRule="evenodd" d="M8.22 4.407a.75.75 0 011.06 0l2.25 2.25a.75.75 0 010 1.06l-2.25 2.25a.75.75 0 01-1.06-1.06L9.69 7.5 8.22 6.03a.75.75 0 010-1.06zM3.25 10a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5h-1.5a.75.75 0 01-.75-.75zm12 0a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5h-1.5a.75.75 0 01-.75-.75z" clipRule="evenodd" />
-    </svg>
-);
-const ListViewIcon: React.FC<{ className?: string }> = ({ className }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 20 20" fill="currentColor">
-        <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-    </svg>
-);
-const LocationMarkerIcon: React.FC<{ className?: string }> = ({ className }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 20 20" fill="currentColor">
-        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-    </svg>
-);
 
 interface DonorSearchProps {
-    onLocationRequest: () => void;
-    onRadiusChange: (radius: number) => void;
-    isLocating: boolean;
-    locationError: string;
-    view: 'map' | 'list';
-    setView: React.Dispatch<React.SetStateAction<"map" | "list">>
+  isLocating: boolean;
+  locationError: string;
+  view: 'map' | 'list';
+  setView: React.Dispatch<React.SetStateAction<'map' | 'list'>>;
+  onLocationRequest: () => void;
+  onRadiusChange: (radius: number) => void;
+  searchString: string;
+  setSearchString: (v: string) => void;
+  bloodGroup: BloodGroup | null;
+  setBloodGroup: (v: BloodGroup | null) => void;
+  searchAddress: { division: string; district: string; upazila: string };
+  setSearchAddress: React.Dispatch<
+    React.SetStateAction<{ division: string; district: string; upazila: string }>
+  >;
+  setIsLoading: (v: boolean) => void;
 }
 
-const DonorSearch: React.FC<DonorSearchProps> = ({ onLocationRequest, onRadiusChange, isLocating, locationError, view, setView }) => {
-    const [activeTab, setActiveTab] = useState('new');
-    const [bloodGroup, setBloodGroup] = useState<BloodGroup>()
-    const [add, setAdd] = useState({
-        division: '',
-        district: '',
-        upazila: ''
-    });
+const DonorSearch: React.FC<DonorSearchProps> = ({
+  onLocationRequest,
+  onRadiusChange,
+  isLocating,
+  locationError,
+  view,
+  setView,
+  setSearchString,
+  bloodGroup,
+  setBloodGroup,
+  searchAddress,
+  setSearchAddress,
+  setIsLoading,
+}) => {
+  const { division, district, upazila } = useLocationSelect(searchAddress);
 
-    const {
-        division,
-        district,
-        upazila,
-        selectedDivision,
-        setSelectedDivision,
-        selectedDistrict,
-        setSelectedDistrict,
-        selectedUpazila,
-        setSelectedUpazila
-    } = useLocationSelect(add);
+  // Local input state for button-triggered search
+  const [inputValue, setInputValue] = useState('');
 
-    return (
-        <div className="space-y-4">
+  const handleSearch = () => {
+    setIsLoading(true);
+    setSearchString(inputValue); 
+  };
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+  return (
+    <div className="space-y-4">
+      {/* Filters */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        {/* Division */}
+        <select
+          value={searchAddress.division}
+          onChange={(e) =>
+            setSearchAddress({ ...searchAddress, division: e.target.value })
+          }
+          className="bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:bg-white focus:border-gray-500"
+        >
+          <option value="">বিভাগ নির্বাচন করুন</option>
+          {division.map((d) => (
+            <option key={d.id} value={d.name}>
+              {d.name}
+            </option>
+          ))}
+        </select>
 
-                <div className="relative">
-                    <select onChange={e => setBloodGroup(e.target.value as BloodGroup)} className="w-full appearance-none bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-red-500">
-                        <option value=""  >ব্লাড গ্রুপ (সব)</option>
-                        <option value="A+">A+</option>
-                        <option value="A-">A-</option>
-                        <option value="B+">B+</option>
-                        <option value="B-">B-</option>
-                        <option value="AB+">AB+</option>
-                        <option value="AB-">AB-</option>
-                        <option value="O+">O+</option>
-                        <option value="O-">O-</option>
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                        <ChevronDownIcon className="h-4 w-4" />
-                    </div>
-                </div>
-                <div className="relative">
-                    <select
-                        className="w-full appearance-none bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-red-500"
-                        onChange={(e) => onRadiusChange(Number(e.target.value))}
-                    >
-                        <option value="0">দূরত্ব (সব)</option>
-                        <option value="5">৫ কিমি</option>
-                        <option value="10">১০ কিমি</option>
-                        <option value="20">২০ কিমি</option>
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                        <ChevronDownIcon className="h-4 w-4" />
-                    </div>
-                </div>
-                <div className="relative">
-                    <select className="w-full appearance-none bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-red-500">
-                        <option>সর্ট (নতুন/পুরাতন)</option>
-                        <option>নতুন</option>
-                        <option>পুরাতন</option>
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                        <ChevronDownIcon className="h-4 w-4" />
-                    </div>
-                </div>
-          
-            </div>
-            <div className="flex flex-wrap items-center gap-4">
-                <input
-                    type="text"
-                    placeholder="নাম / ফোন / এলাকার নাম দিয়ে খুঁজুন..."
-                    className="flex-grow bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:bg-white focus:border-red-500"
-                />
-                <button
-                    onClick={onLocationRequest}
-                    disabled={isLocating}
-                    className="flex items-center bg-gray-100 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition duration-300 disabled:opacity-50 disabled:cursor-wait"
-                    aria-label="আমার বর্তমান অবস্থান ব্যবহার করুন"
-                >
-                    <LocationMarkerIcon className="w-5 h-5 mr-2" />
-                    {isLocating ? 'লোকেশন খুঁজছে...' : 'আমার অবস্থান'}
-                </button>
+        {/* District */}
+        <select
+          value={searchAddress.district}
+          onChange={(e) =>
+            setSearchAddress({ ...searchAddress, district: e.target.value })
+          }
+          className="bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:bg-white focus:border-gray-500"
+        >
+          <option value="">জেলা নির্বাচন করুন</option>
+          {district.map((d) => (
+            <option key={d.id} value={d.name}>
+              {d.name}
+            </option>
+          ))}
+        </select>
 
-                <button className="bg-red-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-red-700 transition duration-300">
-                    ফিল্টার করুন
-                </button>
+        {/* Upazila */}
+        <select
+          value={searchAddress.upazila}
+          onChange={(e) =>
+            setSearchAddress({ ...searchAddress, upazila: e.target.value })
+          }
+          className="bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:bg-white focus:border-gray-500"
+        >
+          <option value="">উপজেলা নির্বাচন করুন</option>
+          {upazila.map((u) => (
+            <option key={u.id} value={u.name}>
+              {u.name}
+            </option>
+          ))}
+        </select>
 
-            </div>
-            {locationError && <p className="text-sm text-red-600">{locationError}</p>}
-            <div className="flex items-center space-x-2">
-                <div className="flex-1">
-                    <div className="flex w-full gap-x-4"> <div className="relative">
-                        <select
-                            value={selectedDivision?.id ?? ""}
-                            onChange={e => {
-                                const divi = division.find(d => d.id === Number(e.target.value));
-                                if (divi) {
-                                    setSelectedDivision({ id: divi.id, name: divi.name });
-                                    setSelectedDistrict(null);
-                                    setSelectedUpazila(null);
-                                }
-                            }}
-                            className="w-full appearance-none bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-red-500">
-                            <option value="" disabled>বিভাগ নির্বাচন করুন</option>
-                            {division.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-                        </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                            <ChevronDownIcon className="h-4 w-4" />
-                        </div>
-                    </div>  {/* District */}
-                        <div className="relative">
-                            <select
-                                value={selectedDistrict?.id ?? ""}
-                                disabled={!selectedDivision}
-                                onChange={e => {
-                                    const dist = district.find(d => d.id === Number(e.target.value));
-                                    if (dist) { setSelectedDistrict({ id: dist.id, name: dist.name }); setSelectedUpazila(null); }
-                                }}
-                                className={"w-full appearance-none bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-red-500 "}>
-                                <option value="" disabled>জেলা নির্বাচন করুন</option>
-                                {district.filter(d => d.division_id === selectedDivision?.id).map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-                            </select>
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                <ChevronDownIcon className="h-4 w-4" />
-                            </div>
-                        </div>
+        {/* Blood Group */}
+        <select
+          value={bloodGroup ?? ''}
+          onChange={(e) => setBloodGroup(e.target.value as BloodGroup)}
+          className="bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:bg-white focus:border-gray-500"
+        >
+          <option value="">ব্লাড গ্রুপ (সব)</option>
+          {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map((group) => (
+            <option key={group} value={group}>
+              {group}
+            </option>
+          ))}
+        </select>
 
-                        {/* Upazila */}
-                        <div className="relative">
-                            <select
-                                value={selectedUpazila?.id ?? ""}
-                                disabled={!selectedDistrict}
-                                onChange={e => {
-                                    const upz = upazila.find(u => u.id === Number(e.target.value));
-                                    if (upz) setSelectedUpazila({ id: upz.id, name: upz.name });
-                                }}
-                                className={"w-full appearance-none bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-red-500 "}>
-                                <option value="" disabled>উপজেলা নির্বাচন করুন</option>
-                                {upazila.filter(u => u.district_id === selectedDistrict?.id).map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
-                            </select>
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                <ChevronDownIcon className="h-4 w-4" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex items-center space-x-2 bg-gray-200 p-1 rounded-lg ">
-                    <button
-                        onClick={() => setView('list')}
-                        className={`flex items-center space-x-2 px-4 py-1.5 text-sm font-medium rounded-lg ${view === 'list' ? 'bg-white shadow' : 'text-gray-600'}`}
-                        aria-pressed={view === 'list'}
-                    >
-                        <ListViewIcon className="w-5 h-5" />
-                        <span>লিষ্ট ভিউ</span>
-                    </button>
-                    <button
-                        onClick={() => setView('map')}
-                        className={`flex items-center space-x-2 px-4 py-1.5 text-sm font-medium rounded-lg ${view === 'map' ? 'bg-white shadow' : 'text-gray-600'}`}
-                        aria-pressed={view === 'map'}
-                    >
-                        <MapViewIcon className="w-5 h-5" />
-                        <span>ম্যাপ ভিউ</span>
-                    </button>
-                </div>
-            </div>
+        {/* Distance */}
+        <select
+          onChange={(e) => onRadiusChange(Number(e.target.value))}
+          className="bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:bg-white focus:border-gray-500"
+        >
+          <option value="0">দূরত্ব (সব)</option>
+          <option value="5">৫ কিমি</option>
+          <option value="10">১০ কিমি</option>
+          <option value="20">২০ কিমি</option>
+        </select>
+      </div>
+
+      {/* Search + Buttons */}
+      <div className="flex flex-wrap items-center gap-4">
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder="নাম / ফোন / এলাকার নাম দিয়ে খুঁজুন..."
+          className="flex-grow bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:bg-white focus:border-gray-500"
+        />
+
+        <button
+          onClick={onLocationRequest}
+          disabled={isLocating}
+          className="bg-gray-100 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition disabled:opacity-50"
+        >
+          {isLocating ? 'লোকেশন খুঁজছে...' : 'আমার অবস্থান'}
+        </button>
+
+        <button
+          onClick={handleSearch}
+          className="bg-red-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-red-700 transition"
+        >
+          ফিল্টার করুন
+        </button>
+
+        {/* View Toggle */}
+        <div className="flex items-center space-x-2 bg-gray-200 p-1 rounded-lg">
+          <button
+            onClick={() => setView('list')}
+            className={`px-4 py-1.5 rounded-lg ${view === 'list' ? 'bg-white shadow' : 'text-gray-600'
+              }`}
+          >
+            লিষ্ট ভিউ
+          </button>
+          <button
+            onClick={() => setView('map')}
+            className={`px-4 py-1.5 rounded-lg ${view === 'map' ? 'bg-white shadow' : 'text-gray-600'
+              }`}
+          >
+            ম্যাপ ভিউ
+          </button>
         </div>
-    );
+      </div>
+
+      {locationError && <p className="text-sm text-red-600">{locationError}</p>}
+    </div>
+  );
 };
 
 export default DonorSearch;

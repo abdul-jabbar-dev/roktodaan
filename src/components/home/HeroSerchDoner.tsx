@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 
@@ -7,18 +7,18 @@ import 'swiper/css';
 import 'swiper/css/grid';
 import 'swiper/css/pagination';
 import Image from "next/image";
+import { QueryState } from "./Hero";
+import { useGetDonorsQuery } from "@/redux/services/homeDonor";
+import { DonorInfo } from "@/types/user/user";
+import getDefaultImg from "@/utils/DefaultImg";
+import { mapBloodGroupEnumToLabel } from "@/utils/BloodGroupFormet";
 
-export default function HeroSerchDoner() {
-    const doners = [
-        { id: 1, name: "Abdul Jabbar", age: 21, location: "Tongi Gazipur Dhaka Bangladesh.", bloodGroup: "O+", profileImage: "https://avatar.iran.liara.run/public/boy" },
-        { id: 2, name: "Hasan", age: 24, location: "Dhaka, Bangladesh.", bloodGroup: "A+", profileImage: "https://avatar.iran.liara.run/public/boy" },
-        { id: 3, name: "Rahim", age: 20, location: "Gazipur, Bangladesh.", bloodGroup: "B-", profileImage: "https://avatar.iran.liara.run/public/boy" },
-        { id: 4, name: "Karim", age: 29, location: "Uttara, Dhaka.", bloodGroup: "AB+", profileImage: "https://avatar.iran.liara.run/public/boy" },
-        { id: 5, name: "Jabed", age: 26, location: "Mirpur, Dhaka.", bloodGroup: "O-", profileImage: "https://avatar.iran.liara.run/public/boy" },
-        { id: 6, name: "Nayeem", age: 23, location: "Banani, Dhaka.", bloodGroup: "A-", profileImage: "https://avatar.iran.liara.run/public/boy" },
-        { id: 7, name: "Sakib", age: 22, location: "Barishal, Bangladesh.", bloodGroup: "B+", profileImage: "https://avatar.iran.liara.run/public/boy" },
-        { id: 8, name: "Fahim", age: 25, location: "Cumilla, Bangladesh.", bloodGroup: "AB-", profileImage: "https://avatar.iran.liara.run/public/boy" },
-    ];
+export default function HeroSerchDoner({ useQuery }: { useQuery: QueryState }) {
+
+
+    const { data, isLoading, refetch, isSuccess } = useGetDonorsQuery(useQuery, { skip: !useQuery.bloodGroup });
+
+
 
     const bloodGroups = [
         { name: "O+", img: "/svg/op.svg" },
@@ -30,6 +30,9 @@ export default function HeroSerchDoner() {
         { name: "AB+", img: "/svg/abp.svg" },
         { name: "AB-", img: "/svg/abn.svg" }
     ];
+    if (isSuccess && data?.data?.length === 0) return (
+        <p className="text-center py-4">No donors found for this blood group.</p>
+    )
 
     return (
         <Swiper
@@ -67,23 +70,28 @@ export default function HeroSerchDoner() {
             modules={[Pagination]}
             className="mySwiper container mx-auto"
         >
-            {doners.map((doner) => (
-                <SwiperSlide className="py-6" key={doner.id}>
+            {isSuccess && data?.data?.map((donor: DonorInfo) => (
+                <SwiperSlide className="py-6 min-w-92" key={donor.id}>
                     <div className="card relative flex flex-col sm:h-56 h-96  sm:flex-row w-full card-side bg-base-100 shadow-sm">
                         <figure>
-                            <Image width={100} height={160} className="sm:w-32 w-full h-72 object-cover" src={doner.profileImage} alt={doner.name} />
+                            <Image width={130} height={180} className="sm:w-32 w-full h-72 object-cover" src={donor.profile.img || getDefaultImg(donor.profile.gender as "male" | "female")} alt={donor.profile.fullName || "Donor Name"} />
                         </figure>
                         <div className="card-body relative">
                             <div>
-                                <h2 className="card-title">{doner.name}</h2>
-                                <h2>Age: {doner.age}</h2>
+                                <h2 className="card-title">{donor.profile.fullName}</h2>
+                                <h2>Age: {donor.profile.age}</h2>
                             </div>
-                            <p>{doner.location}</p>
+                            <p>
+                                {[donor?.address?.upazila, donor?.address?.district, donor?.address?.division]
+                                    .filter(Boolean)
+                                    .join(', ')}
+                            </p>
                             <span className="w-11 absolute top-4 right-4">
+
                                 <Image
                                     className="w-11"
-                                    src={(bloodGroups.find((bg) => bg.name === doner.bloodGroup)?.img as string)}
-                                    alt={doner.bloodGroup}
+                                    src={(bloodGroups.find((bg) => bg.name === mapBloodGroupEnumToLabel(donor.profile.bloodGroup))?.img as string)}
+                                    alt={donor.profile.bloodGroup || " "}
                                     height={30}
                                     width={30}
                                 />

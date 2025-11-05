@@ -1,18 +1,46 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import HeroSerch from './HeroSerch';
 import HeroSerchDoner from './HeroSerchDoner';
 import HeroBG from './HeroBG';
+import Link from 'next/link';
+
+
+
+type Address =
+  | { latitude: number; longitude: number }  
+  | { upazila?: string; district?: string; division?: string };  
+
+export type QueryState = {
+  bloodGroup: string|undefined;
+  address?: Address;
+}
+
+
 
 export default function Hero() {
   const [open, setOpen] = useState(false);
+  const [useQuery, setUseQuery] = useState<QueryState>({
+    bloodGroup: "",
+    address: undefined,
+  });
+
+
+  useEffect(() => {
+    if(useQuery.bloodGroup){
+      setOpen(true)
+    }else setOpen(false) 
+
+  }, [useQuery])
+
+
 
 
   return (
     <div>
       <div className="hero bg-gray-100 relative ">
         <div className="hero-content flex-col md:flex-row-reverse lg:gap-x-12 md:gap-x-6 px-0 py-12 relative z-10">
-          
+
           {/* Left Content */}
           <div className="text-center md:text-left w-full md:w-5/12">
             <h1 className="text-5xl font-bold">
@@ -25,12 +53,12 @@ export default function Hero() {
 
           {/* Search Card */}
           <div className="card bg-base-100 w-full max-w-md shrink-0 shadow-2xl">
-            <HeroSerch open={open} setOpen={setOpen} />
+            <HeroSerch open={open} setOpen={setOpen}  setUseQuery={setUseQuery} />
           </div>
         </div>
 
         {/* SVG Always at Bottom with dynamic offset */}
-        <HeroBG/>
+        <HeroBG />
       </div>
 
       {/* Collapse Donor */}
@@ -45,8 +73,8 @@ export default function Hero() {
 
         <div style={{ padding: 0 }} className="collapse-content mx-auto">
           <div className="w-full py-4">
-            See All
-            <HeroSerchDoner />
+            <Link href={'/donor'}>See All</Link>
+            <HeroSerchDoner useQuery={useQuery} />
           </div>
         </div>
       </div>

@@ -20,22 +20,27 @@ const DynamicDonorViewPoint = dynamic(
 );
 
 
+
+const UserLocation = dynamic(() => import('@/components/UserLocation'), {
+    ssr: false,
+});
+
 const App: React.FC = async () => {
 
     const { data: initialUsers } = await API.user.getUsers();
 
 
-    
+
     const fetchDonorLocations = async (users: DonorInfo[]): Promise<DonorInfo[]> => {
         if (!Array.isArray(users) || users.length === 0) {
             console.warn("⚠ No users found for geocoding.");
             return [];
         } else {
-       
-            
+
+
             const donorPromises = users?.map(async (user) => {
-       
-                
+
+
                 if (!user.address?.upazila) {
                     console.warn(`Skipping GeoCoding for user ID ${user.id}: Address incomplete.`);
                     return user as DonorInfo;
@@ -91,7 +96,6 @@ const App: React.FC = async () => {
                             <h1 className="text-3xl md:text-4xl font-bold text-gray-800">আমাদের ডেডিকেটেড ডোনার্স তালিকা</h1>
                             <p className="text-gray-600 mt-2">জীবন বাঁচাতে প্রস্তুত হিরোদের খুঁজে নিন</p>
                         </div>
-                        {/* 💡 ডাইনামিক কম্পোনেন্ট ব্যবহার করা হচ্ছে */}
                         <DynamicDonorViewPoint allDonors={donorsWithCoords} />
                     </section>
 

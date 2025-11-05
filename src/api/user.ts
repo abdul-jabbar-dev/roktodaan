@@ -52,8 +52,7 @@ const forgetPasswod = async (email: string) => {
         },
       }
     );
-if (res && 'error' in res) throw res;
-
+    if (res && "error" in res) throw res;
 
     return res.data;
   } catch (err: any) {
@@ -135,7 +134,7 @@ const changePasswordWithOtp = async (userData: {
     const res = await AXIOS.post(URLS.USER.NEW_PASSWORD_WITH_OTP, userData, {
       withCredentials: true,
     });
-if (res && 'error' in res) throw res;
+    if (res && "error" in res) throw res;
 
     return res.data;
   } catch (err: any) {
@@ -226,7 +225,7 @@ const genOTP = async (email: string) => {
         },
       }
     );
-   if (res && 'error' in res) throw res;
+    if (res && "error" in res) throw res;
     return res.data;
   } catch (err: any) {
     return { error: err?.error || "Failed to generate OTP" };
@@ -256,7 +255,7 @@ const varifyOTP = async (
       }
     );
 
-   if (res && 'error' in res) throw res;
+    if (res && "error" in res) throw res;
     return res.data;
   } catch (err: any) {
     return { error: err?.error || "Failed to verify OTP" };
@@ -309,7 +308,9 @@ const sessionStatus = async (sessionName: string) => {
   } catch (err: unknown) {
     return {
       error:
-        (err as any)?.response?.data?.error || (err as any)?.error || "No Session Found",
+        (err as any)?.response?.data?.error ||
+        (err as any)?.error ||
+        "No Session Found",
     };
   }
 };
