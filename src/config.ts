@@ -1,7 +1,8 @@
-const SITE_URL = "http://localhost:link"
-const SERVER_URL = "http://localhost:5555";
+const SITE_URL = process.env.SITE_URL||"http://localhost:link"
+// const SERVER_URL = process.env.SERVER_URL||"http://localhost:5555";
+const SERVER_URL = 'https://roktodaan-express.onrender.com';
 const USER_KEY = "uck";
-const GOOGLE_API_KEY = 'AIzaSyCE60_SOCNW9eiIlRpYYfEweP9A663Vwmw'
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY||'AIzaSyCE60_SOCNW9eiIlRpYYfEweP9A663Vwmw'
 // Base API
 const API_BASE = "api";
 
@@ -15,7 +16,7 @@ const URLS = {
   LOCAL_STORE: { SET_USER: USER_KEY },
   SITE_URL,
   SERVER_URL,
-  CLOUDINARY_URL: "https://api.cloudinary.com/v1_1/dnkwv76h3/upload",
+  CLOUDINARY_URL: process.env.CLOUDINARY_URL||"https://api.cloudinary.com/v1_1/dnkwv76h3/upload",
   MEDIA: {
     DELETE_MEDIA: (public_id: string) =>
       `${MEDIA_BASE}/delete/?public_id=${public_id}`,

@@ -30,8 +30,7 @@ const App: React.FC = async () => {
     const cookiesAccessor = cookies()
  
     const { data: initialUsers } = await API.user.getUsers(cookiesAccessor);
-
-
+ 
 
     const fetchDonorLocations = async (users: DonorInfo[]): Promise<DonorInfo[]> => {
         if (!Array.isArray(users) || users.length === 0) {

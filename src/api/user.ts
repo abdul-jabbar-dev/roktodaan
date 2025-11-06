@@ -180,14 +180,15 @@ const getUsers = async (tokenOrAccessor?: any | null) => {
       tokenStr = tokenData || null;
     } else if (typeof tokenOrAccessor === "string" || !tokenOrAccessor) {
       tokenStr = getItemFromStore();
-    } 
-    
-    const token = tokenStr ? JSON.parse(tokenStr)?.token : null;
-    console.log(token);
+    }
+
+    const token = tokenStr ? JSON.parse(tokenStr)?.token : null; 
     const res: any = await AXIOS.get(URLS.USER.GET_USERS, {
       headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        ...(token && {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        }),
       },
     });
     if (res?.error) {
