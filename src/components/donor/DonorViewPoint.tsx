@@ -6,8 +6,7 @@ import DonorSearch from './DonorSearch';
 import MapView from './MapView';
 import { getAreaNameOSM } from '@/utils/AreaCalculate';
 import { DonorInfo } from '@/types/user/user';
-import BloodGroup from '@/types/blood/group';
-import API from '@/api';
+import BloodGroup from '@/types/blood/group'; 
 import { mapBloodGroupEnumToLabel } from '@/utils/BloodGroupFormet';
 
 interface UserLocation {

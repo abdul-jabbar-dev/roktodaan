@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 
@@ -12,6 +12,7 @@ import { useGetDonorsQuery } from "@/redux/services/homeDonor";
 import { DonorInfo } from "@/types/user/user";
 import getDefaultImg from "@/utils/DefaultImg";
 import { mapBloodGroupEnumToLabel } from "@/utils/BloodGroupFormet";
+import { DonorModal } from "../donor/DonorModal";
 
 export default function HeroSerchDoner({ useQuery }: { useQuery: QueryState }) {
 
@@ -30,7 +31,9 @@ export default function HeroSerchDoner({ useQuery }: { useQuery: QueryState }) {
         { name: "AB+", img: "/svg/abp.svg" },
         { name: "AB-", img: "/svg/abn.svg" }
     ];
-    if (isSuccess && data?.data?.length === 0) return (
+
+    const donors = useMemo(() => data?.data ?? [], [data]);
+    if (isSuccess && donors.length === 0) return (
         <p className="text-center py-4">No donors found for this blood group.</p>
     )
 
@@ -70,13 +73,13 @@ export default function HeroSerchDoner({ useQuery }: { useQuery: QueryState }) {
             modules={[Pagination]}
             className="mySwiper container mx-auto"
         >
-            {isSuccess && data?.data?.map((donor: DonorInfo) => (
+            {isSuccess &&donors?.map((donor: DonorInfo) => (
                 <SwiperSlide className="py-6 min-w-92" key={donor.id}>
-                    <div className="card relative flex flex-col sm:h-56 h-96  sm:flex-row w-full card-side bg-base-100 shadow-sm">
+                    <div className="card   flex flex-col sm:h-56 h-96  sm:flex-row w-full card-side bg-base-100 shadow-sm">
                         <figure>
                             <Image width={130} height={180} className="sm:w-32 w-full h-72 object-cover" src={donor.profile.img || getDefaultImg(donor.profile.gender as "male" | "female")} alt={donor.profile.fullName || "Donor Name"} />
                         </figure>
-                        <div className="card-body relative">
+                        <div className="card-body  ">
                             <div>
                                 <h2 className="card-title">{donor.profile.fullName}</h2>
                                 <h2>Age: {donor.profile.age}</h2>
@@ -96,9 +99,15 @@ export default function HeroSerchDoner({ useQuery }: { useQuery: QueryState }) {
                                     width={30}
                                 />
                             </span>
-                            <div className="card-actions justify-end">
-                                <button className="btn btn-neutral rounded-lg btn-sm">View Contact</button>
-                            </div>
+
+                            <DonorModal
+                                donor={donor}
+                                trigger={
+                                    <button className="bg-red-600 text-white text-sm font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300">
+                                        দেখুন
+                                    </button>
+                                }
+                            />
                         </div>
                     </div>
                 </SwiperSlide>

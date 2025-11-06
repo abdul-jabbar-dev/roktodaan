@@ -26,11 +26,90 @@ const UserLocation = dynamic(() => import('@/components/UserLocation'), {
 });
 
 
+// const fetchDonorLocations = async (users: DonorInfo[]): Promise<DonorInfo[]> => {
+//   if (!Array.isArray(users) || users.length === 0) {
+//     console.warn("⚠ No users found for geocoding.");
+//     return [];
+//   }
+
+//   // 🔹 প্রতি ব্যাচে কয়টা request পাঠানো হবে
+//   const BATCH_SIZE = 5;
+//   // 🔹 প্রতিবার ব্যাচ শেষ হলে কত ms delay হবে (Gemini safe zone)
+//   const DELAY_MS = 6000;
+
+//   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+//   const updatedDonors: DonorInfo[] = [];
+
+//   for (let i = 0; i < users.length; i += BATCH_SIZE) {
+//     const batch = users.slice(i, i + BATCH_SIZE);
+
+//     console.log(`📦 Sending batch ${i / BATCH_SIZE + 1} (${batch.length} users)`);
+
+//     // Promise.all দিয়ে parallel batch handle
+//     const results = await Promise.all(
+//       batch.map(async (user) => {
+//         if (!user.address?.upazila) {
+//           console.warn(`Skipping GeoCoding for user ID ${user.id}: Address incomplete.`);
+//           return user as DonorInfo;
+//         }
+
+//         const address = JSON.stringify({
+//           roadORarea: user.address.area,
+//           upazila: user.address.upazila,
+//           district: user.address.district,
+//           division: user.address.division
+//         });
+
+//         try {
+//           const coords = await getCoordsFromAI({ address, id: user.id + "" });
+
+//           if (coords.area) {
+//             return {
+//               ...user,
+//               address: {
+//                 ...user.address,
+//                 coords: coords.area
+//               }
+//             } as DonorInfo;
+//           } else {
+//             return {
+//               ...user,
+//               address: {
+//                 ...user.address,
+//                 coords: {
+//                   latitude: coords.latitude,
+//                   longitude: coords.longitude
+//                 }
+//               }
+//             } as DonorInfo;
+//           }
+//         } catch (error) {
+//           console.error(`❌ Failed to get coords for ${user.id}:`, error);
+//           return user as DonorInfo;
+//         }
+//       })
+//     );
+
+//     updatedDonors.push(...results);
+
+//     // ⚡ ব্যাচ শেষ হলে একটু ব্রেক দাও
+//     if (i + BATCH_SIZE < users.length) {
+//       console.log(`⏳ Waiting ${DELAY_MS / 1000}s before next batch...`);
+//       await delay(DELAY_MS);
+//     }
+//   }
+
+//   return updatedDonors;
+// };
+
+
+
 const App: React.FC = async () => {
     const cookiesAccessor = cookies()
- 
+
     const { data: initialUsers } = await API.user.getUsers(cookiesAccessor);
- 
+
 
     const fetchDonorLocations = async (users: DonorInfo[]): Promise<DonorInfo[]> => {
         if (!Array.isArray(users) || users.length === 0) {
@@ -83,7 +162,7 @@ const App: React.FC = async () => {
         }
     };
 
-    const donorsWithCoords = await fetchDonorLocations(initialUsers);
+    // const donorsWithCoords = await fetchDonorLocations(initialUsers);
 
     return (
         <div className="min-h-screen bg-gray-50 text-gray-800">
@@ -95,7 +174,7 @@ const App: React.FC = async () => {
                             <h1 className="text-3xl md:text-4xl font-bold text-gray-800">আমাদের ডেডিকেটেড ডোনার্স তালিকা</h1>
                             <p className="text-gray-600 mt-2">জীবন বাঁচাতে প্রস্তুত হিরোদের খুঁজে নিন</p>
                         </div>
-                        <DynamicDonorViewPoint allDonors={donorsWithCoords} />
+                        <DynamicDonorViewPoint allDonors={initialUsers} />
                     </section>
 
                     Under Construction
