@@ -30,10 +30,13 @@ export const DonorModal: React.FC<DonorModalProps> = ({ donor, trigger }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [open]);
 
-  useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
-    return () => (document.body.style.overflow = '');
-  }, [open]);
+useEffect(() => {
+  document.body.style.overflow = open ? 'hidden' : '';
+  return () => {
+    document.body.style.overflow = '';
+  };
+}, [open]);
+
 
   const handleRoute = () => router.push('/donor/' + donor.id);
 
