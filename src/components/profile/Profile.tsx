@@ -76,7 +76,7 @@ export default function Profile({ user, edit, setUser }: ProfileProps) {
 
           {CDInputToText({
             label: "Weight",
-            value: user?.profile?.weight+" kg",
+            value: user?.profile?.weight,
             edit,
             name: "weight",
             onChange: (e) =>

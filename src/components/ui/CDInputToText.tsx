@@ -36,7 +36,7 @@ export default function CDInputToText({
           />
         ) : (
           <span>
-            {value ? (error ? <span className="text-red-500">{value}</span> : value) : "Not Set"}
+            {value ? (error ? <span className="text-red-500">{label === 'Weight' ? value + " kg" : value}</span> : value) : "Not Set"}
           </span>
 
         )}
