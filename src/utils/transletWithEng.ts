@@ -19,8 +19,7 @@ export const translateText = async (text: string) => {
 
       // if translation actually changed (not same as input)
       if (translated && translated.trim() !== text.trim()) {
-        console.log(`✅ Translated by ${url}:`, translated);
-        return translated;
+          return translated;
       }
     } catch (err) {
       console.warn(`⚠️ Server ${url} failed`);

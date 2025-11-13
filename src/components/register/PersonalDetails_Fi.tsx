@@ -104,8 +104,7 @@ export default function PersonalDetails_Fi() {
           setSuccess(true);
         }
       } catch (err) {
-        console.log("ddd", err);
-        setGlobalError(err instanceof Error ? { message: err.message } : { message: "Unexpected error" });
+         setGlobalError(err instanceof Error ? { message: err.message } : { message: "Unexpected error" });
       }
     }
     setSuccess(true);

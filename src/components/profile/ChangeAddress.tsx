@@ -35,11 +35,10 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
 
         // Redux এ save করুন 
         const res = await API.user.updateLocation(updatedAddress)
-        console.log(res);
+        
         if (res?.error) {
             toast.error(res.error)
-        } else {
-            console.log(res)
+        } else { 
             dispatch(setUserAddressDataFetch(res.data.data))
             setEdit(false);
             toast.success("ঠিকানা সফলভাবে আপডেট করা হয়েছে")

@@ -33,9 +33,4 @@ export function mapStatus(
 
   return map[value];
 }
-
-// Usage examples
-console.log(mapStatus("VeryUrgent", "request")); // Output: খুব প্রয়োজন
-console.log(mapStatus("খুব প্রয়োজন", "request")); // Output: VeryUrgent
-console.log(mapStatus("Reserved", "donation")); // Output: সংরক্ষিত
-console.log(mapStatus("সংরক্ষিত", "donation")); // Output: Reserved
+ 

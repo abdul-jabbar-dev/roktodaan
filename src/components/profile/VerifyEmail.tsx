@@ -22,8 +22,7 @@ const VerifyEmail = ({ email,setShowVerify }: { email: string ,setShowVerify:Rea
   const sendCode = async () => {
     setLoading(true)
     const data = await API.user.genOTP(email)
-    console.log(data)
-    if (data.status) {
+     if (data.status) {
       setLoading(false)
       setStep("otp");
       setMessage({ type: "success", text: `OTP sent to ${email}` });

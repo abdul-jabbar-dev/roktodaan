@@ -1,7 +1,5 @@
-function getFormattedAddress(donor) {
-    console.log(donor)
-    // 1. প্রথমে চেক করুন donor অবজেক্ট এবং address অবজেক্ট আছে কি না।
-    if (!donor || !donor.address) {
+function getFormattedAddress(donor: any) {
+     if (!donor || !donor.address) {
         return "Address information missing.";
     }
 

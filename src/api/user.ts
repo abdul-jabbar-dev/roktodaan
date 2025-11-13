@@ -123,7 +123,6 @@ const update_profile_img = async (img: string) => {
 
     return res.data;
   } catch (err: any) {
-    console.log(err);
     return { error: err?.response?.data?.error || "Failed to update profile" };
   }
 }; // change Password
@@ -139,7 +138,6 @@ const changePasswordWithOtp = async (userData: {
 
     return res.data;
   } catch (err: any) {
-    console.log("userData:", err);
     return {
       error:
         err?.response?.data?.error ||

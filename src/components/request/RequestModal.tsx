@@ -147,13 +147,7 @@ export const RequestModal: React.FC<RequestModalProps> = ({ request, trigger }) 
       )
     );
   };
-
-
-
-  useEffect(() => {
-    console.log(request)
-  }, [])
-
+ 
   useEffect(() => {
     if (selectedUnits.length === 1) {
       const newUnitData = {
@@ -289,7 +283,7 @@ export const RequestModal: React.FC<RequestModalProps> = ({ request, trigger }) 
                             <strong>ব্যাগ:</strong> {new Date(donation.date).toLocaleDateString("bn-BD")} - <strong>স্থান:</strong> {donation.place}
                           </span>
                           <span className="ml-3 text-sm text-gray-500 mr-2 ">{mapStatus(donation.status, 'donation')}</span>
-                          {donation.status === DonationStatus.Reserved && donation?.reserved?.otherName || donation?.reserved?.donor?.profile?.fullName }
+                          {donation.status === DonationStatus.Reserved && donation?.reserved?.otherName || (donation?.reserved?.donor as any)?.profile?.fullName }
 
                           {donation.status === DonationStatus.Upcomming && (
                             <BloodBagIcon

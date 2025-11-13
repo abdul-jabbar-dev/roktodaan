@@ -29,8 +29,7 @@ export const getItemFromStore = ( ): string | null => {
             if (cookieValue) { 
                 localData = decodeURIComponent(cookieValue);
                 localStorage.setItem(cookieKey, localData);
-                console.log("Data restored from Cookie to LocalStorage.");
-            }
+             }                 
             
         } catch (e) {
             console.warn("Failed to read cookie on client or server environment.", e);
@@ -44,7 +43,6 @@ export const removeItemFromStore = () => {
  
     document.cookie = `${cookieKey}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     
-    console.log("Data removed from LocalStorage and Cookie.");
     return true;
 };
 

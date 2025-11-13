@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
 
 interface DonorModalProps {
-  donor: DonorInfo;
+  donor: any;
   trigger: React.ReactNode;
 }
 

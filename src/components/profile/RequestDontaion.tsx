@@ -53,7 +53,7 @@ const RequestDontaion = ({
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                        {(user as any)?.bloodRequest?.map(request => (
+                        {(user as any)?.bloodRequest?.map((request : BloodRequest) => (
                             <tr key={request.id} className="hover:bg-gray-50">
                                 <td className="py-4 px-4 whitespace-nowrap">
                                     <p className="font-medium text-gray-900">{request.attendantName}</p>

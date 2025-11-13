@@ -38,7 +38,7 @@ export default function HeroSerchDoner({ useQuery }: { useQuery: QueryState }) {
     const donors = useMemo(() => data?.data ?? [], [data]);
     if (isSuccess && donors.length === 0) return (
         <span>
-            <NoDonor link={<Link className="inline mx-1 text-red-600 underline" href={'/donor'}>সকল দাতা</Link>}/>
+            <NoDonor text=" " link={<Link className="inline mx-1 text-red-600 underline" href={'/donor'}>সকল দাতা</Link>}/>
         </span>
     )
     if (isLoading && !isSuccess) {

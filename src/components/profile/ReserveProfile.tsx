@@ -16,19 +16,19 @@ const ReserveProfile: React.FC<ReserveProfileProps> = ({ donation }) => {
     const reserved = donation.reserved;
 
     const name =
-        reserved?.otherName || reserved?.donor?.profile.fullName || 'Unknown';
+        reserved?.otherName || (reserved?.donor as any)?.profile.fullName || 'Donor Name';
     const address =
-        reserved?.otherAddress || getFormattedAddress(reserved?.donor) || 'N/A';
+        reserved?.otherAddress || getFormattedAddress(reserved?.donor) || 'No address set';
     const phoneNumber =
-        reserved?.otherPhoneNumber || reserved?.donor?.profile?.phoneNumber || '';
-    const email = reserved?.donor?.profile?.email || '';
-    const gender = (reserved?.donor?.gender as 'male' | 'female') || 'male';
+        reserved?.otherPhoneNumber || (reserved?.donor as any)?.profile?.phoneNumber || '';
+    const email = (reserved?.donor as any)?.profile?.email || '';
+    const gender = ((reserved?.donor as any)?.gender as 'male' | 'female') || 'male';
     const profileImg =
-        reserved?.donor?.profile?.img || getDefaultImg(gender);
+        (reserved?.donor as any)?.profile?.img || getDefaultImg(gender);
 
     return (
         <div className="bg-white border border-white shadow-lg rounded-xl p-4">
-          
+
             <div className="flex-none sm:flex">
                 {/* Profile Image */}
                 <div className="relative h-32 w-32 sm:mb-0 mb-3">

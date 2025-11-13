@@ -46,7 +46,6 @@ const DonorViewPoint: React.FC<{ allDonors: DonorInfo[] }> = ({ allDonors }) => 
     // 2️⃣ Filter by blood group
     if (bloodGroup) {
       filteredDonors = filteredDonors.filter(donor => {
-        console.log(donor.profile?.bloodGroup, bloodGroup)
         return mapBloodGroupEnumToLabel(donor.profile?.bloodGroup) === bloodGroup
       });
     }
@@ -114,7 +113,6 @@ const DonorViewPoint: React.FC<{ allDonors: DonorInfo[] }> = ({ allDonors }) => 
             position.coords.latitude,
             position.coords.longitude
           );
-          console.log('📍 User current area:', location);
 
           setUserLocation({
             latitude: position.coords.latitude,

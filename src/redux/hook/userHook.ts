@@ -17,8 +17,7 @@ export function useUser() {
     }
     
     const token = JSON.parse(tokenStr)?.token;
-    console.log("token:", token);
-    if (!token) { 
+     if (!token) { 
       return;
     }
 
