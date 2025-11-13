@@ -4,6 +4,7 @@ import AdminIcon from '@rsuite/icons/Admin';
 import { BloodRequest, DonationStatus, RequestStatus } from '@/types/request/type';
 import  ArrowLeftLineIcon  from '@rsuite/icons/ArrowLeftLine';
 import ReserveProfile from './ReserveProfile';
+import ClientDate from '@/utils/DateFormet';
  
 
 const donationStatus = Object.values(DonationStatus)
@@ -32,6 +33,7 @@ const RequestDontaion = ({
     };
 
     const [selectedRequest, setSelectedRequest] = useState<BloodRequest | null>(null)
+    console.log(user)
     return (
         <div className="bg-gray-50 border border-gray-200 text-gray-800 px-4 py-3 rounded-lg shadow-sm w-full  mb-6">
             <div className="flex items-center mb-2">
@@ -62,7 +64,7 @@ const RequestDontaion = ({
                                     <span className="bg-red-100 text-red-700 font-bold text-sm px-3 py-1 rounded-full">{request.bloodGroup}</span>
                                 </td>
                                 <td className="py-4 px-4 whitespace-nowrap text-gray-600 hidden md:table-cell">{request.hospital}</td>
-                                <td className="py-4 px-4 whitespace-nowrap text-gray-600 text-center hidden sm:table-cell">{request.postedAt}</td>
+                                <td className="py-4 px-4 whitespace-nowrap text-gray-600 text-center hidden sm:table-cell">{ClientDate({dateString:request.postedAt})}</td>
                                 <td className="py-4 px-4 whitespace-nowrap text-center">
                                     {/* <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full`}>
                                      {request.}

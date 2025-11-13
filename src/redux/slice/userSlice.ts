@@ -26,7 +26,7 @@ type Credential = {
 };
 
 type Profile = {
-  id?: number;
+  id?: string;
   userId?: number;
   fullName: string;
   age: number;
@@ -42,7 +42,7 @@ type Profile = {
 };
 
 export type UserState = {
-  id?: number;
+  id?: string;
   userId?: number;
   createdAt: string;
   updatedAt: string;

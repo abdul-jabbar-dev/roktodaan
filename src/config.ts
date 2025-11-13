@@ -32,6 +32,7 @@ const URLS = {
     BASE: REQUEST_BASE,
     PUBLISH_REQUEST: `${REQUEST_BASE}/publish`,
     ALL_REQUESTS: `${REQUEST_BASE}/get_requests`,
+    UPCOMMING_REQUESTS:(user_id:string)=> `${REQUEST_BASE}/request/${user_id}`,
   },
   USER: {
     FORGET_PASSWORD: `${USER_BASE}/forget_password`,

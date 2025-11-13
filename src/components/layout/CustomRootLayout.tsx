@@ -4,14 +4,15 @@ import Image from 'next/image'
 import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { useSelector, useDispatch } from 'react-redux'
-import { clearUserData, fetchUser, UserState } from '@/redux/slice/userSlice'  
+import { clearUserData, fetchUser, UserState } from '@/redux/slice/userSlice'
 import { getItemFromStore, removeItemFromStore } from '@/utils/store/localstore'
+import UpcomingDonationBanner from '../notify/UpcomingDonationBanner'
 
 export default function CustomRootLayout() {
   const user = useSelector(({ user }: { user: UserState & { loading: boolean; error?: string; success: boolean } }) => user);
   const dispatch = useDispatch<any>()
   useEffect(() => {
-    const tokenStr =getItemFromStore()
+    const tokenStr = getItemFromStore()
     if (tokenStr) {
       dispatch(fetchUser());
     }
@@ -26,6 +27,7 @@ export default function CustomRootLayout() {
 
     <div className=" bg-base-100 shadow-sm  ">
       <div className="container mx-auto navbar">
+
         <div className="flex-1">
           <Link href="/" className=" cursor-pointer text-red-500 font-extrabold text-xl">রক্তদান</Link>
         </div>
@@ -34,8 +36,13 @@ export default function CustomRootLayout() {
             <div className=' flex items-center'>
 
               <Link
-                href="/donor">
-                <button className='btn mr-6 btn-lg btn-link no-underline underline-offset-4  text-gray-600'>রক্তদাতা খুঁজুন</button>
+                className='btn  btn-lg btn-link no-underline underline-offset-4  text-gray-600'
+                href="/request">
+                রক্তের জন্য আবেদন
+              </Link>
+
+              <Link
+                href="/donor" className='btn mr-6 btn-lg btn-link no-underline underline-offset-4  text-gray-600'>রক্তদাতা খুঁজুন
               </Link>
 
               <div className="dropdown dropdown-end">
@@ -77,10 +84,11 @@ export default function CustomRootLayout() {
                   <Droplet className='text-red-400' />
                   রক্তদাতা হোন
                 </button>
-              </Link> 
+              </Link>
             </div>}
         </div>
       </div>
+      <UpcomingDonationBanner user={user} />
     </div>
   )
 }
