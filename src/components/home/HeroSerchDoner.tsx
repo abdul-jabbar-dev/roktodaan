@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 
@@ -13,6 +13,9 @@ import { DonorInfo } from "@/types/user/user";
 import getDefaultImg from "@/utils/DefaultImg";
 import { mapBloodGroupEnumToLabel } from "@/utils/BloodGroupFormet";
 import { DonorModal } from "../donor/DonorModal";
+import LoadingAnimation from "../LoadingAnimation";
+import NoDonor from "../NoDonor";
+import Link from "next/link";
 
 export default function HeroSerchDoner({ useQuery }: { useQuery: QueryState }) {
 
@@ -34,8 +37,13 @@ export default function HeroSerchDoner({ useQuery }: { useQuery: QueryState }) {
 
     const donors = useMemo(() => data?.data ?? [], [data]);
     if (isSuccess && donors.length === 0) return (
-        <p className="text-center py-4">No donors found for this blood group.</p>
+        <span>
+            <NoDonor link={<Link className="inline mx-1 text-red-600 underline" href={'/donor'}>সকল দাতা</Link>}/>
+        </span>
     )
+    if (isLoading && !isSuccess) {
+        return <LoadingAnimation />
+    }
 
     return (
         <Swiper
@@ -73,7 +81,7 @@ export default function HeroSerchDoner({ useQuery }: { useQuery: QueryState }) {
             modules={[Pagination]}
             className="mySwiper container mx-auto"
         >
-            {isSuccess &&donors?.map((donor: DonorInfo) => (
+            {isSuccess && donors?.map((donor: DonorInfo) => (
                 <SwiperSlide className="py-6 min-w-92" key={donor.id}>
                     <div className="card   flex flex-col sm:h-56 h-96  sm:flex-row w-full card-side bg-base-100 shadow-sm">
                         <figure>

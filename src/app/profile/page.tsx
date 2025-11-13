@@ -16,6 +16,7 @@ import DonationStat from '@/components/profile/DonationStat'
 import API from '@/api'
 import { Check, Pencil } from 'lucide-react'
 import { toast } from 'react-toastify';
+import RequestDontaion from '@/components/profile/RequestDontaion'
 
 export default function Page() {
     const router = useRouter()
@@ -82,7 +83,7 @@ export default function Page() {
             } else {
                 toast.error(response?.error || 'আপডেট ব্যর্থ হয়েছে ❌')
             }
-        } catch (err:any) {
+        } catch (err: any) {
             console.error('Error updating profile:', err)
             toast.error('message' in err || 'আপডেট ব্যর্থ হয়েছে ❌')
         }
@@ -98,6 +99,7 @@ export default function Page() {
 
     return (
         <div className="container mx-auto my-5 p-5 relative">
+            {/* <RequestDontaion user={user} rootEdit={false} /> */}
             <div className="md:flex no-wrap md:-mx-2">
                 {/* Left Sidebar */}
                 <div className="w-full md:w-3/12 md:mx-2">
@@ -146,49 +148,71 @@ export default function Page() {
                 </div>
 
                 {/* Right Content */}
-                <div className="w-full md:w-9/12 mx-2 h-64 relative">
-                    <div className="flex justify-end w-full top-0 absolute">
-                        {edit ? (
-                            <button
-                                disabled={saving}
-                                onClick={saveUpdate}
-                                className={`flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg text-sm transition-all ${saving ? 'opacity-50 cursor-not-allowed' : ''}`}
-                            >
-                                <Check className="h-3.5 w-3.5" />
-                                <span>{saving ? 'Saving...' : 'Done'}</span>
-                            </button>
-                        ) : (
-                            <button
-                                onClick={() => setEdit(true)}
-                                className="flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg text-sm transition-all"
-                            >
-                                <Pencil className="h-3.5 w-3.5" />
-                                <span>Edit Profile</span>
-                            </button>
-                        )}
-                    </div>
 
-                    <div className="flex justify-center w-full space-x-4 mt-8">
-                        {showVerify && <VerifyEmail setShowVerify={setShowVerify} email={user?.profile?.email} />}
-                        <DonationStat user={user} rootEdit={false} />
-                    </div>
 
-                    <div className="my-4"></div>
-                    <Profile user={user} edit={edit} setUser={setUser} />
+                <div className="tabs tabs-border tabs-lg w-full">
+                    <input type="radio" name="my_tabs_6" className="tab" aria-label="Profile" defaultChecked />
+                    <div className="tab-content bg-base-100 p-6 w-full">
+                        <div className="w-full relative">
+                            <div className="flex justify-end w-full top-0 absolute">
+                                {edit ? (
+                                    <button
+                                        disabled={saving}
+                                        onClick={saveUpdate}
+                                        className={`flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg text-sm transition-all ${saving ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    >
+                                        <Check className="h-3.5 w-3.5" />
+                                        <span>{saving ? 'Saving...' : 'Done'}</span>
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={() => setEdit(true)}
+                                        className="flex items-center justify-center space-x-1 bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg text-sm transition-all"
+                                    >
+                                        <Pencil className="h-3.5 w-3.5" />
+                                        <span>Edit Profile</span>
+                                    </button>
+                                )}
+                            </div>
 
-                    {edit && (
-                        <>
+                            <div className="flex justify-center w-full space-x-4 mt-8">
+                                {showVerify && <VerifyEmail setShowVerify={setShowVerify} email={user?.profile?.email} />}
+                                <DonationStat user={user} rootEdit={false} />
+
+                            </div>
+
                             <div className="my-4"></div>
-                            <ChangePassword />
-                        </>
-                    )}
+                            <Profile user={user} edit={edit} setUser={setUser} />
 
-                    <div className="my-4"></div>
-                    <ChangeAddress rootEdit={edit} user={user} />
+                            {edit && (
+                                <>
+                                    <div className="my-4"></div>
+                                    <ChangePassword />
+                                </>
+                            )}
 
-                    <div className="my-4"></div>
-                    <DonationExperiance rootEdit={edit} user={user} />
+                            <div className="my-4"></div>
+                            <ChangeAddress rootEdit={edit} user={user} />
+
+                            <div className="my-4"></div>
+                            <DonationExperiance rootEdit={edit} user={user} />
+                        </div>
+                    </div>
+
+                    <input type="radio" name="my_tabs_6" className="tab" aria-label="Requests"/>
+                    <div className="tab-content bg-base-100 p-6 w-full">
+                        <div className="w-full relative">
+                            <div className=" w-full mt-8  ">
+                                <RequestDontaion user={user} rootEdit={false} />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* <input type="radio" name="my_tabs_6" className="tab" aria-label="Tab 3" />
+                    <div className="tab-content bg-base-100 border-base-300 p-6 w-full">Tab content 3</div> */}
                 </div>
+
+
             </div>
 
             {/* Global message */}

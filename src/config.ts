@@ -1,14 +1,16 @@
-const SITE_URL = process.env.SITE_URL||"http://localhost:link"
-// const SERVER_URL = process.env.SERVER_URL||"http://localhost:5555";
-const SERVER_URL = 'https://roktodaan-express.onrender.com';
+const SITE_URL = process.env.SITE_URL || "http://localhost:link";
+const SERVER_URL = process.env.SERVER_URL || "http://localhost:5555";
+// const SERVER_URL = 'https://roktodaan-express.onrender.com';
 const USER_KEY = "uck";
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY||'AIzaSyCE60_SOCNW9eiIlRpYYfEweP9A663Vwmw'
+const GOOGLE_API_KEY =
+  process.env.GOOGLE_API_KEY || "AIzaSyCE60_SOCNW9eiIlRpYYfEweP9A663Vwmw";
 // Base API
 const API_BASE = "api";
 
 // User endpoints
 const USER_BASE = `${SERVER_URL}/${API_BASE}/user`;
 const MEDIA_BASE = `${SERVER_URL}/${API_BASE}/media`;
+const REQUEST_BASE = `${SERVER_URL}/${API_BASE}/request`;
 
 const URLS = {
   GOOGLE_API_KEY,
@@ -16,16 +18,25 @@ const URLS = {
   LOCAL_STORE: { SET_USER: USER_KEY },
   SITE_URL,
   SERVER_URL,
-  CLOUDINARY_URL: process.env.CLOUDINARY_URL||"https://api.cloudinary.com/v1_1/dnkwv76h3/upload",
+  CLOUDINARY_URL:
+    process.env.CLOUDINARY_URL ||
+    "https://api.cloudinary.com/v1_1/dnkwv76h3/upload",
   MEDIA: {
     DELETE_MEDIA: (public_id: string) =>
       `${MEDIA_BASE}/delete/?public_id=${public_id}`,
-    UPDATE_USER_IMG: (link: string) => `${MEDIA_BASE}/update_profile_img/?link=${link}`,
+    UPDATE_USER_IMG: (link: string) =>
+      `${MEDIA_BASE}/update_profile_img/?link=${link}`,
     UPLOAD_IMG: `${MEDIA_BASE}/upload_img`,
+  },
+  REQUEST: {
+    BASE: REQUEST_BASE,
+    PUBLISH_REQUEST: `${REQUEST_BASE}/publish`,
+    ALL_REQUESTS: `${REQUEST_BASE}/get_requests`,
   },
   USER: {
     FORGET_PASSWORD: `${USER_BASE}/forget_password`,
     GET_USERS: `${USER_BASE}/get_users`,
+    GET_POPULAR_USERS: `${USER_BASE}/get_popular_users`,
     GET_MY_PROFILE: `${USER_BASE}/me`,
     GET_EXIST_USER: (email: string) => `${USER_BASE}/exist_user/${email}`,
     CREATE_USER: `${USER_BASE}/create_user`,

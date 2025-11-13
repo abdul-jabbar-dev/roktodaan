@@ -1,10 +1,11 @@
 import { DonorInfo } from '@/types/user/user';
-import  { getLastDonationDateRelativeToday } from '@/utils/DateFormet';
+import { getLastDonationDateRelativeToday } from '@/utils/DateFormet';
 import getDefaultImg from '@/utils/DefaultImg';
 import Image from 'next/image';
 import React, { useState, useMemo, useEffect } from 'react';
 import { DonorModal } from './DonorModal';
 import { mapBloodGroupEnumToLabel } from '@/utils/BloodGroupFormet';
+import NoDonor from '../NoDonor';
 
 const ChevronDownIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg
@@ -39,8 +40,8 @@ const getDistanceInKm = (lat1: number, lon1: number, lat2: number, lon2: number)
   const a =
     0.5 - Math.cos(dLat) / 2 +
     Math.cos(lat1 * Math.PI / 180) *
-      Math.cos(lat2 * Math.PI / 180) *
-      (1 - Math.cos(dLon)) / 2;
+    Math.cos(lat2 * Math.PI / 180) *
+    (1 - Math.cos(dLon)) / 2;
   return R * 2 * Math.asin(Math.sqrt(a));
 };
 
@@ -110,11 +111,10 @@ const Pagination: React.FC<{
         <button
           key={number}
           onClick={() => onPageChange(number)}
-          className={`px-3 py-1 rounded-lg ${
-            currentPage === number
-              ? 'bg-red-600 text-white'
-              : 'text-gray-600 hover:bg-gray-200'
-          }`}
+          className={`px-3 py-1 rounded-lg ${currentPage === number
+            ? 'bg-red-600 text-white'
+            : 'text-gray-600 hover:bg-gray-200'
+            }`}
         >
           {number}
         </button>
@@ -229,7 +229,7 @@ const DonorTable: React.FC<DonorTableProps> = ({
                   colSpan={4}
                   className="text-center py-10 text-gray-500 font-medium"
                 >
-                  এই ফিল্টারে কোন ডোনার পাওয়া যায়নি।
+                  <NoDonor text={"এই ফিল্টারে কোন ডোনার পাওয়া যায়নি।"} />
                 </td>
               </tr>
             )}

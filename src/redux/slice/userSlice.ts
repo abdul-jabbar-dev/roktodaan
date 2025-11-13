@@ -142,7 +142,7 @@ const userSlice = createSlice({
       .addCase(
         fetchUser.fulfilled,
         (state, action: PayloadAction<UserState|any>) => {
-          if((action.payload as any).data) Object.assign(state, action.payload?.data);//note check why data 
+          if((action.payload as any).data) Object.assign(state, action.payload?.data);
           else Object.assign(state, action.payload); // note maybe its ok
 
           Object.assign(state, action.payload?.data);

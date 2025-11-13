@@ -198,6 +198,34 @@ const getUsers = async (tokenOrAccessor?: any | null) => {
     return { error: err?.response?.data?.error || "Failed to fetch users" };
   }
 };
+// get all users (generic it call ssr and client also)
+const getPopularUsers = async (tokenOrAccessor?: any | null) => {
+  try {
+    let tokenStr: string | null = null;
+
+    if (tokenOrAccessor && typeof tokenOrAccessor.get === "function") {
+      const tokenData = tokenOrAccessor.get(URLS.LOCAL_STORE.SET_USER)?.value;
+      tokenStr = tokenData || null;
+    } else if (typeof tokenOrAccessor === "string" || !tokenOrAccessor) {
+      tokenStr = getItemFromStore();
+    }
+
+    const token = tokenStr ? JSON.parse(tokenStr)?.token : null; 
+    const res: any = await AXIOS.get(URLS.USER.GET_POPULAR_USERS, {
+      headers: {
+        ...(token && {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        }),
+      },
+    });
+    if (res?.error) {
+      return { error: res?.error || "Failed to fetch users" };
+    } else return res.data;
+  } catch (err: any) {
+    return { error: err?.response?.data?.error || "Failed to fetch users" };
+  }
+};
 
 // update donation experience
 const updateExperiance = async (experiance: {
@@ -333,6 +361,7 @@ const sessionStatus = async (sessionName: string) => {
 };
 
 const user = {
+  getPopularUsers,
   getMyInfo,
   updatePassword,
   updateuser,

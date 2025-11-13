@@ -62,7 +62,7 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
                 <div className="flex justify-between">
                     {/* Area */}
                     <div className="grid grid-cols-2 gap-3 items-center  w-full">
-                        <label className="text-gray-700 font-medium ml-4">এলাকা</label>
+                        <label className="text-gray-700 font-medium ml-4">House/Road/Area</label>
                         {edit ? (
                             <input
                                 type="text"
@@ -79,7 +79,7 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
 
                     {/* Upazila */}
                     <div className="grid grid-cols-2 gap-3 items-center  w-full">
-                        <label className="text-gray-700 font-medium ml-4">উপজেলা {edit&&"*"}</label>
+                        <label className="text-gray-700 font-medium ml-4">Upazila {edit && "*"}</label>
                         {edit ? (
                             <select
                                 value={selectedUpazila?.id ?? ""}
@@ -107,7 +107,7 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
 
                     {/* District */}
                     <div className="grid grid-cols-2 gap-3 items-center w-full">
-                        <label className="text-gray-700 font-medium ml-4">জেলা {edit&&"*"}</label>
+                        <label className="text-gray-700 font-medium ml-4">District {edit && "*"}</label>
                         {edit ? (
                             <select
                                 value={selectedDistrict?.id ?? ""}
@@ -134,7 +134,7 @@ const ChangeAddress = ({ user, rootEdit }: { user: UserState, rootEdit: boolean 
 
                     {/* Division */}
                     <div className="grid grid-cols-2 gap-3 items-center  w-full">
-                        <label className="text-gray-700 font-medium ml-4">বিভাগ {edit &&"*"}</label>
+                        <label className="text-gray-700 font-medium ml-4">Division {edit && "*"}</label>
                         {edit ? (
                             <select
                                 value={selectedDivision?.id ?? ""}

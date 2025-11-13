@@ -236,7 +236,7 @@ export default function PersonalDetails_Fi() {
         <div className="flex flex-col md:flex-row gap-4 w-full">
           {/* Division */}
           <div className="w-full">
-            <label className="block text-gray-700 font-medium mb-2">বিভাগ *</label>
+            <label className="block text-gray-700 font-medium mb-2">Division *</label>
             <select
               value={selectedDivision?.id ?? ""}
               onChange={e => {
@@ -259,7 +259,7 @@ export default function PersonalDetails_Fi() {
 
           {/* District */}
           <div className="w-full">
-            <label className="block text-gray-700 font-medium mb-2">জেলা *</label>
+            <label className="block text-gray-700 font-medium mb-2">District *</label>
             <select
               value={selectedDistrict?.id ?? ""}
               disabled={!selectedDivision}
@@ -279,7 +279,7 @@ export default function PersonalDetails_Fi() {
 
           {/* Upazila */}
           <div className="w-full">
-            <label className="block text-gray-700 font-medium mb-2">উপজেলা *</label>
+            <label className="block text-gray-700 font-medium mb-2">Upazila *</label>
             <select
               value={selectedUpazila?.id ?? ""}
               disabled={!selectedDistrict}

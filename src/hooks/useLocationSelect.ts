@@ -39,8 +39,7 @@ export function useLocationSelect(step5Address: {
     if (division.length && step5Address?.division) {
       const match = division.find(
         (d) =>
-          d.name === step5Address.division ||
-          d.name === step5Address.division
+          d.name === step5Address.division || d.name === step5Address.division
       );
       if (match) setSelectedDivision({ id: match.id, name: match.name });
     }
@@ -50,8 +49,7 @@ export function useLocationSelect(step5Address: {
     if (district.length && step5Address?.district) {
       const match = district.find(
         (d) =>
-          d.name === step5Address.district ||
-          d.name === step5Address.district
+          d.name === step5Address.district || d.name === step5Address.district
       );
       if (match) setSelectedDistrict({ id: match.id, name: match.name });
     }
